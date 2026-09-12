@@ -14,7 +14,7 @@ ENTER  = {"none","fadeIn","popIn","slideIn"}
 TRANS  = {"crossfade","pageTurn","wipe","cut"}
 FX     = {"none","petals","snow","fireflies","sparkle","rain","dust"}
 
-SUBTITLE_TOP = 0.88   # Spec §6.3 — 자막이 차지하는 하단 영역 경계
+SUBTITLE_TOP = 0.80   # Spec §6.3 — 자막이 차지하는 하단 영역 경계
 
 
 class Report:

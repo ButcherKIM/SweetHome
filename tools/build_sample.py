@@ -38,7 +38,7 @@ def beat(bid, text, scene):
             "durationMs": dur, "wordTimings": timings(text, dur), "scene": scene}
 
 
-WOODCUTTER = {"asset": "characters/woodcutter", "x": 0.32, "y": 0.88,
+WOODCUTTER = {"asset": "characters/woodcutter", "x": 0.32, "y": 0.80,
               "scale": 1.0, "z": 30, "anim": "breathe"}
 
 

@@ -1,0 +1,1428 @@
+<title>금도끼 은도끼 플레이어</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#EDF0EE; --surface:#FFFFFF; --sunk:#E3E8E5;
+  --ink:#141A18; --muted:#5B6B65; --line:#D2D9D5;
+  --accent:#1F6F5C; --accent-soft:#DCEDE7; --accent-ink:#0E3E33;
+  --warn:#8A6A16; --warn-soft:#F6EDD6; --err:#A63D38; --err-soft:#F8E4E2;
+  --stage-void:#0B100E;
+  --shadow:0 1px 2px rgba(20,26,24,.06), 0 8px 24px rgba(20,26,24,.06);
+  --r:10px;
+  --ui:"IBM Plex Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,monospace;
+  --story:"Gowun Batang","IBM Plex Sans KR",serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1412; --surface:#171E1B; --sunk:#111815;
+    --ink:#E4EAE7; --muted:#8A9A94; --line:#2A332F;
+    --accent:#4EBFA0; --accent-soft:#17302A; --accent-ink:#9FE3CF;
+    --warn:#C79A33; --warn-soft:#2C2617; --err:#D4695F; --err-soft:#2E1B19;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1412; --surface:#171E1B; --sunk:#111815;
+  --ink:#E4EAE7; --muted:#8A9A94; --line:#2A332F;
+  --accent:#4EBFA0; --accent-soft:#17302A; --accent-ink:#9FE3CF;
+  --warn:#C79A33; --warn-soft:#2C2617; --err:#D4695F; --err-soft:#2E1B19;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--ui);line-height:1.55;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:18px;padding-block:26px 64px;
+  display:flex;flex-direction:column;gap:18px}
+
+/* ── header ─────────────────────────────── */
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px}
+h1{font-family:var(--story);font-size:26px;font-weight:700;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px}
+.chip{font-size:11px;font-weight:600;letter-spacing:.04em;padding:3px 9px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent-ink);white-space:nowrap}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.err{background:var(--err-soft);color:var(--err)}
+
+/* ── stage ──────────────────────────────── */
+.stage{position:relative;aspect-ratio:16/9;width:100%;max-width:100%;overflow:hidden;
+  border-radius:var(--r);background:var(--stage-void);box-shadow:var(--shadow);
+  container-type:size;user-select:none;cursor:pointer}
+.cam{position:absolute;inset:-8%;transform-origin:50% 50%}
+.bg{position:absolute;inset:0;background-size:cover;background-position:center;
+  transition:filter .3s}
+.bg.shape{background-image:none!important}
+.layer{position:absolute;inset:0}
+.actor{position:absolute;transform:translateX(-50%);will-change:transform}
+.actor>.inner{transform-origin:50% 100%}
+.actor img{display:block;height:100%;width:auto;max-width:none}
+.shapeA{border-radius:44% 44% 30% 30%/50% 50% 26% 26%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 -14px 26px rgba(0,0,0,.16)}
+.shapeP{border-radius:5px;height:100%;transform:rotate(-12deg)}
+.shapeA b{font:600 4.2cqh/1 var(--ui);color:rgba(255,255,255,.94);
+  text-shadow:0 1px 3px rgba(0,0,0,.4)}
+canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* 자막 — Spec §6.3: 기본 ON, 64px@1080p = 5.9cqh, 어절 간격 0.3em */
+.subs{position:absolute;left:5%;right:5%;bottom:3.6%;z-index:900;text-align:center}
+.subs .box{display:inline-block;max-width:100%;padding:.34em .78em;border-radius:8px;
+  background:rgba(10,16,14,.66);backdrop-filter:blur(3px)}
+.subs p{margin:0;font:700 5.9cqh/1.42 var(--ui);color:#F4F7F5;
+  letter-spacing:.005em;text-wrap:balance}
+.subs w{display:inline-block;margin-inline-end:.32em;
+  transition:transform .12s ease,color .12s ease}
+.subs w:last-child{margin-inline-end:0}
+.subs w.on{color:#FFE08A;transform:scale(1.08)}
+.subs.off{display:none}
+
+/* 선택지 / 엔딩 */
+.overlay{position:absolute;inset:0;z-index:1000;display:flex;flex-direction:column;
+  justify-content:flex-end;gap:3cqh;padding:4cqh;background:linear-gradient(transparent,rgba(8,12,10,.82) 42%)}
+.oq{text-align:center;font:700 5.4cqh/1.3 var(--ui);color:#F4F7F5;margin:0;
+  text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4cqh}
+.opt{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.3);border-radius:10px;
+  padding:2cqh 1.4cqh;cursor:pointer;display:flex;flex-direction:column;align-items:center;
+  gap:1.4cqh;min-height:0;transition:transform .14s,border-color .14s,background .14s;
+  color:#F4F7F5;font-family:var(--ui)}
+.opt:hover,.opt:focus-visible{transform:translateY(-4px);border-color:#FFE08A;background:rgba(255,255,255,.18)}
+.opt .thumb{width:100%;aspect-ratio:1;border-radius:8px;display:block;overflow:hidden}
+.opt .thumb img{width:100%;height:100%;object-fit:contain}
+.opt b{font:600 3.8cqh/1.25 var(--ui);text-align:center;word-spacing:.3em}
+.ending{align-items:center;justify-content:center;text-align:center;
+  background:rgba(8,12,10,.78);gap:1.6cqh}
+.ending .t{font:700 7cqh/1.2 var(--story);color:#FFE08A;margin:0}
+.ending .l{font:400 4.6cqh/1.5 var(--story);color:#F4F7F5;margin:0;max-width:78%}
+.ending .badge{font:600 3.2cqh/1 var(--ui);color:#0E3E33;background:#FFE08A;
+  padding:.5em .9em;border-radius:999px}
+.ending button{font:600 4cqh/1 var(--ui);padding:.7em 1.4em;border-radius:999px;
+  border:none;background:#F4F7F5;color:#141A18;cursor:pointer}
+
+/* ── transport ──────────────────────────── */
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+button,select{font-family:var(--ui);font-size:13px}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:7px 13px;border-radius:8px;cursor:pointer;font-weight:500;transition:background .12s}
+.btn:hover{background:var(--sunk)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.spacer{flex:1}
+.pos{font:500 12px/1 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.prog{height:3px;background:var(--sunk);border-radius:2px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);width:0}
+
+/* ── panels ─────────────────────────────── */
+details{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+summary{cursor:pointer;padding:11px 14px;font-weight:600;font-size:13.5px;
+  display:flex;align-items:center;gap:9px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";color:var(--muted);font-size:11px}
+details[open] summary::before{content:"▾"}
+summary .hint{font-weight:400;color:var(--muted);font-size:12px;margin-left:auto;text-align:right}
+.body{padding:2px 14px 15px;display:flex;flex-direction:column;gap:13px}
+
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:9px}
+.slot{border:1.5px dashed var(--line);border-radius:9px;padding:7px;cursor:pointer;
+  display:flex;flex-direction:column;gap:6px;align-items:center;background:var(--sunk);
+  transition:border-color .14s,background .14s}
+.slot:hover,.slot.over{border-color:var(--accent);background:var(--accent-soft)}
+.slot.has{border-style:solid;border-color:var(--accent)}
+.slot .ph{width:100%;aspect-ratio:1;border-radius:6px;display:grid;place-items:center;
+  overflow:hidden;background:var(--surface)}
+.slot .ph img{width:100%;height:100%;object-fit:contain}
+.slot .ph span{width:52%;height:52%;border-radius:40%;display:block}
+.slot em{font:500 10.5px/1.25 var(--mono);font-style:normal;color:var(--muted);
+  text-align:center;word-break:break-all}
+
+.sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}
+.sl{display:flex;flex-direction:column;gap:3px}
+.sl label{font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.sl b{font:500 12px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+
+textarea{width:100%;min-height:230px;font:400 12px/1.6 var(--mono);padding:11px;
+  border:1px solid var(--line);border-radius:8px;background:var(--sunk);color:var(--ink);
+  resize:vertical;tab-size:2}
+.vout{font:400 12px/1.7 var(--mono);display:flex;flex-direction:column;gap:3px}
+.vout div{padding:5px 9px;border-radius:6px}
+.vout .e{background:var(--err-soft);color:var(--err)}
+.vout .w{background:var(--warn-soft);color:var(--warn)}
+.vout .k{background:var(--accent-soft);color:var(--accent-ink)}
+.note{font-size:12.5px;color:var(--muted);margin:0}
+.note code{font:400 11.5px var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+@media (max-width:560px){
+  h1{font-size:21px}
+  .slots{grid-template-columns:repeat(auto-fill,minmax(74px,1fr))}
+  .spacer{flex-basis:100%;height:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .cam,.actor>.inner{transition:none!important;animation:none!important}
+}
+
+@keyframes breathe{0%,100%{transform:scaleY(1) translateY(0)}50%{transform:scaleY(1.018) translateY(-.6%)}}
+@keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3.4%)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.07)}100%{opacity:1;transform:scale(1)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-26%)}to{opacity:1;transform:translateX(0)}}
+@keyframes driftIn{from{transform:translateX(-7%)}to{transform:translateX(0)}}
+@keyframes tCross{from{opacity:0}to{opacity:1}}
+@keyframes tPage{from{opacity:.15;transform:perspective(1200px) rotateY(-22deg) translateX(9%)}
+                 to{opacity:1;transform:none}}
+@keyframes tWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>금도끼 은도끼</h1>
+    <span class="chip" id="chVer">story.json v0.4</span>
+    <span class="chip" id="chVal">검증 대기</span>
+    <span class="sub">도형 단계 프로토타입 · 에셋을 넣으면 그림으로 바뀝니다</span>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="cam" id="cam">
+      <div class="bg" id="bg"></div>
+      <div class="layer" id="actors"></div>
+    </div>
+    <canvas class="fx" id="fx"></canvas>
+    <div class="subs" id="subs"><div class="box"><p id="subsP"></p></div></div>
+  </div>
+
+  <div class="prog"><i id="prog"></i></div>
+
+  <div class="bar">
+    <button class="btn pri" id="bPlay">▶  재생</button>
+    <button class="btn" id="bPrev">◂ 이전</button>
+    <button class="btn" id="bNext">다음 ▸</button>
+    <button class="btn" id="bRestart">처음부터</button>
+    <span class="spacer"></span>
+    <button class="btn" id="bSubs" aria-pressed="true">자막</button>
+    <button class="btn" id="bVoice" aria-pressed="false">음성</button>
+    <span class="pos" id="pos">—</span>
+  </div>
+
+  <details open>
+    <summary>에셋 넣기<span class="hint" id="slotHint">칸을 누르거나 이미지를 끌어다 놓으세요</span></summary>
+    <div class="body">
+      <p class="note">마젠타 배경째로 넣으세요. 브라우저가 <b>마젠타를 걷어내고, 가장 큰 덩어리만 남깁니다</b> — 구석의 반짝이는 자동으로 떨어집니다. 배경(<code>bg_</code>)은 그대로 씁니다.</p>
+      <div class="slots" id="slots"></div>
+      <div class="bar"><button class="btn" id="bClear">에셋 모두 지우기</button>
+        <span class="note" id="assetNote"></span></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>배경 보정<span class="hint">배경이 캐릭터를 잡아먹으면 여기서 물러나게</span></summary>
+    <div class="body">
+      <p class="note">에셋을 다시 뽑지 않고 배경만 뒤로 물리는 실험입니다. 값이 정해지면 <code>story.json</code> 에 필드로 넣습니다.</p>
+      <div class="sliders">
+        <div class="sl"><label>흐림 <b id="vBlur">0.0px</b></label>
+          <input type="range" id="sBlur" min="0" max="60" value="0"></div>
+        <div class="sl"><label>밝기 <b id="vBri">100%</b></label>
+          <input type="range" id="sBri" min="50" max="130" value="100"></div>
+        <div class="sl"><label>채도 <b id="vSat">100%</b></label>
+          <input type="range" id="sSat" min="0" max="140" value="100"></div>
+      </div>
+      <div class="bar"><button class="btn" id="bReset">원래대로</button>
+        <button class="btn" id="bSuggest">추천값 (흐림 1.2 · 밝기 92 · 채도 88)</button></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>story.json 고쳐보기<span class="hint">한 줄 고치고 적용 — 30초 안에 되면 규격이 쓸 만한 것</span></summary>
+    <div class="body">
+      <p class="note">예: <code>"camera": "pushIn"</code> 을 <code>"panRight"</code> 로, 또는 <code>"x": 0.32</code> 를 <code>0.7</code> 로.
+        허용값은 <code>still · pushIn · pullOut · panLeft · panRight · tiltUp</code>.</p>
+      <textarea id="ta" spellcheck="false"></textarea>
+      <div class="bar"><button class="btn pri" id="bApply">적용하고 재생</button>
+        <button class="btn" id="bRevert">되돌리기</button></div>
+      <div class="vout" id="vout"></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>도형이 뭘 뜻하나<span class="hint">에셋이 없는 자리</span></summary>
+    <div class="body"><div class="slots" id="legend"></div></div>
+  </details>
+</div>
+
+<script>
+const DEFAULT_STORY = {
+  "schemaVersion": "0.4",
+  "storyId": "goldaxe",
+  "title": "금도끼 은도끼",
+  "source": "한국 전래동화 (public domain)",
+  "locale": "ko-KR",
+  "targetAge": [
+    4,
+    7
+  ],
+  "styleId": "hanji-watercolor-v1",
+  "stage": {
+    "width": 1920,
+    "height": 1080,
+    "safeArea": 0.05
+  },
+  "rootNode": "n_intro",
+  "canonicalEnding": "n_end_honest",
+  "subtitle": {
+    "defaultOn": true,
+    "highlightUnit": "eojeol",
+    "minFontPx": 64,
+    "wordSpacingEm": 0.3,
+    "maxLines": 2
+  },
+  "assets": {
+    "backgrounds": {
+      "bg_forest_day": {
+        "src": "bg/bg_forest_day.png",
+        "tint": "#7C9A6B"
+      },
+      "bg_pond_day": {
+        "src": "bg/bg_pond_day.png",
+        "tint": "#6E8CA8"
+      },
+      "bg_pond_glow": {
+        "src": "bg/bg_pond_glow.png",
+        "tint": "#C9A24B"
+      }
+    },
+    "characters": {
+      "woodcutter": {
+        "displayName": "나무꾼",
+        "tint": "#4A7FB5",
+        "poses": {
+          "idle": "char/woodcutter_idle.png",
+          "sad": "char/woodcutter_sad.png",
+          "surprise": "char/woodcutter_surprise.png",
+          "happy": "char/woodcutter_happy.png"
+        }
+      },
+      "spirit": {
+        "displayName": "산신령",
+        "tint": "#E8C86A",
+        "poses": {
+          "calm": "char/spirit_calm.png",
+          "smile": "char/spirit_smile.png"
+        }
+      }
+    },
+    "props": {
+      "axe_iron": {
+        "src": "prop/axe_iron.png",
+        "tint": "#8A8F98"
+      },
+      "axe_gold": {
+        "src": "prop/axe_gold.png",
+        "tint": "#E3B341"
+      },
+      "axe_silver": {
+        "src": "prop/axe_silver.png",
+        "tint": "#C6CBD1"
+      }
+    }
+  },
+  "nodes": {
+    "n_intro": {
+      "type": "narrative",
+      "beats": [
+        {
+          "id": "b_intro_01",
+          "text": "산속 깊은 곳에 마음씨 착한 나무꾼이 살았어요.",
+          "audio": "audio/b_intro_01.opus",
+          "durationMs": 7700,
+          "wordTimings": [
+            [
+              0,
+              2,
+              0,
+              811
+            ],
+            [
+              3,
+              5,
+              811,
+              1622
+            ],
+            [
+              6,
+              8,
+              1622,
+              2433
+            ],
+            [
+              9,
+              12,
+              2433,
+              3649
+            ],
+            [
+              13,
+              15,
+              3649,
+              4460
+            ],
+            [
+              16,
+              20,
+              4460,
+              6081
+            ],
+            [
+              21,
+              26,
+              6081,
+              7700
+            ]
+          ],
+          "scene": {
+            "background": "bg_forest_day",
+            "camera": "pushIn",
+            "transitionIn": "crossfade",
+            "fx": "dust",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.32,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "idle",
+                "enter": "fadeIn"
+              }
+            ]
+          }
+        },
+        {
+          "id": "b_intro_02",
+          "text": "나무를 하다가 그만, 도끼를 연못에 빠뜨렸어요.",
+          "audio": "audio/b_intro_02.opus",
+          "durationMs": 8010,
+          "wordTimings": [
+            [
+              0,
+              3,
+              0,
+              1265
+            ],
+            [
+              4,
+              7,
+              1265,
+              2530
+            ],
+            [
+              8,
+              11,
+              2530,
+              3373
+            ],
+            [
+              12,
+              15,
+              3373,
+              4638
+            ],
+            [
+              16,
+              19,
+              4638,
+              5903
+            ],
+            [
+              20,
+              26,
+              5903,
+              8010
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_day",
+            "camera": "panRight",
+            "transitionIn": "pageTurn",
+            "fx": "none",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.32,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "sad",
+                "enter": "none"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.62,
+                "y": 0.72,
+                "scale": 0.5,
+                "z": 25,
+                "anim": "bob",
+                "enter": "slideIn"
+              }
+            ]
+          }
+        },
+        {
+          "id": "b_intro_03",
+          "text": "그때 연못에서 환한 빛이 쏟아졌어요.",
+          "audio": "audio/b_intro_03.opus",
+          "durationMs": 6460,
+          "wordTimings": [
+            [
+              0,
+              2,
+              0,
+              861
+            ],
+            [
+              3,
+              7,
+              861,
+              2584
+            ],
+            [
+              8,
+              10,
+              2584,
+              3445
+            ],
+            [
+              11,
+              13,
+              3445,
+              4306
+            ],
+            [
+              14,
+              20,
+              4306,
+              6460
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "pushIn",
+            "transitionIn": "crossfade",
+            "fx": "sparkle",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.26,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "surprise",
+                "enter": "none"
+              }
+            ]
+          }
+        },
+        {
+          "id": "b_intro_04",
+          "text": "산신령이 나타나 금도끼를 들어 보였어요.",
+          "audio": "audio/b_intro_04.opus",
+          "durationMs": 7080,
+          "wordTimings": [
+            [
+              0,
+              4,
+              0,
+              1666
+            ],
+            [
+              5,
+              8,
+              1666,
+              2915
+            ],
+            [
+              9,
+              13,
+              2915,
+              4581
+            ],
+            [
+              14,
+              16,
+              4581,
+              5414
+            ],
+            [
+              17,
+              22,
+              5414,
+              7080
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "still",
+            "transitionIn": "cut",
+            "fx": "sparkle",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.22,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "surprise",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "pose": "calm",
+                "x": 0.7,
+                "y": 0.74,
+                "scale": 1.25,
+                "z": 20,
+                "anim": "bob",
+                "enter": "fadeIn"
+              },
+              {
+                "asset": "props/axe_gold",
+                "x": 0.56,
+                "y": 0.6,
+                "scale": 0.55,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          }
+        }
+      ],
+      "choice": {
+        "promptText": "이것이 네 도끼냐?",
+        "promptAudio": "audio/n_intro_choice.opus",
+        "promptWordTimings": [
+          [
+            0,
+            3,
+            0,
+            1114
+          ],
+          [
+            4,
+            5,
+            1114,
+            1485
+          ],
+          [
+            6,
+            10,
+            1485,
+            2600
+          ]
+        ],
+        "options": [
+          {
+            "id": "a",
+            "label": "쇠도끼를 가리킨다",
+            "tint": "#8A8F98",
+            "image": "icon/choice_point_iron.png",
+            "next": "n_end_honest"
+          },
+          {
+            "id": "b",
+            "label": "금도끼를 받는다",
+            "tint": "#E3B341",
+            "image": "icon/choice_take_gold.png",
+            "next": "n_end_greedy"
+          },
+          {
+            "id": "c",
+            "label": "모르겠다고 한다",
+            "tint": "#9B8FB5",
+            "image": "icon/choice_shrug.png",
+            "next": "n_end_unsure"
+          }
+        ]
+      }
+    },
+    "n_end_honest": {
+      "type": "ending",
+      "isCanonical": true,
+      "endingTitle": "정직한 나무꾼",
+      "lesson": "정직한 마음은 반짝반짝 빛난단다.",
+      "beats": [
+        {
+          "id": "b_honest_01",
+          "text": "아니라고 말하자, 산신령은 도끼 세 자루를 모두 주었어요.",
+          "audio": "audio/b_honest_01.opus",
+          "durationMs": 9250,
+          "wordTimings": [
+            [
+              0,
+              4,
+              0,
+              1609
+            ],
+            [
+              5,
+              9,
+              1609,
+              2816
+            ],
+            [
+              10,
+              14,
+              2816,
+              4425
+            ],
+            [
+              15,
+              17,
+              4425,
+              5229
+            ],
+            [
+              18,
+              19,
+              5229,
+              5631
+            ],
+            [
+              20,
+              23,
+              5631,
+              6838
+            ],
+            [
+              24,
+              26,
+              6838,
+              7642
+            ],
+            [
+              27,
+              32,
+              7642,
+              9250
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "pullOut",
+            "transitionIn": "crossfade",
+            "fx": "sparkle",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.28,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "happy",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "pose": "smile",
+                "x": 0.7,
+                "y": 0.74,
+                "scale": 1.25,
+                "z": 20,
+                "anim": "bob",
+                "enter": "none"
+              },
+              {
+                "asset": "props/axe_gold",
+                "x": 0.5,
+                "y": 0.56,
+                "scale": 0.45,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/axe_silver",
+                "x": 0.58,
+                "y": 0.58,
+                "scale": 0.45,
+                "z": 34,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "n_end_greedy": {
+      "type": "ending",
+      "endingTitle": "사라진 금빛",
+      "lesson": "내 것을 아끼는 마음이 가장 반짝인단다.",
+      "beats": [
+        {
+          "id": "b_greedy_01",
+          "text": "손을 뻗자 빛이 사라졌지만, 나무꾼은 제 쇠도끼를 되찾았어요.",
+          "audio": "audio/b_greedy_01.opus",
+          "durationMs": 9870,
+          "wordTimings": [
+            [
+              0,
+              2,
+              0,
+              790
+            ],
+            [
+              3,
+              5,
+              790,
+              1580
+            ],
+            [
+              6,
+              8,
+              1580,
+              2370
+            ],
+            [
+              9,
+              15,
+              2370,
+              4344
+            ],
+            [
+              16,
+              20,
+              4344,
+              5923
+            ],
+            [
+              21,
+              22,
+              5923,
+              6318
+            ],
+            [
+              23,
+              27,
+              6318,
+              7897
+            ],
+            [
+              28,
+              34,
+              7897,
+              9870
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_day",
+            "camera": "pullOut",
+            "transitionIn": "wipe",
+            "fx": "none",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.34,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "happy",
+                "enter": "none"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.56,
+                "y": 0.66,
+                "scale": 0.5,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "n_end_unsure": {
+      "type": "ending",
+      "endingTitle": "함께 찾은 도끼",
+      "lesson": "모를 땐 같이 찾아보면 된단다.",
+      "beats": [
+        {
+          "id": "b_unsure_01",
+          "text": "모르겠다고 하자, 산신령이 함께 연못을 들여다봐 주었어요.",
+          "audio": "audio/b_unsure_01.opus",
+          "durationMs": 9560,
+          "wordTimings": [
+            [
+              0,
+              5,
+              0,
+              1992
+            ],
+            [
+              6,
+              9,
+              1992,
+              2789
+            ],
+            [
+              10,
+              14,
+              2789,
+              4382
+            ],
+            [
+              15,
+              17,
+              4382,
+              5179
+            ],
+            [
+              18,
+              21,
+              5179,
+              6374
+            ],
+            [
+              22,
+              26,
+              6374,
+              7967
+            ],
+            [
+              27,
+              32,
+              7967,
+              9560
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "tiltUp",
+            "transitionIn": "crossfade",
+            "fx": "fireflies",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.3,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "idle",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "pose": "smile",
+                "x": 0.62,
+                "y": 0.78,
+                "scale": 1.1,
+                "z": 20,
+                "anim": "bob",
+                "enter": "none"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+};
+const $ = s => document.querySelector(s);
+const clone = o => JSON.parse(JSON.stringify(o));
+
+let story = clone(DEFAULT_STORY);
+let imgs = {};                       // "bg_pond_glow" | "characters/woodcutter:surprise" -> dataURL
+let st = { node:null, beat:0, playing:false, phase:'beat', seen:new Set() };
+let clk = { t0:0, dur:0, raf:0, wi:-1, boundary:false };
+let bgFx = { blur:0, bri:100, sat:100 };
+
+/* ── 에셋 키 목록 ───────────────────────── */
+function assetKeys(s){
+  const out = [];
+  for(const id in s.assets.backgrounds) out.push({key:id, kind:'bg', label:id, tint:s.assets.backgrounds[id].tint});
+  for(const id in s.assets.characters){
+    const c = s.assets.characters[id];
+    for(const p in c.poses) out.push({key:`characters/${id}:${p}`, kind:'char', label:`${id}_${p}`, tint:c.tint});
+  }
+  for(const id in (s.assets.props||{})) out.push({key:`props/${id}`, kind:'prop', label:id, tint:s.assets.props[id].tint});
+  return out;
+}
+const actorKey = a => a.asset.startsWith('characters/') ? `${a.asset}:${a.pose}` : a.asset;
+const tintOf = a => {
+  const [kind,name] = a.asset.split('/');
+  return (story.assets[kind]?.[name]?.tint) || '#7A8A84';
+};
+
+/* ── 마젠타 크로마키 + 최대 덩어리만 남기기 ── */
+function keyOut(img){
+  const MAX = 1400;
+  const sc = Math.min(1, MAX/Math.max(img.width, img.height));
+  const w = Math.round(img.width*sc), h = Math.round(img.height*sc);
+  const c = document.createElement('canvas'); c.width=w; c.height=h;
+  const cx = c.getContext('2d', {willReadFrequently:true});
+  cx.drawImage(img,0,0,w,h);
+  const im = cx.getImageData(0,0,w,h), d = im.data, n = w*h;
+
+  // 1) 마젠타 → 투명 (경계는 부드럽게)
+  for(let i=0;i<n;i++){
+    const o=i*4, r=d[o], g=d[o+1], b=d[o+2];
+    if(r>110 && b>110){
+      const mn = Math.min(r,b), ratio = g/mn;
+      if(ratio < .72) d[o+3]=0;
+      else if(ratio < .88) d[o+3] = Math.min(d[o+3], Math.round(255*(ratio-.72)/.16));
+    }
+  }
+  // 2) 최대 연결 덩어리만 남긴다 → 구석 반짝이·부스러기 제거
+  const label = new Int32Array(n).fill(-1), stk = new Int32Array(n);
+  let cur=0, best=-1, bestN=0;
+  const ok = i => d[i*4+3] >= 40;
+  for(let i=0;i<n;i++){
+    if(label[i]!==-1 || !ok(i)) continue;
+    let sp=0, sz=0; stk[sp++]=i; label[i]=cur;
+    while(sp>0){
+      const p=stk[--sp]; sz++;
+      const x=p%w, y=(p-x)/w;
+      if(x>0   && label[p-1]===-1 && ok(p-1)){label[p-1]=cur; stk[sp++]=p-1;}
+      if(x<w-1 && label[p+1]===-1 && ok(p+1)){label[p+1]=cur; stk[sp++]=p+1;}
+      if(y>0   && label[p-w]===-1 && ok(p-w)){label[p-w]=cur; stk[sp++]=p-w;}
+      if(y<h-1 && label[p+w]===-1 && ok(p+w)){label[p+w]=cur; stk[sp++]=p+w;}
+    }
+    if(sz>bestN){bestN=sz; best=cur;}
+    cur++;
+  }
+  let x0=w,y0=h,x1=0,y1=0, dropped=0;
+  for(let i=0;i<n;i++){
+    if(label[i]!==best){ if(d[i*4+3]>0) dropped++; d[i*4+3]=0; continue; }
+    const x=i%w, y=(i-x)/w;
+    if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;
+    // 가장자리 마젠타 잔상 억제
+    const o=i*4;
+    if(d[o+3]<250){
+      const r=d[o], g=d[o+1], b=d[o+2], av=(r+b)/2;
+      if(av>g){ const f=Math.min(1,(av-g)/70)*.7; d[o]=r-(r-g)*f; d[o+2]=b-(b-g)*f; }
+    }
+  }
+  cx.putImageData(im,0,0);
+  if(x1<=x0||y1<=y0) return {url:c.toDataURL('image/png'), dropped};
+
+  // 3) 여백 트림 (기준점 = 하단 중앙)
+  const tw=x1-x0+1, th=y1-y0+1;
+  const t=document.createElement('canvas'); t.width=tw; t.height=th;
+  t.getContext('2d').drawImage(c, x0,y0,tw,th, 0,0,tw,th);
+  return {url:t.toDataURL('image/png'), dropped};
+}
+function plainResize(img){
+  const MAX=1800, sc=Math.min(1,MAX/Math.max(img.width,img.height));
+  const c=document.createElement('canvas');
+  c.width=Math.round(img.width*sc); c.height=Math.round(img.height*sc);
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  return c.toDataURL('image/jpeg',.88);
+}
+function loadFile(file, key, kind){
+  const fr = new FileReader();
+  fr.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      let note = '';
+      if(kind==='bg'){ imgs[key] = plainResize(im); }
+      else { const r = keyOut(im); imgs[key] = r.url;
+             note = r.dropped>200 ? `  ·  ${key}: 배경 밖 부스러기 제거됨` : ''; }
+      $('#assetNote').textContent = `${Object.keys(imgs).length}개 적용됨${note}`;
+      buildSlots(); render(); save();
+    };
+    im.src = fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+function save(){ try{ localStorage.setItem('goldaxe_imgs', JSON.stringify(imgs)); }catch(e){} }
+function load(){ try{ imgs = JSON.parse(localStorage.getItem('goldaxe_imgs')||'{}'); }catch(e){ imgs={}; } }
+
+/* ── 슬롯 UI ────────────────────────────── */
+function buildSlots(){
+  const box = $('#slots'), leg = $('#legend');
+  box.innerHTML=''; leg.innerHTML='';
+  for(const a of assetKeys(story)){
+    const el = document.createElement('div');
+    el.className = 'slot' + (imgs[a.key] ? ' has' : '');
+    el.tabIndex = 0;
+    el.innerHTML = `<div class="ph">${ imgs[a.key]
+        ? `<img alt="${a.label}" src="${imgs[a.key]}">`
+        : `<span style="background:${a.tint};${a.kind==='bg'?'border-radius:5px;width:74%;height:52%':''}"></span>` }</div>
+      <em>${a.label}</em>`;
+    const pick = () => {
+      const f = document.createElement('input');
+      f.type='file'; f.accept='image/*';
+      f.onchange = () => f.files[0] && loadFile(f.files[0], a.key, a.kind);
+      f.click();
+    };
+    el.onclick = pick;
+    el.onkeydown = e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); } };
+    el.ondragover = e => { e.preventDefault(); el.classList.add('over'); };
+    el.ondragleave = () => el.classList.remove('over');
+    el.ondrop = e => { e.preventDefault(); el.classList.remove('over');
+      const f = e.dataTransfer.files[0]; if(f) loadFile(f, a.key, a.kind); };
+    box.appendChild(el);
+    leg.appendChild(el.cloneNode(true));
+  }
+}
+
+/* ── 파티클 ─────────────────────────────── */
+const fxC = $('#fx'), fxX = fxC.getContext('2d');
+let parts = [], fxName='none', fxRaf=0;
+const FX = {
+  petals:   {n:26, c:'#E8B4C8', r:[3,7],  vy:[.18,.5],  sway:1.3, fade:0},
+  snow:     {n:46, c:'#FFFFFF', r:[1.4,3.4],vy:[.2,.55], sway:.7,  fade:0},
+  rain:     {n:60, c:'#BFD4E0', r:[.8,1.4],vy:[2.4,4],  sway:.1,  fade:0, line:12},
+  dust:     {n:26, c:'#E6DCC4', r:[1,2.2], vy:[-.08,.1],sway:.35, fade:.5, a:.34},
+  fireflies:{n:20, c:'#FFE08A', r:[1.8,3.4],vy:[-.14,.1],sway:.5, fade:1},
+  sparkle:  {n:30, c:'#FFF1B8', r:[1.4,3.2],vy:[-.3,-.05],sway:.4,fade:1},
+};
+function fxSize(){ const r=fxC.getBoundingClientRect();
+  fxC.width=Math.max(1,r.width*devicePixelRatio); fxC.height=Math.max(1,r.height*devicePixelRatio); }
+function setFx(name){
+  fxName = (name && name!=='none' && FX[name]) ? name : 'none';
+  parts = [];
+  if(fxName==='none'){ fxX.clearRect(0,0,fxC.width,fxC.height); return; }
+  const p = FX[fxName], W=fxC.width, H=fxC.height;
+  for(let i=0;i<p.n;i++) parts.push({
+    x:Math.random()*W, y:Math.random()*H,
+    r:(p.r[0]+Math.random()*(p.r[1]-p.r[0]))*devicePixelRatio,
+    vy:(p.vy[0]+Math.random()*(p.vy[1]-p.vy[0]))*devicePixelRatio,
+    ph:Math.random()*6.28, sp:.4+Math.random()*.8 });
+}
+function fxTick(t){
+  fxRaf = requestAnimationFrame(fxTick);
+  const W=fxC.width, H=fxC.height;
+  fxX.clearRect(0,0,W,H);
+  if(fxName==='none') return;
+  const p = FX[fxName];
+  fxX.fillStyle = p.c; fxX.strokeStyle = p.c;
+  for(const o of parts){
+    o.y += o.vy; o.ph += .02*o.sp;
+    o.x += Math.sin(o.ph)*p.sway*devicePixelRatio;
+    if(o.y>H+20){ o.y=-20; o.x=Math.random()*W; }
+    if(o.y<-20){ o.y=H+20; o.x=Math.random()*W; }
+    if(o.x<-20) o.x=W+20; if(o.x>W+20) o.x=-20;
+    const base = p.a ?? .8;
+    fxX.globalAlpha = base * (p.fade ? (.35+.65*Math.abs(Math.sin(o.ph*.7)))*p.fade + (1-p.fade) : 1);
+    if(p.line){ fxX.lineWidth=o.r; fxX.beginPath();
+      fxX.moveTo(o.x,o.y); fxX.lineTo(o.x, o.y+p.line*devicePixelRatio); fxX.stroke(); }
+    else { fxX.beginPath(); fxX.arc(o.x,o.y,o.r,0,6.2832); fxX.fill(); }
+  }
+  fxX.globalAlpha = 1;
+}
+
+/* ── 렌더 ───────────────────────────────── */
+const CAM = {
+  still:   ['scale(1.02)','scale(1.02)'],
+  pushIn:  ['scale(1.0)','scale(1.13)'],
+  pullOut: ['scale(1.13)','scale(1.0)'],
+  panLeft: ['scale(1.06) translateX(-3.5%)','scale(1.06) translateX(3.5%)'],
+  panRight:['scale(1.06) translateX(3.5%)','scale(1.06) translateX(-3.5%)'],
+  tiltUp:  ['scale(1.06) translateY(2.6%)','scale(1.06) translateY(-2.6%)'],
+};
+const TRANS = { crossfade:'tCross .5s ease both', pageTurn:'tPage .55s ease both',
+                wipe:'tWipe .45s ease both', cut:'none' };
+
+function curNode(){ return story.nodes[st.node]; }
+function curBeat(){ return curNode().beats[st.beat]; }
+
+function render(){
+  const b = curBeat(), sc = b.scene;
+  const cam = $('#cam'), bg = $('#bg'), la = $('#actors');
+
+  // 배경
+  const bgAsset = story.assets.backgrounds[sc.background] || {};
+  if(imgs[sc.background]){ bg.style.backgroundImage = `url(${imgs[sc.background]})`; bg.classList.remove('shape'); }
+  else { bg.style.backgroundImage='none'; bg.classList.add('shape'); }
+  bg.style.background_ = '';
+  bg.style.backgroundColor = imgs[sc.background] ? 'transparent' : (bgAsset.tint || '#5A6B64');
+  bg.style.filter = `blur(${bgFx.blur/10}px) brightness(${bgFx.bri}%) saturate(${bgFx.sat}%)`;
+
+  // 카메라
+  const [from,to] = CAM[sc.camera||'still'] || CAM.still;
+  cam.style.transition='none'; cam.style.transform=from;
+  void cam.offsetWidth;
+  cam.style.transition = `transform ${b.durationMs}ms cubic-bezier(.4,0,.35,1)`;
+  cam.style.transform = to;
+
+  // 전환
+  const tr = TRANS[sc.transitionIn||'crossfade'];
+  cam.style.animation='none'; void cam.offsetWidth;
+  if(tr!=='none') cam.style.animation = tr;
+
+  // 배우
+  la.innerHTML='';
+  for(const a of (sc.actors||[])){
+    const isChar = a.asset.startsWith('characters/');
+    const k = actorKey(a), src = imgs[k];
+    const wrap = document.createElement('div');
+    wrap.className='actor';
+    const baseH = isChar ? 45 : 16;
+    wrap.style.cssText = `left:${a.x*100}%;bottom:${(1-a.y)*100}%;height:${baseH*(a.scale??1)}cqh;
+      z-index:${a.z??10};${a.flip?'transform:translateX(-50%) scaleX(-1);':''}`;
+    const inner = document.createElement('div');
+    inner.className='inner';
+    inner.style.height='100%';
+    const an = a.anim||'none';
+    if(an==='breathe') inner.style.animation='breathe 3.6s ease-in-out infinite';
+    else if(an==='sway') inner.style.animation='sway 4.2s ease-in-out infinite';
+    else if(an==='bob') inner.style.animation='bob 3s ease-in-out infinite';
+    else if(an==='driftIn') inner.style.animation=`driftIn ${b.durationMs}ms ease-out both`;
+    if(src){ const im=new Image(); im.src=src; im.alt=''; inner.appendChild(im); }
+    else {
+      const sh = document.createElement('div');
+      sh.className = isChar ? 'shapeA' : 'shapeP';
+      sh.style.cssText += `background:${tintOf(a)};aspect-ratio:${isChar?'0.52':'1.6'};margin:0 auto;`;
+      if(isChar) sh.innerHTML = `<b>${story.assets.characters[a.asset.split('/')[1]]?.displayName||''}</b>`;
+      inner.appendChild(sh);
+    }
+    const en = a.enter||'none';
+    if(en!=='none') wrap.style.animation = `${en} .5s ease both`;
+    wrap.appendChild(inner); la.appendChild(wrap);
+  }
+
+  setFx(sc.fx);
+  drawSubs(b);
+  $('#pos').textContent = `${st.node}  ·  비트 ${st.beat+1}/${curNode().beats.length}  ·  ${(b.durationMs/1000).toFixed(1)}s`;
+}
+
+function drawSubs(b){
+  const p = $('#subsP'); p.innerHTML='';
+  for(const [a,z] of b.wordTimings){
+    const w = document.createElement('w'); w.textContent = b.text.slice(a,z); p.appendChild(w);
+  }
+  clk.wi = -1;
+}
+function highlight(i){
+  if(i===clk.wi) return;
+  clk.wi = i;
+  const ws = $('#subsP').children;
+  for(let k=0;k<ws.length;k++) ws[k].classList.toggle('on', k===i);
+}
+
+/* ── 재생 클록 ──────────────────────────── */
+function step(now){
+  if(!st.playing) return;
+  clk.raf = requestAnimationFrame(step);
+  const b = curBeat(), el = now - clk.t0;
+  $('#prog').style.width = Math.min(100, el/b.durationMs*100) + '%';
+  if(!clk.boundary){
+    let i = -1;
+    for(let k=0;k<b.wordTimings.length;k++) if(el >= b.wordTimings[k][2]) i = k;
+    highlight(i);
+  }
+  if(!voiceOn() && el >= b.durationMs) next();
+}
+function play(){
+  if(st.phase!=='beat') return;
+  st.playing = true; clk.t0 = performance.now(); clk.boundary=false;
+  $('#bPlay').textContent='❙❙  일시정지';
+  cancelAnimationFrame(clk.raf); clk.raf = requestAnimationFrame(step);
+  if(voiceOn()) speak(curBeat().text);
+}
+function pause(){
+  st.playing=false; $('#bPlay').textContent='▶  재생';
+  cancelAnimationFrame(clk.raf); speechSynthesis.cancel();
+}
+function goto(nodeId, beat, autoplay){
+  speechSynthesis.cancel();
+  st.node=nodeId; st.beat=beat; st.phase='beat';
+  $('#stage').querySelectorAll('.overlay').forEach(e=>e.remove());
+  render();
+  if(autoplay) play(); else { pause(); highlight(-1); $('#prog').style.width='0%'; }
+}
+function next(){
+  const n = curNode();
+  if(st.beat < n.beats.length-1){ st.beat++; render(); if(st.playing) play(); return; }
+  pause();
+  if(n.choice) showChoice(n); else showEnding(n);
+}
+function prev(){
+  if(st.beat>0){ st.beat--; render(); if(st.playing) play(); }
+  else goto(story.rootNode, 0, false);
+}
+
+/* ── 선택지 / 엔딩 ──────────────────────── */
+function showChoice(n){
+  st.phase='choice';
+  const ov = document.createElement('div');
+  ov.className='overlay';
+  ov.innerHTML = `<p class="oq">${n.choice.promptText}</p><div class="opts"></div>`;
+  const row = ov.querySelector('.opts');
+  for(const o of n.choice.options){
+    const b = document.createElement('button');
+    b.className='opt';
+    const key = `icon:${o.id}`;
+    b.innerHTML = `<span class="thumb" style="background:${o.tint||'#7A8A84'}"></span><b>${o.label}</b>`;
+    b.onclick = () => goto(o.next, 0, true);
+    row.appendChild(b);
+  }
+  $('#stage').appendChild(ov);
+  if(voiceOn()) speak(n.choice.promptText);
+}
+function showEnding(n){
+  st.phase='ending'; st.seen.add(st.node);
+  const ov = document.createElement('div');
+  ov.className='overlay ending';
+  ov.innerHTML = `${n.isCanonical?'<span class="badge">원작 엔딩을 찾았어요!</span>':''}
+    <p class="t">${n.endingTitle||''}</p><p class="l">${n.lesson||''}</p>
+    <button class="btn">다시 하기</button>
+    <p class="l" style="font-size:3.2cqh;opacity:.75">${st.seen.size} / 3 엔딩</p>`;
+  ov.querySelector('button').onclick = () => goto(story.rootNode, 0, true);
+  $('#stage').appendChild(ov);
+}
+
+/* ── 음성 (Web Speech, 무료) ────────────── */
+let koVoice = null;
+function pickVoice(){
+  const vs = speechSynthesis.getVoices();
+  koVoice = vs.find(v=>v.lang && v.lang.toLowerCase().startsWith('ko')) || null;
+  const btn = $('#bVoice');
+  if(!koVoice){ btn.disabled=true; btn.title='이 브라우저에 한국어 음성이 없습니다'; }
+}
+speechSynthesis.onvoiceschanged = pickVoice; pickVoice();
+const voiceOn = () => $('#bVoice').getAttribute('aria-pressed')==='true' && koVoice;
+
+function speak(text){
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice = koVoice; u.lang='ko-KR'; u.rate=.92; u.pitch=1.05;
+  const b = curBeat();
+  u.onboundary = e => {
+    clk.boundary = true;
+    const ci = e.charIndex ?? 0;
+    let i = -1;
+    for(let k=0;k<b.wordTimings.length;k++) if(ci >= b.wordTimings[k][0]) i = k;
+    highlight(i);
+  };
+  u.onend = () => { if(st.playing && st.phase==='beat') next(); };
+  speechSynthesis.speak(u);
+}
+
+/* ── 검증 (validate_story.py 의 브라우저판) ── */
+const E_CAM=['still','pushIn','pullOut','panLeft','panRight','tiltUp'];
+const E_ANIM=['none','breathe','sway','bob','driftIn'];
+const E_ENTER=['none','fadeIn','popIn','slideIn'];
+const E_TRANS=['crossfade','pageTurn','wipe','cut'];
+const E_FX=['none','petals','snow','fireflies','sparkle','rain','dust'];
+function validate(s){
+  const er=[], wa=[];
+  const beats=[]; for(const id in s.nodes) for(const b of s.nodes[id].beats) beats.push([id,b]);
+  for(const [nid,b] of beats){
+    const sc=b.scene;
+    if(!s.assets.backgrounds[sc.background]) er.push(`V2 ${b.id}: 배경 '${sc.background}' 미선언`);
+    for(const a of sc.actors||[]){
+      const [k,nm]=a.asset.split('/');
+      if(!s.assets[k]?.[nm]) er.push(`V2 ${b.id}: 에셋 '${a.asset}' 미선언`);
+      else if(k==='characters' && !s.assets[k][nm].poses[a.pose])
+        er.push(`V2 ${b.id}: '${nm}' 에 포즈 '${a.pose}' 없음`);
+      if(!E_ANIM.includes(a.anim??'none')) er.push(`V6 ${b.id}: anim='${a.anim}' 허용값 아님`);
+      if(!E_ENTER.includes(a.enter??'none')) er.push(`V6 ${b.id}: enter='${a.enter}' 허용값 아님`);
+      if(a.x<0||a.x>1||a.y<0||a.y>1) er.push(`V10 ${b.id}: ${a.asset} 좌표가 화면 밖`);
+      if(a.y>0.80) er.push(`V12 ${b.id}: ${a.asset} y=${a.y} — 자막 영역(0.80) 침범`);
+    }
+    if(!E_CAM.includes(sc.camera??'still')) er.push(`V6 ${b.id}: camera='${sc.camera}' 허용값 아님 (${E_CAM.join(' · ')})`);
+    if(!E_TRANS.includes(sc.transitionIn??'crossfade')) er.push(`V6 ${b.id}: transitionIn='${sc.transitionIn}' 허용값 아님`);
+    if(!E_FX.includes(sc.fx??'none')) er.push(`V6 ${b.id}: fx='${sc.fx}' 허용값 아님`);
+    if(b.durationMs<6000||b.durationMs>15000) er.push(`V7 ${b.id}: ${(b.durationMs/1000).toFixed(1)}초 — 6~12초(최대 15)`);
+    else if(b.durationMs>12000) wa.push(`V7 ${b.id}: ${(b.durationMs/1000).toFixed(1)}초 — 분할 검토`);
+    if(!b.wordTimings?.length) er.push(`V11 ${b.id}: wordTimings 없음 — 어절 하이라이트 불가`);
+    else {
+      const last=b.wordTimings[b.wordTimings.length-1];
+      if(last[1]>b.text.length) er.push(`V8 ${b.id}: 문자 인덱스가 본문을 벗어남`);
+      if(last[3]>b.durationMs) er.push(`V8 ${b.id}: 어절 종료가 durationMs 초과`);
+    }
+  }
+  // V4 트리
+  const edges={}; for(const id in s.nodes) edges[id]=(s.nodes[id].choice?.options||[]).map(o=>o.next);
+  for(const id in edges) for(const nx of edges[id])
+    if(!s.nodes[nx]) er.push(`V4 ${id}: 없는 노드 '${nx}' 를 가리킨다`);
+  const seen=new Set(), stk=[s.rootNode];
+  while(stk.length){ const c=stk.pop(); if(!c||seen.has(c)||!s.nodes[c])continue; seen.add(c);
+    (edges[c]||[]).forEach(n=>stk.push(n)); }
+  for(const id in s.nodes) if(!seen.has(id)) er.push(`V4 ${id}: 도달할 수 없는 노드`);
+  for(const id in s.nodes){
+    const n=s.nodes[id];
+    if(n.type==='narrative' && !n.choice) er.push(`V4 ${id}: narrative 인데 choice 없음 (막다른 길)`);
+    if(n.type==='ending' && !n.lesson) er.push(`V5 ${id}: lesson 없음`);
+  }
+  // V5 결말
+  const ends=Object.keys(s.nodes).filter(id=>s.nodes[id].type==='ending');
+  if(![3,9].includes(ends.length)) er.push(`V5 결말 ${ends.length}개 — 데모 3 / 전편 9`);
+  const can=ends.filter(id=>s.nodes[id].isCanonical);
+  if(can.length!==1) er.push(`V5 isCanonical ${can.length}개 — 정확히 1개`);
+  else if(s.canonicalEnding!==can[0]) er.push(`V5 canonicalEnding 불일치 ('${s.canonicalEnding}' vs '${can[0]}')`);
+  return {er,wa};
+}
+function showValidation(s){
+  const {er,wa} = validate(s);
+  const box = $('#vout'); box.innerHTML='';
+  const chip = $('#chVal');
+  if(!er.length && !wa.length){ box.innerHTML = `<div class="k">V1~V12 통과</div>`;
+    chip.textContent='검증 통과'; chip.className='chip'; }
+  else {
+    er.forEach(t=>box.insertAdjacentHTML('beforeend',`<div class="e">✗ ${t}</div>`));
+    wa.forEach(t=>box.insertAdjacentHTML('beforeend',`<div class="w">⚠ ${t}</div>`));
+    chip.textContent = er.length ? `오류 ${er.length}` : `경고 ${wa.length}`;
+    chip.className = 'chip ' + (er.length ? 'err' : 'warn');
+  }
+  return er.length===0;
+}
+
+/* ── 배선 ───────────────────────────────── */
+$('#bPlay').onclick   = () => st.playing ? pause() : play();
+$('#bNext').onclick   = () => { const n=curNode(); if(st.beat<n.beats.length-1){st.beat++;render();} else next(); };
+$('#bPrev').onclick   = prev;
+$('#bRestart').onclick= () => goto(story.rootNode, 0, false);
+$('#stage').onclick   = e => { if(st.phase!=='beat'||e.target.closest('.overlay')) return;
+  const n=curNode(); if(st.beat<n.beats.length-1){st.beat++;render();if(st.playing)play();} else next(); };
+$('#bSubs').onclick   = e => { const on = e.target.getAttribute('aria-pressed')==='true';
+  e.target.setAttribute('aria-pressed', !on); $('#subs').classList.toggle('off', on); };
+$('#bVoice').onclick  = e => { const on = e.target.getAttribute('aria-pressed')==='true';
+  e.target.setAttribute('aria-pressed', !on); if(on) speechSynthesis.cancel(); };
+
+const SL = [['#sBlur','#vBlur','blur',v=>`${(v/10).toFixed(1)}px`],
+            ['#sBri','#vBri','bri',v=>`${v}%`], ['#sSat','#vSat','sat',v=>`${v}%`]];
+SL.forEach(([s,l,k,f])=>{ $(s).oninput = e => { bgFx[k]=+e.target.value; $(l).textContent=f(+e.target.value);
+  $('#bg').style.filter=`blur(${bgFx.blur/10}px) brightness(${bgFx.bri}%) saturate(${bgFx.sat}%)`; }; });
+function setFxVals(b,br,sa){ bgFx={blur:b,bri:br,sat:sa};
+  $('#sBlur').value=b; $('#sBri').value=br; $('#sSat').value=sa;
+  $('#vBlur').textContent=(b/10).toFixed(1)+'px'; $('#vBri').textContent=br+'%'; $('#vSat').textContent=sa+'%';
+  $('#bg').style.filter=`blur(${b/10}px) brightness(${br}%) saturate(${sa}%)`; }
+$('#bReset').onclick   = () => setFxVals(0,100,100);
+$('#bSuggest').onclick = () => setFxVals(12,92,88);
+
+$('#bApply').onclick = () => {
+  let parsed;
+  try{ parsed = JSON.parse($('#ta').value); }
+  catch(err){ $('#vout').innerHTML = `<div class="e">✗ JSON 문법 오류 — ${err.message}</div>`;
+    $('#chVal').textContent='문법 오류'; $('#chVal').className='chip err'; return; }
+  if(!showValidation(parsed)) return;
+  story = parsed; buildSlots(); goto(story.rootNode, 0, true);
+};
+$('#bRevert').onclick = () => { story = clone(DEFAULT_STORY);
+  $('#ta').value = JSON.stringify(story,null,2); buildSlots(); showValidation(story); goto(story.rootNode,0,false); };
+$('#bClear').onclick = () => { imgs={}; save(); buildSlots(); render();
+  $('#assetNote').textContent='모두 지웠습니다'; };
+
+new ResizeObserver(fxSize).observe(fxC);
+addEventListener('resize', fxSize);
+
+load();
+$('#ta').value = JSON.stringify(story, null, 2);
+buildSlots(); showValidation(story); fxSize(); fxTick(0);
+$('#assetNote').textContent = Object.keys(imgs).length ? `${Object.keys(imgs).length}개 적용됨` : '';
+goto(story.rootNode, 0, false);
+</script>

@@ -135,7 +135,7 @@
               {
                 "asset": "characters/woodcutter",
                 "x": 0.32,
-                "y": 0.88,
+                "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
                 "anim": "breathe",
@@ -197,7 +197,7 @@
               {
                 "asset": "characters/woodcutter",
                 "x": 0.32,
-                "y": 0.88,
+                "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
                 "anim": "breathe",
@@ -262,7 +262,7 @@
               {
                 "asset": "characters/woodcutter",
                 "x": 0.26,
-                "y": 0.88,
+                "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
                 "anim": "breathe",
@@ -318,7 +318,7 @@
               {
                 "asset": "characters/woodcutter",
                 "x": 0.22,
-                "y": 0.88,
+                "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
                 "anim": "breathe",
@@ -466,7 +466,7 @@
               {
                 "asset": "characters/woodcutter",
                 "x": 0.28,
-                "y": 0.88,
+                "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
                 "anim": "breathe",
@@ -575,7 +575,7 @@
               {
                 "asset": "characters/woodcutter",
                 "x": 0.34,
-                "y": 0.88,
+                "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
                 "anim": "breathe",
@@ -659,7 +659,7 @@
               {
                 "asset": "characters/woodcutter",
                 "x": 0.3,
-                "y": 0.88,
+                "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
                 "anim": "breathe",
