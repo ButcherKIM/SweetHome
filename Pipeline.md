@@ -287,23 +287,25 @@ python tools/normalize.py --story {storyId}
 ### S6 — 나레이션 `edge-tts`
 
 ```bash
-python tools/tts_gen.py --story {storyId} [--only b_intro_04]
+python3 tools/tts_gen.py --story {storyId} [--rate -28%] [--only b_intro_01_1]
 ```
 
 | 입력 | 출력 |
 |---|---|
-| `script.json` 의 `text`, `choice.*.label`, `promptText` | `audio/*.opus`, `timings/*.json` |
+| `story.json` 의 모든 `lines[].text` + `choice.promptText` | `audio/*.mp3` + `story.json` 갱신 |
 
 **무료이며 단어 타임스탬프를 준다.** 한글 학습이 핵심 기능이므로 후자가 채택 이유다.
 
 **처리**
-1. `edge-tts` 로 합성 (`ko-KR-SunHiNeural` 등) — API 키 불필요.
-   **속도는 글자당 290ms(초당 3.45음절)를 목표로** `--rate` 를 `-20%` 근처에서
-   시작해 실측하며 맞춘다 ([Spec §3.3](./StoryTellingSpec.md#33-비트-길이--6~12초))
-2. `WordBoundary` 이벤트 수집 → 어절별 `(offset, duration)`
-3. 어절 단위 `wordTimings` 산출 — **변환·근사 없이 그대로** (D14 확정)
-4. **실제 길이를 재서 `durationMs` 를 덮어쓴다** — 대본 단계의 추정치는 여기서 폐기된다
-5. Opus 인코딩 (48kbps mono)
+1. `edge-tts` 로 합성 — API 키 불필요, 완전 무료.
+   음성 `ko-KR-SunHiNeural` · 속도 `--rate=-28%` (실측 글자당 235ms, 초당 4.3음절)
+2. ⚠️ **`boundary="WordBoundary"` 를 반드시 지정한다.** 기본값은 `SentenceBoundary` 이고,
+   그대로 두면 문장 전체만 와서 **어절 하이라이트를 만들 수 없다** — 제품의 절반이 걸린 지점
+3. 한국어 `WordBoundary` 는 띄어쓰기 어절과 정확히 일치한다. 문장부호는 떼고 오므로
+   (`살았어요.` → `살았어요`) 다음 공백까지 늘려 어절 범위를 복원한다
+4. **말이 끝난 시각을 재서 `durationMs` 를 덮어쓴다** — 대본 단계의 추정치는 여기서 폐기된다
+   `durationMs = max(6000, 말이 끝난 시각 + 1200)`
+5. mp3 로 저장 (줄당 25~40KB)
 
 **되먹임 — 길이 리포트**
 
