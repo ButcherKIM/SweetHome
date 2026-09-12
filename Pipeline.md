@@ -175,7 +175,7 @@ muted mid-saturation palette, children's picture book, flat lighting
 1. [§4.5 움직임 어휘 enum](./StoryTellingSpec.md#45-움직임-어휘--폐쇄형-집합) 전문
    → **자유 서술이 아니라 enum에서 고르게 한다.** 출력 안정성의 핵심
 2. 톤 정책 (배드엔딩 금지, 교훈 1문장)
-3. 비트 길이 규칙 (6~12초 ≈ 한국어 **25~50자**)
+3. 비트 길이 규칙 (6~12초 ≈ 공백 제외 **16~30자**, 글자당 290ms 기준)
 4. **자막 규칙 — 2줄 초과 금지** (한 화면에 긴 문장 ✗)
 5. 이미 확정된 에셋 ID 목록 → **재사용 유도**
    ("가능하면 아래 배경에서 고르고, 꼭 필요할 때만 새로 요청")
@@ -294,10 +294,12 @@ python tools/tts_gen.py --story {storyId} [--only b_intro_04]
 **무료이며 단어 타임스탬프를 준다.** 한글 학습이 핵심 기능이므로 후자가 채택 이유다.
 
 **처리**
-1. `edge-tts` 로 합성 (`ko-KR-SunHiNeural` 등) — API 키 불필요
+1. `edge-tts` 로 합성 (`ko-KR-SunHiNeural` 등) — API 키 불필요.
+   **속도는 글자당 290ms(초당 3.45음절)를 목표로** `--rate` 를 `-20%` 근처에서
+   시작해 실측하며 맞춘다 ([Spec §3.3](./StoryTellingSpec.md#33-비트-길이--6~12초))
 2. `WordBoundary` 이벤트 수집 → 어절별 `(offset, duration)`
 3. 어절 단위 `wordTimings` 산출 — **변환·근사 없이 그대로** (D14 확정)
-4. 실제 `durationMs` 측정
+4. **실제 길이를 재서 `durationMs` 를 덮어쓴다** — 대본 단계의 추정치는 여기서 폐기된다
 5. Opus 인코딩 (48kbps mono)
 
 **되먹임 — 길이 리포트**

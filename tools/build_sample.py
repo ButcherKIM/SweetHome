@@ -9,8 +9,10 @@ wordTimings 는 여기서 어절 길이에 비례해 추정한다.
 """
 import json, pathlib
 
-# 나레이션 속도: 어린이 동화 구연 기준 (글자당 약 310ms)
-LEAD_MS, MS_PER_CHAR = 1500, 310
+# 나레이션 속도. 프로토타입에서 4~7세 기준으로 실제 귀로 맞춰본 값이다.
+# 글자당 290ms ≈ 초당 3.45음절. 앞뒤 여백 1.5초(그림이 자리잡고 나서 말이 시작된다).
+# 이 값은 S6(edge-tts)이 합성 결과를 실측하면 그것으로 대체된다.
+LEAD_MS, MS_PER_CHAR, MIN_MS = 1500, 290, 6000
 
 
 def timings(text, duration_ms):
@@ -33,7 +35,7 @@ def timings(text, duration_ms):
 
 
 def beat(bid, text, scene):
-    dur = LEAD_MS + sum(1 for c in text if not c.isspace()) * MS_PER_CHAR
+    dur = max(MIN_MS, LEAD_MS + sum(1 for c in text if not c.isspace()) * MS_PER_CHAR)
     return {"id": bid, "text": text, "audio": f"audio/{bid}.opus",
             "durationMs": dur, "wordTimings": timings(text, dur), "scene": scene}
 
