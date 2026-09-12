@@ -9,7 +9,7 @@
 import json, re, sys, pathlib
 
 CAMERA = {"still","pushIn","pullOut","panLeft","panRight","tiltUp"}
-ANIM   = {"none","breathe","sway","bob","driftIn"}
+ANIM   = {"none","breathe","sway","bob","driftIn","pulse"}
 ENTER  = {"none","fadeIn","popIn","slideIn"}
 TRANS  = {"crossfade","pageTurn","wipe","cut"}
 FX     = {"none","petals","snow","fireflies","sparkle","rain","dust"}
@@ -125,6 +125,14 @@ def v5_endings(story, r):
             r.err("V5", f"{nid}: lesson 이 없다 (Spec §3.4 — 모든 결말은 교훈 1문장)")
 
 
+def v6b_blend(story, r):
+    for kind in ("backgrounds", "characters", "props"):
+        for name, spec in story["assets"].get(kind, {}).items():
+            bl = spec.get("blend", "normal")
+            if bl not in ("normal", "screen"):
+                r.err("V6", f"{kind}/{name}: blend='{bl}' 는 normal 또는 screen 이어야 한다")
+
+
 def v6_enums(story, r):
     for nid, b in iter_beats(story):
         sc = b["scene"]
@@ -232,6 +240,7 @@ def main():
     v4_tree(story, r)
     v5_endings(story, r)
     v6_enums(story, r)
+    v6b_blend(story, r)
     v7_duration(story, r)
     v8_timings(story, r)
     v9_text(story, r)

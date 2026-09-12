@@ -185,6 +185,44 @@ No shadow, no ground, no cast shadow, no hands, no other objects.
 
 ---
 
+## 5.5 발광체 (빛·불·안개·반짝임) `assets/prop/`
+
+> ⚠️ **발광체는 마젠타로 뽑지 않는다.** 빛은 반투명이라 오려낼 수 없다.
+> **검은 배경에 뽑아서 `screen` 으로 더한다** — 검은색은 더하기 합성에서 저절로 사라진다.
+
+`story.json` 에서 `"blend": "screen"` 을 붙이면 플레이어가 알아서 처리한다
+(오려내지 않고, 화면을 덮는 오버레이로 배치하며, `x`/`y` 는 중심이 된다).
+
+```jsonc
+"props": { "light_rays": { "src": "prop/light_rays.png", "blend": "screen" } }
+```
+
+**재사용성이 가장 높은 에셋이다.** 빛줄기 한 장이면 산신령 등장, 박이 열리는 장면,
+엔딩, 다른 동화까지 전부 커버한다. 우선순위를 높게 두고 한 장을 잘 만든다.
+
+| 파일명 | 설명 (`{GLOW}`) |
+|---|---|
+| `prop_light_rays.png` | soft golden light rays fanning upward and outward from a point near the bottom, with gentle glowing haze |
+| `prop_sparkle_burst.png` | a soft burst of small golden sparkles radiating from the center |
+| `prop_mist.png` | a low band of soft white mist drifting sideways |
+
+**템플릿**
+
+```
+Hand-painted watercolor {GLOW}, soft and gentle, warm golden tone,
+fading out smoothly toward the edges.
+
+Pure solid BLACK background (#000000). Absolutely nothing else in the image —
+no scenery, no objects, no characters, no ground, no text, no border.
+Only the glow itself on pure black.
+Wide composition, aspect ratio 16:9.
+```
+
+> 검은색이 완전히 검어야 한다. 회색빛이 돌면 화면 전체가 뿌옇게 들뜬다.
+> 결과가 뿌옇다면 `pure #000000 black, absolute black, no grey` 를 덧붙인다.
+
+---
+
 ## 6. 선택지 그림 `assets/icon/`
 
 > 4~7세는 선택지를 **그림으로 이해한다** (Spec §3.5). 글자 없이도 뭘 고르는지 보여야 한다.
@@ -226,6 +264,7 @@ Isolated on a plain flat magenta #FF00FF background. No shadow, no ground, no te
 | 캐릭터가 매번 달라진다 | 시트를 첨부했는지 확인. 첨부해도 안 되면 시트를 다시 만든다 |
 | 21:9가 안 나온다 | `extremely wide panoramic banner composition, much wider than tall` 을 덧붙인다 |
 | 그림체가 매번 다르다 | 공통 스타일 토큰을 **통째로** 앞에 붙였는지 확인 (요약하면 안 된다) |
+| 빛/안개가 뿌옇게 들뜬다 | 배경이 순수 검정이 아니다. `pure #000000 black, absolute black, no grey` 추가 (§5.5) |
 | 인물이 화면 밖을 본다 | 다시 뽑지 말고 `story.json` 에 `"flip": true` 추가 (§3 방향 규칙) |
 | 구석에 반짝이·장식이 붙는다 | **프롬프트로는 막을 수 없다.** 플레이어가 마젠타를 걷어낼 때 가장 큰 덩어리만 남겨 자동 제거한다 |
 

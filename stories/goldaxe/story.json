@@ -75,6 +75,11 @@
       "axe_silver": {
         "src": "prop/axe_silver.png",
         "tint": "#C6CBD1"
+      },
+      "light_rays": {
+        "src": "prop/light_rays.png",
+        "tint": "#FFE9A8",
+        "blend": "screen"
       }
     }
   },
@@ -278,6 +283,15 @@
                 "anim": "breathe",
                 "pose": "surprise",
                 "enter": "none"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.58,
+                "y": 0.52,
+                "scale": 1.0,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "fadeIn"
               }
             ]
           }
@@ -353,6 +367,15 @@
                 "z": 35,
                 "anim": "sway",
                 "enter": "popIn"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.66,
+                "y": 0.5,
+                "scale": 0.85,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "none"
               }
             ]
           }

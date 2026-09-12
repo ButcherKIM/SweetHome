@@ -53,6 +53,10 @@ h1{font-family:var(--story);font-size:26px;font-weight:700;margin:0;letter-spaci
 .bg.shape{background-image:none!important}
 .layer{position:absolute;inset:0}
 .actor{position:absolute;transform:translateX(-50%);will-change:transform}
+.actor.ov{transform:translate(-50%,-50%)}
+.actor.ov .inner{mix-blend-mode:screen}
+.shapeL{height:100%;aspect-ratio:1.6;margin:0 auto;border-radius:50%;
+  filter:blur(14px);opacity:.75}
 .actor .ent{height:100%}
 .actor .flp{height:100%}
 .actor .inner{height:100%;transform-origin:50% 100%}
@@ -172,6 +176,7 @@ a{color:var(--accent)}
 @keyframes breathe{0%,100%{transform:scaleY(1) translateY(0)}50%{transform:scaleY(1.018) translateY(-.6%)}}
 @keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3.4%)}}
+@keyframes pulse{0%,100%{opacity:.68}50%{opacity:1}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.07)}100%{opacity:1;transform:scale(1)}}
 @keyframes slideIn{from{opacity:0;transform:translateX(-26%)}to{opacity:1;transform:translateX(0)}}
@@ -342,6 +347,11 @@ const DEFAULT_STORY = {
       "axe_silver": {
         "src": "prop/axe_silver.png",
         "tint": "#C6CBD1"
+      },
+      "light_rays": {
+        "src": "prop/light_rays.png",
+        "tint": "#FFE9A8",
+        "blend": "screen"
       }
     }
   },
@@ -545,6 +555,15 @@ const DEFAULT_STORY = {
                 "anim": "breathe",
                 "pose": "surprise",
                 "enter": "none"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.58,
+                "y": 0.52,
+                "scale": 1.0,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "fadeIn"
               }
             ]
           }
@@ -620,6 +639,15 @@ const DEFAULT_STORY = {
                 "z": 35,
                 "anim": "sway",
                 "enter": "popIn"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.66,
+                "y": 0.5,
+                "scale": 0.85,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "none"
               }
             ]
           }
@@ -985,7 +1013,8 @@ function assetKeys(s){
     const c = s.assets.characters[id];
     for(const p in c.poses) out.push({key:`characters/${id}:${p}`, kind:'char', label:`${id}_${p}`, tint:c.tint});
   }
-  for(const id in (s.assets.props||{})) out.push({key:`props/${id}`, kind:'prop', label:id, tint:s.assets.props[id].tint});
+  for(const id in (s.assets.props||{})){ const pr = s.assets.props[id];
+    out.push({key:`props/${id}`, kind:'prop', label:id, tint:pr.tint, blend:pr.blend||'normal'}); }
   return out;
 }
 const actorKey = a => a.asset.startsWith('characters/') ? `${a.asset}:${a.pose}` : a.asset;
@@ -1065,7 +1094,7 @@ function loadFile(file, key, kind){
     const im = new Image();
     im.onload = () => {
       let note = '';
-      if(kind==='bg'){ imgs[key] = plainResize(im); }
+      if(kind==='bg' || kind==='glow'){ imgs[key] = plainResize(im); }
       else { const r = keyOut(im); imgs[key] = r.url;
              note = r.dropped>200 ? `  ·  ${key}: 배경 밖 부스러기 제거됨` : ''; }
       $('#assetNote').textContent = `${Object.keys(imgs).length}개 적용됨${note}`;
@@ -1088,12 +1117,13 @@ function buildSlots(){
     el.tabIndex = 0;
     el.innerHTML = `<div class="ph">${ imgs[a.key]
         ? `<img alt="${a.label}" src="${imgs[a.key]}">`
-        : `<span style="background:${a.tint};${a.kind==='bg'?'border-radius:5px;width:74%;height:52%':''}"></span>` }</div>
+        : `<span style="background:${a.tint};${a.kind==='bg'||a.blend==='screen'?'border-radius:5px;width:74%;height:52%':''}"></span>` }</div>
       <em>${a.label}</em>`;
+    const kind = a.blend==='screen' ? 'glow' : a.kind;
     const pick = () => {
       const f = document.createElement('input');
       f.type='file'; f.accept='image/*';
-      f.onchange = () => f.files[0] && loadFile(f.files[0], a.key, a.kind);
+      f.onchange = () => f.files[0] && loadFile(f.files[0], a.key, kind);
       f.click();
     };
     el.onclick = pick;
@@ -1101,7 +1131,7 @@ function buildSlots(){
     el.ondragover = e => { e.preventDefault(); el.classList.add('over'); };
     el.ondragleave = () => el.classList.remove('over');
     el.ondrop = e => { e.preventDefault(); el.classList.remove('over');
-      const f = e.dataTransfer.files[0]; if(f) loadFile(f, a.key, a.kind); };
+      const f = e.dataTransfer.files[0]; if(f) loadFile(f, a.key, kind); };
     box.appendChild(el);
     leg.appendChild(el.cloneNode(true));
   }
@@ -1202,12 +1232,15 @@ function render(){
   la.innerHTML='';
   for(const a of (sc.actors||[])){
     const isChar = a.asset.startsWith('characters/');
+    const [akind, aname] = a.asset.split('/');
+    const glow = (story.assets[akind]?.[aname]?.blend || 'normal') === 'screen';
     const k = actorKey(a), src = imgs[k];
     const wrap = document.createElement('div');
-    wrap.className='actor';
-    const baseH = isChar ? 45 : 16;
-    wrap.style.cssText = `left:${a.x*100}%;bottom:${(1-a.y)*100}%;height:${baseH*(a.scale??1)}cqh;
-      z-index:${a.z??10};`;
+    wrap.className = 'actor' + (glow ? ' ov' : '');
+    const baseH = isChar ? 45 : (glow ? 124 : 16);
+    wrap.style.cssText = glow
+      ? `left:${a.x*100}%;top:${a.y*100}%;height:${baseH*(a.scale??1)}cqh;z-index:${a.z??10};`
+      : `left:${a.x*100}%;bottom:${(1-a.y)*100}%;height:${baseH*(a.scale??1)}cqh;z-index:${a.z??10};`;
     const ent = document.createElement('div'); ent.className='ent';
     const flp = document.createElement('div'); flp.className='flp';
     if(a.flip) flp.style.transform = 'scaleX(-1)';
@@ -1218,11 +1251,13 @@ function render(){
     else if(an==='sway') inner.style.animation='sway 4.2s ease-in-out infinite';
     else if(an==='bob') inner.style.animation='bob 3s ease-in-out infinite';
     else if(an==='driftIn') inner.style.animation=`driftIn ${eDur(b)}ms ease-out both`;
+    else if(an==='pulse') inner.style.animation='pulse 3.2s ease-in-out infinite';
     if(src){ const im=new Image(); im.src=src; im.alt=''; inner.appendChild(im); }
     else {
       const sh = document.createElement('div');
-      sh.className = isChar ? 'shapeA' : 'shapeP';
-      sh.style.cssText += `background:${tintOf(a)};aspect-ratio:${isChar?'0.52':'1.6'};margin:0 auto;`;
+      sh.className = isChar ? 'shapeA' : (glow ? 'shapeL' : 'shapeP');
+      if(!glow) sh.style.cssText += `background:${tintOf(a)};aspect-ratio:${isChar?'0.52':'1.6'};margin:0 auto;`;
+      else sh.style.background = `radial-gradient(closest-side, ${tintOf(a)}, transparent)`;
       if(isChar) sh.innerHTML = `<b>${story.assets.characters[a.asset.split('/')[1]]?.displayName||''}</b>`;
       inner.appendChild(sh);
     }
@@ -1394,7 +1429,7 @@ function speak(text){
 
 /* ── 검증 (validate_story.py 의 브라우저판) ── */
 const E_CAM=['still','pushIn','pullOut','panLeft','panRight','tiltUp'];
-const E_ANIM=['none','breathe','sway','bob','driftIn'];
+const E_ANIM=['none','breathe','sway','bob','driftIn','pulse'];
 const E_ENTER=['none','fadeIn','popIn','slideIn'];
 const E_TRANS=['crossfade','pageTurn','wipe','cut'];
 const E_FX=['none','petals','snow','fireflies','sparkle','rain','dust'];

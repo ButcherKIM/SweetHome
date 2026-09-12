@@ -69,7 +69,14 @@
           "additionalProperties": {
             "type": "object",
             "required": ["src"],
-            "properties": { "src": {"type":"string"}, "tint": {"type":"string"} }
+            "properties": {
+              "src":  {"type":"string"},
+              "tint": {"type":"string"},
+              "blend": {
+                "enum": ["normal","screen"],
+                "description": "screen = 발광체(빛·불·안개). 검은 배경에 생성해 더하기 합성한다. 오려내지 않으며 화면 전체를 덮는 오버레이로 배치된다 (x,y 는 중심)"
+              }
+            }
           }
         }
       }
@@ -180,7 +187,7 @@
         "scale": { "type":"number", "exclusiveMinimum": 0 },
         "flip":  { "type":"boolean" },
         "z":     { "type":"integer" },
-        "anim":  { "enum": ["none","breathe","sway","bob","driftIn"] },
+        "anim":  { "enum": ["none","breathe","sway","bob","driftIn","pulse"] },
         "enter": { "enum": ["none","fadeIn","popIn","slideIn"] }
       }
     }

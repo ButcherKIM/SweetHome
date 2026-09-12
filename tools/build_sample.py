@@ -94,6 +94,10 @@ story = {
             "axe_iron":   {"src": "prop/axe_iron.png",   "tint": "#8A8F98"},
             "axe_gold":   {"src": "prop/axe_gold.png",   "tint": "#E3B341"},
             "axe_silver": {"src": "prop/axe_silver.png", "tint": "#C6CBD1"},
+            # 발광체는 검은 배경에 생성해 screen 으로 더한다. 오려낼 수 없기 때문이다.
+            # 빛줄기 한 장은 산신령 등장·엔딩·다른 동화에서 그대로 재사용된다.
+            "light_rays": {"src": "prop/light_rays.png", "tint": "#FFE9A8",
+                           "blend": "screen"},
         },
     },
 
@@ -121,7 +125,12 @@ story = {
                 beat("b_intro_03", "그때 연못에서 환한 빛이 쏟아졌어요.", {
                     "background": "bg_pond_glow", "camera": "pushIn",
                     "transitionIn": "crossfade", "fx": "sparkle",
-                    "actors": [woodcutter("surprise", x=0.26, enter="none")],
+                    "actors": [
+                        woodcutter("surprise", x=0.26, enter="none"),
+                        # 빛이 "쏟아진다" — 밝기만 올리는 것보다 직접적이다
+                        {"asset": "props/light_rays", "x": 0.58, "y": 0.52,
+                         "scale": 1.0, "z": 15, "anim": "pulse", "enter": "fadeIn"},
+                    ],
                 }),
                 beat("b_intro_04", "산신령이 나타나 금도끼를 들어 보였어요.", {
                     "background": "bg_pond_glow", "camera": "still",
@@ -133,6 +142,8 @@ story = {
                          "anim": "bob", "enter": "fadeIn"},
                         {"asset": "props/axe_gold", "x": 0.56, "y": 0.60,
                          "scale": 0.55, "z": 35, "anim": "sway", "enter": "popIn"},
+                        {"asset": "props/light_rays", "x": 0.66, "y": 0.50,
+                         "scale": .85, "z": 15, "anim": "pulse", "enter": "none"},
                     ],
                 }),
             ],
