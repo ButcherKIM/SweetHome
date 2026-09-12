@@ -112,6 +112,9 @@ button,select{font-family:var(--ui);font-size:13px}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 .spacer{flex:1}
 .pos{font:500 12px/1 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.rate{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.rate input{width:84px}
+.rate b{font:500 12px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;min-width:30px}
 .prog{height:3px;background:var(--sunk);border-radius:2px;overflow:hidden}
 .prog i{display:block;height:100%;background:var(--accent);width:0}
 
@@ -206,6 +209,8 @@ a{color:var(--accent)}
     <span class="spacer"></span>
     <button class="btn" id="bSubs" aria-pressed="true">자막</button>
     <button class="btn" id="bVoice" aria-pressed="false">음성</button>
+    <label class="rate" title="4~7세 구연 속도를 찾아보세요">속도
+      <input type="range" id="sRate" min="50" max="110" value="70"><b id="vRate">0.70</b></label>
     <span class="pos" id="voiceState"></span>
     <span class="pos" id="pos">—</span>
   </div>
@@ -947,8 +952,9 @@ const clone = o => JSON.parse(JSON.stringify(o));
 let story = clone(DEFAULT_STORY);
 let imgs = {};                       // "bg_pond_glow" | "characters/woodcutter:surprise" -> dataURL
 let st = { node:null, beat:0, playing:false, phase:'beat', seen:new Set() };
-let clk = { t0:0, dur:0, raf:0, wi:-1, boundary:false };
+let clk = { t0:0, dur:0, raf:0, wi:-1, boundary:false, spoke:false };
 let bgFx = { blur:0, bri:100, sat:100 };
+let rate = .70;
 
 /* ── 에셋 키 목록 ───────────────────────── */
 function assetKeys(s){
@@ -1232,11 +1238,13 @@ function step(now){
     for(let k=0;k<b.wordTimings.length;k++) if(el >= b.wordTimings[k][2]) i = k;
     highlight(i);
   }
-  if(!voiceOn() && el >= b.durationMs) next();
+  // durationMs 를 채웠고, 음성도 끝났을 때만 넘어간다.
+  // 실제 제품에서는 durationMs 가 오디오 실측값이라 둘이 같은 순간이 된다.
+  if(el >= b.durationMs && (!voiceOn() || clk.spoke)) next();
 }
 function play(){
   if(st.phase!=='beat') return;
-  st.playing = true; clk.t0 = performance.now(); clk.boundary=false;
+  st.playing = true; clk.t0 = performance.now(); clk.boundary=false; clk.spoke=false;
   $('#bPlay').textContent='❙❙  일시정지';
   cancelAnimationFrame(clk.raf); clk.raf = requestAnimationFrame(step);
   if(voiceOn()) speak(curBeat().text);
@@ -1323,11 +1331,11 @@ function speak(text){
     if(done || my !== speakId) return;
     done = true; clearTimeout(guard1); clearTimeout(guard2);
     if(why) vState(why);
-    if(st.playing && st.phase==='beat') next();
+    clk.spoke = true;            // 넘기는 건 시계가 한다 (step 참조)
   };
   const u = new SpeechSynthesisUtterance(text);
   if(koVoice) u.voice = koVoice;
-  u.lang='ko-KR'; u.rate=.92; u.pitch=1.05;
+  u.lang='ko-KR'; u.rate=rate; u.pitch=1.05;
   u.onstart = () => { started = true; };
   u.onboundary = e => {
     clk.boundary = true;
@@ -1433,8 +1441,9 @@ $('#bVoice').onclick  = e => {
   const on = e.target.getAttribute('aria-pressed')==='true';
   e.target.setAttribute('aria-pressed', !on);
   if(on){ stopSpeak(); vState(''); }
-  else if(st.playing && st.phase==='beat') speak(curBeat().text);   // 켜자마자 들린다
+  else if(st.playing && st.phase==='beat'){ clk.spoke=false; speak(curBeat().text); }
 };
+$('#sRate').oninput = e => { rate = +e.target.value/100; $('#vRate').textContent = rate.toFixed(2); };
 
 const SL = [['#sBlur','#vBlur','blur',v=>`${(v/10).toFixed(1)}px`],
             ['#sBri','#vBri','bri',v=>`${v}%`], ['#sSat','#vSat','sat',v=>`${v}%`]];
