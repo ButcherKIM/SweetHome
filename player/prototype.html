@@ -223,10 +223,12 @@ a{color:var(--accent)}
   <details open>
     <summary>에셋 넣기<span class="hint" id="slotHint">칸을 누르거나 이미지를 끌어다 놓으세요</span></summary>
     <div class="body">
-      <p class="note">마젠타 배경째로 넣으세요. 브라우저가 <b>마젠타를 걷어내고, 가장 큰 덩어리만 남깁니다</b> — 구석의 반짝이는 자동으로 떨어집니다. 배경(<code>bg_</code>)은 그대로 씁니다.</p>
+      <p class="note"><b>올린 에셋은 기기 간에 공유됩니다</b> — 컴퓨터에서 넣고 폰에서 이어서 보셔도 됩니다.
+        마젠타 배경째로 넣으세요. 브라우저가 <b>마젠타를 걷어내고, 가장 큰 덩어리만 남깁니다</b> — 구석의 반짝이는 자동으로 떨어집니다. 배경(<code>bg_</code>)은 그대로 씁니다.</p>
       <div class="slots" id="slots"></div>
       <div class="bar"><button class="btn" id="bClear">에셋 모두 지우기</button>
-        <span class="note" id="assetNote"></span></div>
+        <span class="note" id="assetNote"></span>
+        <span class="spacer"></span><span class="note" id="syncState">연결 확인 중…</span></div>
     </div>
   </details>
 
@@ -1320,32 +1322,34 @@ function keyOut(img){
     }
   }
   cx.putImageData(im,0,0);
-  if(x1<=x0||y1<=y0) return {url:c.toDataURL('image/png'), dropped};
+  if(x1<=x0||y1<=y0) return {canvas:c, dropped};
 
   // 3) 여백 트림 (기준점 = 하단 중앙)
   const tw=x1-x0+1, th=y1-y0+1;
   const t=document.createElement('canvas'); t.width=tw; t.height=th;
   t.getContext('2d').drawImage(c, x0,y0,tw,th, 0,0,tw,th);
-  return {url:t.toDataURL('image/png'), dropped};
+  return {canvas:t, dropped};
 }
 function plainResize(img){
   const MAX=1800, sc=Math.min(1,MAX/Math.max(img.width,img.height));
   const c=document.createElement('canvas');
   c.width=Math.round(img.width*sc); c.height=Math.round(img.height*sc);
   c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-  return c.toDataURL('image/jpeg',.88);
+  return c;
 }
 function loadFile(file, key, kind){
   const fr = new FileReader();
   fr.onload = () => {
     const im = new Image();
     im.onload = () => {
-      let note = '';
-      if(kind==='bg' || kind==='glow'){ imgs[key] = plainResize(im); }
-      else { const r = keyOut(im); imgs[key] = r.url;
-             note = r.dropped>200 ? `  ·  ${key}: 배경 밖 부스러기 제거됨` : ''; }
-      $('#assetNote').textContent = `${Object.keys(imgs).length}개 적용됨${note}`;
+      const flat = (kind==='bg' || kind==='glow');
+      const r = flat ? {canvas:plainResize(im), dropped:0} : keyOut(im);
+      const type = flat ? 'image/jpeg' : 'image/png';
+      imgs[key] = r.canvas.toDataURL(type, .88);   // 이 기기에서 바로 보이게
       buildSlots(); render(); save();
+      $('#assetNote').textContent = `${Object.keys(imgs).length}개 적용됨`
+        + (r.dropped>200 ? `  ·  ${key}: 배경 밖 부스러기 제거됨` : '');
+      r.canvas.toBlob(b => b && upload(key, b, type), type, .88);
     };
     im.src = fr.result;
   };
@@ -1353,6 +1357,47 @@ function loadFile(file, key, kind){
 }
 function save(){ try{ localStorage.setItem('goldaxe_imgs', JSON.stringify(imgs)); }catch(e){} }
 function load(){ try{ imgs = JSON.parse(localStorage.getItem('goldaxe_imgs')||'{}'); }catch(e){ imgs={}; } }
+
+/* ── 기기 간 공유 ────────────────────────
+   localStorage 는 그 브라우저 안에만 남는다. 폰에서 이어서 하려면
+   이미지를 아티팩트에 올리고 그 id 를 공유 문서에 적어야 한다. */
+let cap = { assets:null, db:null }, assetIds = {};
+const MAP = 'assets/map';
+const syncMsg = t => { const e=$('#syncState'); if(e) e.textContent = t; };
+
+async function initCloud(){
+  try{
+    cap.assets = await window.claude?.use?.('assets') ?? null;
+    cap.db     = await window.claude?.use?.('db') ?? null;
+  }catch(e){ /* 이 화면에서는 못 쓴다 */ }
+  if(!cap.db){ syncMsg('이 기기에만 저장됨 (다른 기기에서는 안 보입니다)'); return; }
+  cap.db.doc(MAP).onSnapshot(snap => {
+    const items = (snap.exists && snap.data()?.items) || [];
+    let changed = false;
+    for(const it of items){
+      if(!it || !it.key || !it.id) continue;
+      assetIds[it.key] = it.id;
+      const url = '/_blob/' + it.id;
+      if(imgs[it.key] !== url && !imgs[it.key]?.startsWith('data:')){ imgs[it.key] = url; changed = true; }
+      else if(!imgs[it.key]){ imgs[it.key] = url; changed = true; }
+    }
+    syncMsg(items.length ? `☁ ${items.length}개 기기 간 공유됨` : '☁ 연결됨 — 올린 에셋이 없습니다');
+    if(changed){ buildSlots(); render(); }
+  }, () => syncMsg('공유 연결이 끊겼습니다 — 이 기기에만 저장됩니다'));
+}
+
+async function upload(key, blob, type){
+  if(!cap.assets || !cap.db){ return; }
+  try{
+    syncMsg('☁ 올리는 중…');
+    const { id } = await cap.assets.upload(blob, { type });
+    assetIds[key] = id;
+    await cap.db.doc(MAP).set({ items: Object.entries(assetIds).map(([k,v])=>({key:k,id:v})) });
+    syncMsg(`☁ ${Object.keys(assetIds).length}개 기기 간 공유됨`);
+  }catch(e){
+    syncMsg(`올리기 실패 (${e?.code||'오류'}) — 이 기기에만 저장됩니다`);
+  }
+}
 
 /* ── 슬롯 UI ────────────────────────────── */
 function buildSlots(){
@@ -1838,13 +1883,17 @@ $('#bApply').onclick = () => {
 };
 $('#bRevert').onclick = () => { story = clone(DEFAULT_STORY);
   $('#ta').value = JSON.stringify(story,null,2); buildSlots(); showValidation(story); goto(story.rootNode,0,false); };
-$('#bClear').onclick = () => { imgs={}; save(); buildSlots(); render();
-  $('#assetNote').textContent='모두 지웠습니다'; };
+$('#bClear').onclick = async () => {
+  imgs={}; assetIds={}; save(); buildSlots(); render();
+  $('#assetNote').textContent='모두 지웠습니다';
+  if(cap.db){ try{ await cap.db.doc(MAP).set({items:[]}); syncMsg('☁ 연결됨 — 올린 에셋이 없습니다'); }catch(e){} }
+};
 
 new ResizeObserver(fxSize).observe(fxC);
 addEventListener('resize', fxSize);
 
 load();
+initCloud();
 $('#ta').value = JSON.stringify(story, null, 2);
 buildSlots(); showValidation(story); fxSize(); fxTick(0);
 $('#assetNote').textContent = Object.keys(imgs).length ? `${Object.keys(imgs).length}개 적용됨` : '';
