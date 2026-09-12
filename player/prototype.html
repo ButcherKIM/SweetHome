@@ -176,7 +176,7 @@ a{color:var(--accent)}
 @keyframes breathe{0%,100%{transform:scaleY(1) translateY(0)}50%{transform:scaleY(1.018) translateY(-.6%)}}
 @keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3.4%)}}
-@keyframes pulse{0%,100%{opacity:.68}50%{opacity:1}}
+@keyframes pulse{0%,100%{opacity:.8}50%{opacity:1}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes popIn{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.07)}100%{opacity:1;transform:scale(1)}}
 @keyframes slideIn{from{opacity:0;transform:translateX(-26%)}to{opacity:1;transform:translateX(0)}}
@@ -271,7 +271,7 @@ a{color:var(--accent)}
 
 <script>
 const DEFAULT_STORY = {
-  "schemaVersion": "0.4",
+  "schemaVersion": "0.5",
   "storyId": "goldaxe",
   "title": "금도끼 은도끼",
   "source": "한국 전래동화 (public domain)",
@@ -361,53 +361,6 @@ const DEFAULT_STORY = {
       "beats": [
         {
           "id": "b_intro_01",
-          "text": "산속 깊은 곳에 마음씨 착한 나무꾼이 살았어요.",
-          "audio": "audio/b_intro_01.opus",
-          "durationMs": 7300,
-          "wordTimings": [
-            [
-              0,
-              2,
-              0,
-              768
-            ],
-            [
-              3,
-              5,
-              768,
-              1536
-            ],
-            [
-              6,
-              8,
-              1536,
-              2304
-            ],
-            [
-              9,
-              12,
-              2304,
-              3457
-            ],
-            [
-              13,
-              15,
-              3457,
-              4225
-            ],
-            [
-              16,
-              20,
-              4225,
-              5762
-            ],
-            [
-              21,
-              26,
-              5762,
-              7300
-            ]
-          ],
           "scene": {
             "background": "bg_forest_day",
             "camera": "pushIn",
@@ -425,51 +378,106 @@ const DEFAULT_STORY = {
                 "enter": "fadeIn"
               }
             ]
-          }
+          },
+          "lines": [
+            {
+              "id": "b_intro_01_1",
+              "text": "산속 깊은 곳에 마음씨 착한 나무꾼이 살았어요.",
+              "audio": "audio/b_intro_01_1.opus",
+              "durationMs": 7300,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  0,
+                  768
+                ],
+                [
+                  3,
+                  5,
+                  768,
+                  1536
+                ],
+                [
+                  6,
+                  8,
+                  1536,
+                  2304
+                ],
+                [
+                  9,
+                  12,
+                  2304,
+                  3457
+                ],
+                [
+                  13,
+                  15,
+                  3457,
+                  4225
+                ],
+                [
+                  16,
+                  20,
+                  4225,
+                  5762
+                ],
+                [
+                  21,
+                  26,
+                  5762,
+                  7300
+                ]
+              ]
+            },
+            {
+              "id": "b_intro_01_2",
+              "text": "오늘도 지게를 지고 나무를 하러 올라갔어요.",
+              "audio": "audio/b_intro_01_2.opus",
+              "durationMs": 7010,
+              "wordTimings": [
+                [
+                  0,
+                  3,
+                  0,
+                  1168
+                ],
+                [
+                  4,
+                  7,
+                  1168,
+                  2336
+                ],
+                [
+                  8,
+                  10,
+                  2336,
+                  3115
+                ],
+                [
+                  11,
+                  14,
+                  3115,
+                  4283
+                ],
+                [
+                  15,
+                  17,
+                  4283,
+                  5062
+                ],
+                [
+                  18,
+                  24,
+                  5062,
+                  7010
+                ]
+              ]
+            }
+          ]
         },
         {
           "id": "b_intro_02",
-          "text": "나무를 하다가 그만, 도끼를 연못에 빠뜨렸어요.",
-          "audio": "audio/b_intro_02.opus",
-          "durationMs": 7590,
-          "wordTimings": [
-            [
-              0,
-              3,
-              0,
-              1198
-            ],
-            [
-              4,
-              7,
-              1198,
-              2396
-            ],
-            [
-              8,
-              11,
-              2396,
-              3195
-            ],
-            [
-              12,
-              15,
-              3195,
-              4393
-            ],
-            [
-              16,
-              19,
-              4393,
-              5591
-            ],
-            [
-              20,
-              26,
-              5591,
-              7590
-            ]
-          ],
           "scene": {
             "background": "bg_pond_day",
             "camera": "panRight",
@@ -501,114 +509,136 @@ const DEFAULT_STORY = {
                 "enter": "slideIn"
               }
             ]
-          }
+          },
+          "lines": [
+            {
+              "id": "b_intro_02_1",
+              "text": "그런데 그만, 도끼가 손에서 미끄러졌어요.",
+              "audio": "audio/b_intro_02_1.opus",
+              "durationMs": 7010,
+              "wordTimings": [
+                [
+                  0,
+                  3,
+                  0,
+                  1237
+                ],
+                [
+                  4,
+                  7,
+                  1237,
+                  2062
+                ],
+                [
+                  8,
+                  11,
+                  2062,
+                  3299
+                ],
+                [
+                  12,
+                  15,
+                  3299,
+                  4536
+                ],
+                [
+                  16,
+                  23,
+                  4536,
+                  7010
+                ]
+              ]
+            },
+            {
+              "id": "b_intro_02_2",
+              "text": "도끼는 깊은 연못 속으로 풍덩 빠져버렸어요.",
+              "audio": "audio/b_intro_02_2.opus",
+              "durationMs": 7010,
+              "wordTimings": [
+                [
+                  0,
+                  3,
+                  0,
+                  1168
+                ],
+                [
+                  4,
+                  6,
+                  1168,
+                  1947
+                ],
+                [
+                  7,
+                  9,
+                  1947,
+                  2726
+                ],
+                [
+                  10,
+                  13,
+                  2726,
+                  3894
+                ],
+                [
+                  14,
+                  16,
+                  3894,
+                  4673
+                ],
+                [
+                  17,
+                  24,
+                  4673,
+                  7010
+                ]
+              ]
+            },
+            {
+              "id": "b_intro_02_3",
+              "text": "나무꾼은 그 자리에 주저앉고 말았어요.",
+              "audio": "audio/b_intro_02_3.opus",
+              "durationMs": 6430,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  0,
+                  1608
+                ],
+                [
+                  5,
+                  6,
+                  1608,
+                  2010
+                ],
+                [
+                  7,
+                  10,
+                  2010,
+                  3216
+                ],
+                [
+                  11,
+                  15,
+                  3216,
+                  4824
+                ],
+                [
+                  16,
+                  21,
+                  4824,
+                  6430
+                ]
+              ]
+            }
+          ]
         },
         {
           "id": "b_intro_03",
-          "text": "그때 연못에서 환한 빛이 쏟아졌어요.",
-          "audio": "audio/b_intro_03.opus",
-          "durationMs": 6140,
-          "wordTimings": [
-            [
-              0,
-              2,
-              0,
-              819
-            ],
-            [
-              3,
-              7,
-              819,
-              2456
-            ],
-            [
-              8,
-              10,
-              2456,
-              3275
-            ],
-            [
-              11,
-              13,
-              3275,
-              4094
-            ],
-            [
-              14,
-              20,
-              4094,
-              6140
-            ]
-          ],
           "scene": {
             "background": "bg_pond_glow",
             "camera": "pushIn",
             "transitionIn": "crossfade",
-            "fx": "sparkle",
-            "actors": [
-              {
-                "asset": "characters/woodcutter",
-                "x": 0.26,
-                "y": 0.8,
-                "scale": 1.0,
-                "z": 30,
-                "anim": "breathe",
-                "pose": "surprise",
-                "enter": "none"
-              },
-              {
-                "asset": "props/light_rays",
-                "x": 0.58,
-                "y": 0.52,
-                "scale": 1.0,
-                "z": 15,
-                "anim": "pulse",
-                "enter": "fadeIn"
-              }
-            ]
-          }
-        },
-        {
-          "id": "b_intro_04",
-          "text": "산신령이 나타나 금도끼를 들어 보였어요.",
-          "audio": "audio/b_intro_04.opus",
-          "durationMs": 6720,
-          "wordTimings": [
-            [
-              0,
-              4,
-              0,
-              1581
-            ],
-            [
-              5,
-              8,
-              1581,
-              2767
-            ],
-            [
-              9,
-              13,
-              2767,
-              4348
-            ],
-            [
-              14,
-              16,
-              4348,
-              5139
-            ],
-            [
-              17,
-              22,
-              5139,
-              6720
-            ]
-          ],
-          "scene": {
-            "background": "bg_pond_glow",
-            "camera": "still",
-            "transitionIn": "cut",
             "fx": "sparkle",
             "actors": [
               {
@@ -642,15 +672,119 @@ const DEFAULT_STORY = {
               },
               {
                 "asset": "props/light_rays",
-                "x": 0.66,
+                "x": 0.62,
                 "y": 0.5,
-                "scale": 0.85,
+                "scale": 1.0,
                 "z": 15,
                 "anim": "pulse",
-                "enter": "none"
+                "enter": "fadeIn"
               }
             ]
-          }
+          },
+          "lines": [
+            {
+              "id": "b_intro_03_1",
+              "text": "그때 연못에서 환한 빛이 쏟아졌어요.",
+              "audio": "audio/b_intro_03_1.opus",
+              "durationMs": 6140,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  0,
+                  819
+                ],
+                [
+                  3,
+                  7,
+                  819,
+                  2456
+                ],
+                [
+                  8,
+                  10,
+                  2456,
+                  3275
+                ],
+                [
+                  11,
+                  13,
+                  3275,
+                  4094
+                ],
+                [
+                  14,
+                  20,
+                  4094,
+                  6140
+                ]
+              ]
+            },
+            {
+              "id": "b_intro_03_2",
+              "text": "산신령이 스르르 나타났어요.",
+              "audio": "audio/b_intro_03_2.opus",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  0,
+                  2000
+                ],
+                [
+                  5,
+                  8,
+                  2000,
+                  3500
+                ],
+                [
+                  9,
+                  15,
+                  3500,
+                  6000
+                ]
+              ]
+            },
+            {
+              "id": "b_intro_03_3",
+              "text": "산신령은 반짝이는 금도끼를 들어 보였어요.",
+              "audio": "audio/b_intro_03_3.opus",
+              "durationMs": 7010,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  0,
+                  1558
+                ],
+                [
+                  5,
+                  9,
+                  1558,
+                  3116
+                ],
+                [
+                  10,
+                  14,
+                  3116,
+                  4674
+                ],
+                [
+                  15,
+                  17,
+                  4674,
+                  5453
+                ],
+                [
+                  18,
+                  23,
+                  5453,
+                  7010
+                ]
+              ]
+            }
+          ]
         }
       ],
       "choice": {
@@ -709,59 +843,6 @@ const DEFAULT_STORY = {
       "beats": [
         {
           "id": "b_honest_01",
-          "text": "아니라고 말하자, 산신령은 도끼 세 자루를 모두 주었어요.",
-          "audio": "audio/b_honest_01.opus",
-          "durationMs": 8750,
-          "wordTimings": [
-            [
-              0,
-              4,
-              0,
-              1522
-            ],
-            [
-              5,
-              9,
-              1522,
-              2663
-            ],
-            [
-              10,
-              14,
-              2663,
-              4185
-            ],
-            [
-              15,
-              17,
-              4185,
-              4946
-            ],
-            [
-              18,
-              19,
-              4946,
-              5326
-            ],
-            [
-              20,
-              23,
-              5326,
-              6467
-            ],
-            [
-              24,
-              26,
-              6467,
-              7228
-            ],
-            [
-              27,
-              32,
-              7228,
-              8750
-            ]
-          ],
           "scene": {
             "background": "bg_pond_glow",
             "camera": "pullOut",
@@ -770,7 +851,7 @@ const DEFAULT_STORY = {
             "actors": [
               {
                 "asset": "characters/woodcutter",
-                "x": 0.28,
+                "x": 0.24,
                 "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
@@ -789,25 +870,115 @@ const DEFAULT_STORY = {
                 "enter": "none"
               },
               {
-                "asset": "props/axe_gold",
-                "x": 0.5,
-                "y": 0.56,
-                "scale": 0.45,
-                "z": 35,
-                "anim": "sway",
-                "enter": "popIn"
-              },
-              {
                 "asset": "props/axe_silver",
-                "x": 0.58,
+                "x": 0.5,
                 "y": 0.58,
                 "scale": 0.45,
                 "z": 34,
                 "anim": "sway",
                 "enter": "popIn"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.6,
+                "y": 0.5,
+                "scale": 0.9,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "none"
               }
             ]
-          }
+          },
+          "lines": [
+            {
+              "id": "b_honest_01_1",
+              "text": "나무꾼은 낡은 쇠도끼를 가리켰어요.",
+              "audio": "audio/b_honest_01_1.opus",
+              "durationMs": 6140,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  0,
+                  1637
+                ],
+                [
+                  5,
+                  7,
+                  1637,
+                  2456
+                ],
+                [
+                  8,
+                  12,
+                  2456,
+                  4093
+                ],
+                [
+                  13,
+                  19,
+                  4093,
+                  6140
+                ]
+              ]
+            },
+            {
+              "id": "b_honest_01_2",
+              "text": "산신령은 빙그레 웃으며 도끼 세 자루를 모두 주었어요.",
+              "audio": "audio/b_honest_01_2.opus",
+              "durationMs": 8170,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  0,
+                  1485
+                ],
+                [
+                  5,
+                  8,
+                  1485,
+                  2599
+                ],
+                [
+                  9,
+                  12,
+                  2599,
+                  3713
+                ],
+                [
+                  13,
+                  15,
+                  3713,
+                  4456
+                ],
+                [
+                  16,
+                  17,
+                  4456,
+                  4827
+                ],
+                [
+                  18,
+                  21,
+                  4827,
+                  5941
+                ],
+                [
+                  22,
+                  24,
+                  5941,
+                  6684
+                ],
+                [
+                  25,
+                  30,
+                  6684,
+                  8170
+                ]
+              ]
+            }
+          ]
         }
       ]
     },
@@ -818,59 +989,6 @@ const DEFAULT_STORY = {
       "beats": [
         {
           "id": "b_greedy_01",
-          "text": "손을 뻗자 빛이 사라졌지만, 나무꾼은 제 쇠도끼를 되찾았어요.",
-          "audio": "audio/b_greedy_01.opus",
-          "durationMs": 9330,
-          "wordTimings": [
-            [
-              0,
-              2,
-              0,
-              746
-            ],
-            [
-              3,
-              5,
-              746,
-              1492
-            ],
-            [
-              6,
-              8,
-              1492,
-              2238
-            ],
-            [
-              9,
-              15,
-              2238,
-              4104
-            ],
-            [
-              16,
-              20,
-              4104,
-              5597
-            ],
-            [
-              21,
-              22,
-              5597,
-              5970
-            ],
-            [
-              23,
-              27,
-              5970,
-              7463
-            ],
-            [
-              28,
-              34,
-              7463,
-              9330
-            ]
-          ],
           "scene": {
             "background": "bg_pond_day",
             "camera": "pullOut",
@@ -889,7 +1007,7 @@ const DEFAULT_STORY = {
               },
               {
                 "asset": "props/axe_iron",
-                "x": 0.56,
+                "x": 0.58,
                 "y": 0.66,
                 "scale": 0.5,
                 "z": 35,
@@ -897,7 +1015,103 @@ const DEFAULT_STORY = {
                 "enter": "popIn"
               }
             ]
-          }
+          },
+          "lines": [
+            {
+              "id": "b_greedy_01_1",
+              "text": "금도끼로 손을 뻗자 환한 빛이 스르르 사라졌어요.",
+              "audio": "audio/b_greedy_01_1.opus",
+              "durationMs": 7590,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  0,
+                  1518
+                ],
+                [
+                  5,
+                  7,
+                  1518,
+                  2277
+                ],
+                [
+                  8,
+                  10,
+                  2277,
+                  3036
+                ],
+                [
+                  11,
+                  13,
+                  3036,
+                  3795
+                ],
+                [
+                  14,
+                  16,
+                  3795,
+                  4554
+                ],
+                [
+                  17,
+                  20,
+                  4554,
+                  5692
+                ],
+                [
+                  21,
+                  27,
+                  5692,
+                  7590
+                ]
+              ]
+            },
+            {
+              "id": "b_greedy_01_2",
+              "text": "그래도 나무꾼의 쇠도끼는 그대로 남아 있었어요.",
+              "audio": "audio/b_greedy_01_2.opus",
+              "durationMs": 7590,
+              "wordTimings": [
+                [
+                  0,
+                  3,
+                  0,
+                  1138
+                ],
+                [
+                  4,
+                  8,
+                  1138,
+                  2656
+                ],
+                [
+                  9,
+                  13,
+                  2656,
+                  4174
+                ],
+                [
+                  14,
+                  17,
+                  4174,
+                  5312
+                ],
+                [
+                  18,
+                  20,
+                  5312,
+                  6071
+                ],
+                [
+                  21,
+                  26,
+                  6071,
+                  7590
+                ]
+              ]
+            }
+          ]
         }
       ]
     },
@@ -908,53 +1122,6 @@ const DEFAULT_STORY = {
       "beats": [
         {
           "id": "b_unsure_01",
-          "text": "모르겠다고 하자, 산신령이 함께 연못을 들여다봐 주었어요.",
-          "audio": "audio/b_unsure_01.opus",
-          "durationMs": 9040,
-          "wordTimings": [
-            [
-              0,
-              5,
-              0,
-              1883
-            ],
-            [
-              6,
-              9,
-              1883,
-              2636
-            ],
-            [
-              10,
-              14,
-              2636,
-              4143
-            ],
-            [
-              15,
-              17,
-              4143,
-              4896
-            ],
-            [
-              18,
-              21,
-              4896,
-              6026
-            ],
-            [
-              22,
-              26,
-              6026,
-              7533
-            ],
-            [
-              27,
-              32,
-              7533,
-              9040
-            ]
-          ],
           "scene": {
             "background": "bg_pond_glow",
             "camera": "tiltUp",
@@ -963,7 +1130,7 @@ const DEFAULT_STORY = {
             "actors": [
               {
                 "asset": "characters/woodcutter",
-                "x": 0.3,
+                "x": 0.28,
                 "y": 0.8,
                 "scale": 1.0,
                 "z": 30,
@@ -974,7 +1141,7 @@ const DEFAULT_STORY = {
               {
                 "asset": "characters/spirit",
                 "pose": "smile",
-                "x": 0.62,
+                "x": 0.64,
                 "y": 0.78,
                 "scale": 1.1,
                 "z": 20,
@@ -982,7 +1149,85 @@ const DEFAULT_STORY = {
                 "enter": "none"
               }
             ]
-          }
+          },
+          "lines": [
+            {
+              "id": "b_unsure_01_1",
+              "text": "나무꾼은 잘 모르겠다고 솔직하게 말했어요.",
+              "audio": "audio/b_unsure_01_1.opus",
+              "durationMs": 7010,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  0,
+                  1558
+                ],
+                [
+                  5,
+                  6,
+                  1558,
+                  1947
+                ],
+                [
+                  7,
+                  12,
+                  1947,
+                  3894
+                ],
+                [
+                  13,
+                  17,
+                  3894,
+                  5452
+                ],
+                [
+                  18,
+                  23,
+                  5452,
+                  7010
+                ]
+              ]
+            },
+            {
+              "id": "b_unsure_01_2",
+              "text": "산신령은 함께 연못을 들여다봐 주었어요.",
+              "audio": "audio/b_unsure_01_2.opus",
+              "durationMs": 6720,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  0,
+                  1581
+                ],
+                [
+                  5,
+                  7,
+                  1581,
+                  2372
+                ],
+                [
+                  8,
+                  11,
+                  2372,
+                  3558
+                ],
+                [
+                  12,
+                  16,
+                  3558,
+                  5139
+                ],
+                [
+                  17,
+                  22,
+                  5139,
+                  6720
+                ]
+              ]
+            }
+          ]
         }
       ]
     }
@@ -993,7 +1238,7 @@ const clone = o => JSON.parse(JSON.stringify(o));
 
 let story = clone(DEFAULT_STORY);
 let imgs = {};                       // "bg_pond_glow" | "characters/woodcutter:surprise" -> dataURL
-let st = { node:null, beat:0, playing:false, phase:'beat', seen:new Set() };
+let st = { node:null, beat:0, line:0, playing:false, phase:'beat', seen:new Set() };
 let clk = { t0:0, dur:0, raf:0, wi:-1, boundary:false, spoke:false };
 let bgFx = { blur:0, bri:100, sat:100 };
 const DEF_TREAT = { blurPx:0, brightness:100, saturate:100 };
@@ -1002,7 +1247,9 @@ let liveFx = false;                   // 슬라이더를 만지는 중이면 그
 let rate = .75;
 const REF_RATE = .75;                 // 4~7세 기준으로 맞춘 값 (글자당 290ms)
 const pace  = () => REF_RATE / rate;  // 느리게 하면 자막도 같이 길어진다
-const eDur  = b => Math.round(b.durationMs * pace());
+const eDur  = x => Math.round(x.durationMs * pace());          // 줄 하나
+const beatMs = b => b.lines.reduce((s,l)=>s+l.durationMs, 0);
+const eBeat = b => Math.round(beatMs(b) * pace());              // 그림 한 장 전체
 let measured = {};                    // beatId -> 실제 음성 길이(ms)
 
 /* ── 에셋 키 목록 ───────────────────────── */
@@ -1197,6 +1444,7 @@ const TRANS = { crossfade:'tCross .5s ease both', pageTurn:'tPage .55s ease both
 
 function curNode(){ return story.nodes[st.node]; }
 function curBeat(){ return curNode().beats[st.beat]; }
+function curLine(){ return curBeat().lines[st.line]; }
 
 function render(){
   // 비트를 그린다는 건 곧 비트 상태로 돌아간다는 뜻이다.
@@ -1220,7 +1468,7 @@ function render(){
   const [from,to] = CAM[sc.camera||'still'] || CAM.still;
   cam.style.transition='none'; cam.style.transform=from;
   void cam.offsetWidth;
-  cam.style.transition = `transform ${eDur(b)}ms cubic-bezier(.4,0,.35,1)`;
+  cam.style.transition = `transform ${eBeat(b)}ms cubic-bezier(.4,0,.35,1)`;
   cam.style.transform = to;
 
   // 전환
@@ -1250,7 +1498,7 @@ function render(){
     if(an==='breathe') inner.style.animation='breathe 3.6s ease-in-out infinite';
     else if(an==='sway') inner.style.animation='sway 4.2s ease-in-out infinite';
     else if(an==='bob') inner.style.animation='bob 3s ease-in-out infinite';
-    else if(an==='driftIn') inner.style.animation=`driftIn ${eDur(b)}ms ease-out both`;
+    else if(an==='driftIn') inner.style.animation=`driftIn ${eBeat(b)}ms ease-out both`;
     else if(an==='pulse') inner.style.animation='pulse 3.2s ease-in-out infinite';
     if(src){ const im=new Image(); im.src=src; im.alt=''; inner.appendChild(im); }
     else {
@@ -1267,17 +1515,15 @@ function render(){
   }
 
   setFx(sc.fx);
-  drawSubs(b);
-  const m = measured[b.id];
-  $('#pos').textContent = `${st.node}  ·  비트 ${st.beat+1}/${curNode().beats.length}`
-    + `  ·  자막 ${(eDur(b)/1000).toFixed(1)}s`
-    + (m ? `  ·  음성 ${(m/1000).toFixed(1)}s` : '');
+  drawSubs(curLine());
+  render0();
 }
 
 function render0(){
-  const b = curBeat(), m = measured[b.id];
-  $('#pos').textContent = `${st.node}  ·  비트 ${st.beat+1}/${curNode().beats.length}`
-    + `  ·  자막 ${(eDur(b)/1000).toFixed(1)}s`
+  const b = curBeat(), l = curLine(), m = measured[l.id];
+  $('#pos').textContent = `${st.node}  ·  그림 ${st.beat+1}/${curNode().beats.length}`
+    + ` (${(eBeat(b)/1000).toFixed(0)}s)  ·  줄 ${st.line+1}/${b.lines.length}`
+    + `  ·  자막 ${(eDur(l)/1000).toFixed(1)}s`
     + (m ? `  ·  음성 ${(m/1000).toFixed(1)}s` : '');
 }
 function drawSubs(b){
@@ -1298,45 +1544,57 @@ function highlight(i){
 function step(now){
   if(!st.playing) return;
   clk.raf = requestAnimationFrame(step);
-  const b = curBeat(), el = now - clk.t0, dur = eDur(b);
-  $('#prog').style.width = Math.min(100, el/dur*100) + '%';
+  const b = curBeat(), l = curLine(), el = now - clk.t0, dur = eDur(l);
+  const before = b.lines.slice(0, st.line).reduce((s,x)=>s+x.durationMs,0) * pace();
+  $('#prog').style.width = Math.min(100, (before+el)/eBeat(b)*100) + '%';
   if(!clk.boundary){
     const sc = pace();
     let i = -1;
-    for(let k=0;k<b.wordTimings.length;k++) if(el >= b.wordTimings[k][2]*sc) i = k;
+    for(let k=0;k<l.wordTimings.length;k++) if(el >= l.wordTimings[k][2]*sc) i = k;
     highlight(i);
   }
   // durationMs 를 채웠고, 음성도 끝났을 때만 넘어간다.
   // 실제 제품에서는 durationMs 가 오디오 실측값이라 둘이 같은 순간이 된다.
   if(el >= dur && (!voiceOn() || clk.spoke)) next();
 }
+function playLine(){
+  clk.t0 = performance.now(); clk.boundary=false; clk.spoke=false; highlight(-1);
+  cancelAnimationFrame(clk.raf); clk.raf = requestAnimationFrame(step);
+  if(voiceOn()) speak(curLine().text);
+}
 function play(){
   if(st.phase!=='beat') return;
   st.playing = true; clk.t0 = performance.now(); clk.boundary=false; clk.spoke=false;
   $('#bPlay').textContent='❙❙  일시정지';
   cancelAnimationFrame(clk.raf); clk.raf = requestAnimationFrame(step);
-  if(voiceOn()) speak(curBeat().text);
+  if(voiceOn()) speak(curLine().text);
 }
 function pause(){
   st.playing=false; $('#bPlay').textContent='▶  재생';
   cancelAnimationFrame(clk.raf); stopSpeak();
 }
-function goto(nodeId, beat, autoplay){
+function goto(nodeId, beat, autoplay, line){
   stopSpeak();
-  st.node=nodeId; st.beat=beat;
+  st.node=nodeId; st.beat=beat; st.line=line||0;
   render();
   if(autoplay) play(); else { pause(); highlight(-1); $('#prog').style.width='0%'; }
 }
 function next(){
-  const n = curNode();
-  if(st.beat < n.beats.length-1){ st.beat++; render(); if(st.playing) play(); return; }
+  const n = curNode(), b = curBeat();
+  if(st.line < b.lines.length-1){          // 같은 그림, 다음 줄 — 화면은 그대로
+    st.line++; drawSubs(curLine()); render0();
+    if(st.playing) playLine(); return;
+  }
+  if(st.beat < n.beats.length-1){ st.beat++; st.line=0; render(); if(st.playing) play(); return; }
   pause();
   if(n.choice) showChoice(n); else showEnding(n);
 }
 function prev(){
-  if(st.phase!=='beat'){ render(); return; }   // 오버레이만 닫고 방금 그 비트로
-  if(st.beat>0){ st.beat--; render(); if(st.playing) play(); }
-  else goto(story.rootNode, 0, false);
+  if(st.phase!=='beat'){ render(); return; }   // 오버레이만 닫고 방금 그 자리로
+  if(st.line>0){ st.line--; drawSubs(curLine()); render0(); if(st.playing) playLine(); return; }
+  if(st.beat>0){ st.beat--; st.line=curNode().beats[st.beat].lines.length-1; render();
+                 if(st.playing) play(); return; }
+  goto(story.rootNode, 0, false);
 }
 
 /* ── 선택지 / 엔딩 ──────────────────────── */
@@ -1392,7 +1650,7 @@ function stopSpeak(){ speakId++; clearTimeout(guard1); clearTimeout(guard2);
 
 function speak(text){
   stopSpeak();
-  const my = ++speakId, b = curBeat();
+  const my = ++speakId, b = curLine();
   let done = false, started = false;
   // 음성이 끝났든 막혔든, 재생이 멈추지 않게 한 곳으로 모은다
   const finish = why => {
@@ -1415,7 +1673,7 @@ function speak(text){
   };
   u.onend   = () => {
     if(t0) { measured[b.id] = Math.round(performance.now() - t0);
-             if(curBeat().id === b.id) render0(); }
+             if(curLine().id === b.id) render0(); }
     finish('');
   };
   u.onerror = () => finish('음성 재생 실패 · 무음으로 진행합니다');
@@ -1446,6 +1704,19 @@ function validate(s){
   const beats=[]; for(const id in s.nodes) for(const b of s.nodes[id].beats) beats.push([id,b]);
   checkTreat(s.stage?.bgTreatment, 'stage', er);
   for(const [nid,b] of beats){
+    const t = (b.lines||[]).reduce((x,l)=>x+l.durationMs,0);
+    if(t<12000 || t>35000) er.push(`V7 ${b.id}: 그림 한 장이 ${(t/1000).toFixed(1)}초 — 12~35초여야 한다`);
+    for(const l of b.lines||[]){
+      if(l.durationMs<6000||l.durationMs>15000) er.push(`V7 ${l.id}: ${(l.durationMs/1000).toFixed(1)}초 — 한 줄은 6~12초`);
+      if(!l.wordTimings?.length) er.push(`V11 ${l.id}: wordTimings 없음`);
+      else {
+        const last=l.wordTimings[l.wordTimings.length-1];
+        if(last[1]>l.text.length) er.push(`V8 ${l.id}: 문자 인덱스가 본문을 벗어남`);
+        if(last[3]>l.durationMs) er.push(`V8 ${l.id}: 어절 종료가 durationMs 초과`);
+      }
+    }
+  }
+  for(const [nid,b] of beats){
     const sc=b.scene;
     if(!s.assets.backgrounds[sc.background]) er.push(`V2 ${b.id}: 배경 '${sc.background}' 미선언`);
     for(const a of sc.actors||[]){
@@ -1462,14 +1733,6 @@ function validate(s){
     if(!E_TRANS.includes(sc.transitionIn??'crossfade')) er.push(`V6 ${b.id}: transitionIn='${sc.transitionIn}' 허용값 아님`);
     if(!E_FX.includes(sc.fx??'none')) er.push(`V6 ${b.id}: fx='${sc.fx}' 허용값 아님`);
     checkTreat(sc.bgTreatment, b.id, er);
-    if(b.durationMs<6000||b.durationMs>15000) er.push(`V7 ${b.id}: ${(b.durationMs/1000).toFixed(1)}초 — 6~12초(최대 15)`);
-    else if(b.durationMs>12000) wa.push(`V7 ${b.id}: ${(b.durationMs/1000).toFixed(1)}초 — 분할 검토`);
-    if(!b.wordTimings?.length) er.push(`V11 ${b.id}: wordTimings 없음 — 어절 하이라이트 불가`);
-    else {
-      const last=b.wordTimings[b.wordTimings.length-1];
-      if(last[1]>b.text.length) er.push(`V8 ${b.id}: 문자 인덱스가 본문을 벗어남`);
-      if(last[3]>b.durationMs) er.push(`V8 ${b.id}: 어절 종료가 durationMs 초과`);
-    }
   }
   // V4 트리
   const edges={}; for(const id in s.nodes) edges[id]=(s.nodes[id].choice?.options||[]).map(o=>o.next);
@@ -1509,30 +1772,24 @@ function showValidation(s){
 
 /* ── 배선 ───────────────────────────────── */
 $('#bPlay').onclick   = () => st.playing ? pause() : play();
-$('#bNext').onclick   = () => {
-  if(st.phase!=='beat') return;                // 선택지는 골라야 넘어간다
-  const n=curNode();
-  if(st.beat<n.beats.length-1){ st.beat++; render(); if(st.playing) play(); } else next();
-};
+$('#bNext').onclick   = () => { if(st.phase==='beat') next(); };
 $('#bPrev').onclick   = prev;
 $('#bRestart').onclick= () => goto(story.rootNode, 0, false);
-$('#stage').onclick   = e => { if(st.phase!=='beat'||e.target.closest('.overlay')) return;
-  const n=curNode(); if(st.beat<n.beats.length-1){st.beat++;render();if(st.playing)play();} else next(); };
+$('#stage').onclick   = e => { if(st.phase!=='beat'||e.target.closest('.overlay')) return; next(); };
 $('#bSubs').onclick   = e => { const on = e.target.getAttribute('aria-pressed')==='true';
   e.target.setAttribute('aria-pressed', !on); $('#subs').classList.toggle('off', on); };
 $('#bVoice').onclick  = e => {
   const on = e.target.getAttribute('aria-pressed')==='true';
   e.target.setAttribute('aria-pressed', !on);
   if(on){ stopSpeak(); vState(''); }
-  else if(st.playing && st.phase==='beat'){ clk.spoke=false; speak(curBeat().text); }
+  else if(st.playing && st.phase==='beat'){ clk.spoke=false; speak(curLine().text); }
 };
 $('#sRate').oninput = e => {
   rate = +e.target.value/100; $('#vRate').textContent = rate.toFixed(2);
   if(st.phase==='beat') render0();          // 자막 길이 표시 갱신
 };
 $('#sRate').onchange = () => {              // 놓는 순간 새 속도로 이 비트를 다시
-  if(st.playing && st.phase==='beat'){ clk.t0 = performance.now(); clk.spoke=false;
-    clk.boundary=false; highlight(-1); if(voiceOn()) speak(curBeat().text); }
+  if(st.playing && st.phase==='beat') playLine();
 };
 
 const SL = [['#sBlur','#vBlur','blur',v=>`${(v/10).toFixed(1)}px`],
@@ -1577,7 +1834,7 @@ $('#bApply').onclick = () => {
   const beat = Math.min(st.beat, parsed.nodes[node].beats.length - 1);
   story = parsed; buildSlots(); goto(node, beat, true);
   box.insertAdjacentHTML('afterbegin',
-    `<div class="k">적용했습니다 — ${node} · 비트 ${beat+1} 부터 재생</div>`);
+    `<div class="k">적용했습니다 — ${node} · 그림 ${beat+1} 부터 재생</div>`);
 };
 $('#bRevert').onclick = () => { story = clone(DEFAULT_STORY);
   $('#ta').value = JSON.stringify(story,null,2); buildSlots(); showValidation(story); goto(story.rootNode,0,false); };

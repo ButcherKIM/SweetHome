@@ -7,7 +7,7 @@
   "required": ["schemaVersion","storyId","title","locale","targetAge","stage","rootNode","assets","nodes"],
   "additionalProperties": false,
   "properties": {
-    "schemaVersion": { "const": "0.4" },
+    "schemaVersion": { "const": "0.5" },
     "storyId":  { "type": "string", "pattern": "^[a-z0-9_]+$" },
     "title":    { "type": "string" },
     "source":   { "type": "string" },
@@ -131,16 +131,29 @@
     },
 
     "beat": {
+      "description": "그림 한 장. 그림책의 한 페이지에 해당하며 줄 2~3개를 담는다. 한 줄마다 화면이 바뀌면 그림책이 아니라 애니메이션이 된다. 비트의 길이는 줄 길이의 합이고, 카메라는 그 전체에 걸쳐 움직인다",
       "type": "object",
-      "required": ["id","text","durationMs","wordTimings","scene"],
+      "required": ["id","scene","lines"],
+      "additionalProperties": false,
+      "properties": {
+        "id":    { "type":"string" },
+        "scene": { "$ref": "#/$defs/scene" },
+        "lines": { "type":"array", "minItems":1, "maxItems":4,
+                   "items": {"$ref":"#/$defs/line"} }
+      }
+    },
+
+    "line": {
+      "description": "자막 한 문장 + 오디오 하나. 화면은 바뀌지 않는다",
+      "type": "object",
+      "required": ["id","text","durationMs","wordTimings"],
       "additionalProperties": false,
       "properties": {
         "id":          { "type":"string" },
         "text":        { "type":"string" },
         "audio":       { "type":"string" },
         "durationMs":  { "type":"integer", "minimum": 6000, "maximum": 15000 },
-        "wordTimings": { "$ref": "#/$defs/wordTimings" },
-        "scene":       { "$ref": "#/$defs/scene" }
+        "wordTimings": { "$ref": "#/$defs/wordTimings" }
       }
     },
 

@@ -29,6 +29,16 @@ def iter_beats(story):
             yield nid, b
 
 
+def iter_lines(story):
+    for nid, b in iter_beats(story):
+        for ln in b["lines"]:
+            yield b, ln
+
+
+def beat_ms(b):
+    return sum(ln["durationMs"] for ln in b["lines"])
+
+
 def v1_schema(story, root, r):
     try:
         import jsonschema
@@ -147,26 +157,32 @@ def v6_enums(story, r):
 
 
 def v7_duration(story, r):
-    for nid, b in iter_beats(story):
-        d = b["durationMs"]
+    """줄 하나는 6~12초, 비트(그림 한 장)는 12~35초. 그림책 한 페이지의 체류 시간이다."""
+    for b, ln in iter_lines(story):
+        d = ln["durationMs"]
         if not 6000 <= d <= 15000:
-            r.err("V7", f"{b['id']}: {d/1000:.1f}초 — 4~7세 기준 6~12초(최대 15초)")
+            r.err("V7", f"{ln['id']}: {d/1000:.1f}초 — 한 줄은 6~12초(최대 15초)")
         elif d > 12000:
-            r.warn("V7", f"{b['id']}: {d/1000:.1f}초 — 12초 초과, 비트 분할 검토")
+            r.warn("V7", f"{ln['id']}: {d/1000:.1f}초 — 12초 초과, 문장 분할 검토")
+    for nid, b in iter_beats(story):
+        t = beat_ms(b)
+        if not 12000 <= t <= 35000:
+            r.err("V7", f"{b['id']}: 그림 한 장이 {t/1000:.1f}초 — 12~35초여야 한다 "
+                        f"(줄 {len(b['lines'])}개)")
 
 
 def v8_timings(story, r):
-    for nid, b in iter_beats(story):
-        wt, text, dur = b["wordTimings"], b["text"], b["durationMs"]
+    for b, ln in iter_lines(story):
+        wt, text, dur = ln["wordTimings"], ln["text"], ln["durationMs"]
         prev_end = 0
         for a, z, t0, t1 in wt:
             if not 0 <= a < z <= len(text):
-                r.err("V8", f"{b['id']}: 문자 인덱스 [{a},{z}] 가 본문 길이 {len(text)} 를 벗어난다")
+                r.err("V8", f"{ln['id']}: 문자 인덱스 [{a},{z}] 가 본문 길이 {len(text)} 를 벗어난다")
             if t0 < prev_end:
-                r.err("V8", f"{b['id']}: 어절 시각이 역행한다 ({t0} < {prev_end})")
+                r.err("V8", f"{ln['id']}: 어절 시각이 역행한다 ({t0} < {prev_end})")
             prev_end = t1
         if wt[-1][3] > dur:
-            r.err("V8", f"{b['id']}: 마지막 어절 종료 {wt[-1][3]}ms > durationMs {dur}ms")
+            r.err("V8", f"{ln['id']}: 마지막 어절 종료 {wt[-1][3]}ms > durationMs {dur}ms")
 
 
 def v9_text(story, r):
@@ -192,10 +208,10 @@ def v10_coords(story, r):
 
 
 def v11_wordtimings(story, r):
-    """한글 학습이 핵심 기능이므로 타임스탬프 없는 비트는 통과시키지 않는다."""
-    for nid, b in iter_beats(story):
-        if not b.get("wordTimings"):
-            r.err("V11", f"{b['id']}: wordTimings 없음 — 어절 하이라이트 불가")
+    """한글 학습이 핵심 기능이므로 타임스탬프 없는 줄은 통과시키지 않는다."""
+    for b, ln in iter_lines(story):
+        if not ln.get("wordTimings"):
+            r.err("V11", f"{ln['id']}: wordTimings 없음 — 어절 하이라이트 불가")
     for nid, node in story["nodes"].items():
         ch = node.get("choice")
         if ch and not ch.get("promptWordTimings"):
