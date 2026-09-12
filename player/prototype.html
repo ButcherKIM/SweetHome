@@ -209,7 +209,7 @@ a{color:var(--accent)}
     <span class="spacer"></span>
     <button class="btn" id="bSubs" aria-pressed="true">자막</button>
     <button class="btn" id="bVoice" aria-pressed="false">음성</button>
-    <label class="rate" title="4~7세 구연 속도를 찾아보세요">속도
+    <label class="rate" title="음성과 자막이 함께 느려집니다">구연 속도
       <input type="range" id="sRate" min="50" max="110" value="70"><b id="vRate">0.70</b></label>
     <span class="pos" id="voiceState"></span>
     <span class="pos" id="pos">—</span>
@@ -955,6 +955,10 @@ let st = { node:null, beat:0, playing:false, phase:'beat', seen:new Set() };
 let clk = { t0:0, dur:0, raf:0, wi:-1, boundary:false, spoke:false };
 let bgFx = { blur:0, bri:100, sat:100 };
 let rate = .70;
+const REF_RATE = .70;                 // 표본의 durationMs 가 가정한 속도
+const pace  = () => REF_RATE / rate;  // 느리게 하면 자막도 같이 길어진다
+const eDur  = b => Math.round(b.durationMs * pace());
+let measured = {};                    // beatId -> 실제 음성 길이(ms)
 
 /* ── 에셋 키 목록 ───────────────────────── */
 function assetKeys(s){
@@ -1167,7 +1171,7 @@ function render(){
   const [from,to] = CAM[sc.camera||'still'] || CAM.still;
   cam.style.transition='none'; cam.style.transform=from;
   void cam.offsetWidth;
-  cam.style.transition = `transform ${b.durationMs}ms cubic-bezier(.4,0,.35,1)`;
+  cam.style.transition = `transform ${eDur(b)}ms cubic-bezier(.4,0,.35,1)`;
   cam.style.transform = to;
 
   // 전환
@@ -1194,7 +1198,7 @@ function render(){
     if(an==='breathe') inner.style.animation='breathe 3.6s ease-in-out infinite';
     else if(an==='sway') inner.style.animation='sway 4.2s ease-in-out infinite';
     else if(an==='bob') inner.style.animation='bob 3s ease-in-out infinite';
-    else if(an==='driftIn') inner.style.animation=`driftIn ${b.durationMs}ms ease-out both`;
+    else if(an==='driftIn') inner.style.animation=`driftIn ${eDur(b)}ms ease-out both`;
     if(src){ const im=new Image(); im.src=src; im.alt=''; inner.appendChild(im); }
     else {
       const sh = document.createElement('div');
@@ -1210,9 +1214,18 @@ function render(){
 
   setFx(sc.fx);
   drawSubs(b);
-  $('#pos').textContent = `${st.node}  ·  비트 ${st.beat+1}/${curNode().beats.length}  ·  ${(b.durationMs/1000).toFixed(1)}s`;
+  const m = measured[b.id];
+  $('#pos').textContent = `${st.node}  ·  비트 ${st.beat+1}/${curNode().beats.length}`
+    + `  ·  자막 ${(eDur(b)/1000).toFixed(1)}s`
+    + (m ? `  ·  음성 ${(m/1000).toFixed(1)}s` : '');
 }
 
+function render0(){
+  const b = curBeat(), m = measured[b.id];
+  $('#pos').textContent = `${st.node}  ·  비트 ${st.beat+1}/${curNode().beats.length}`
+    + `  ·  자막 ${(eDur(b)/1000).toFixed(1)}s`
+    + (m ? `  ·  음성 ${(m/1000).toFixed(1)}s` : '');
+}
 function drawSubs(b){
   const p = $('#subsP'); p.innerHTML='';
   for(const [a,z] of b.wordTimings){
@@ -1231,16 +1244,17 @@ function highlight(i){
 function step(now){
   if(!st.playing) return;
   clk.raf = requestAnimationFrame(step);
-  const b = curBeat(), el = now - clk.t0;
-  $('#prog').style.width = Math.min(100, el/b.durationMs*100) + '%';
+  const b = curBeat(), el = now - clk.t0, dur = eDur(b);
+  $('#prog').style.width = Math.min(100, el/dur*100) + '%';
   if(!clk.boundary){
+    const sc = pace();
     let i = -1;
-    for(let k=0;k<b.wordTimings.length;k++) if(el >= b.wordTimings[k][2]) i = k;
+    for(let k=0;k<b.wordTimings.length;k++) if(el >= b.wordTimings[k][2]*sc) i = k;
     highlight(i);
   }
   // durationMs 를 채웠고, 음성도 끝났을 때만 넘어간다.
   // 실제 제품에서는 durationMs 가 오디오 실측값이라 둘이 같은 순간이 된다.
-  if(el >= b.durationMs && (!voiceOn() || clk.spoke)) next();
+  if(el >= dur && (!voiceOn() || clk.spoke)) next();
 }
 function play(){
   if(st.phase!=='beat') return;
@@ -1336,7 +1350,8 @@ function speak(text){
   const u = new SpeechSynthesisUtterance(text);
   if(koVoice) u.voice = koVoice;
   u.lang='ko-KR'; u.rate=rate; u.pitch=1.05;
-  u.onstart = () => { started = true; };
+  let t0 = 0;
+  u.onstart = () => { started = true; t0 = performance.now(); };
   u.onboundary = e => {
     clk.boundary = true;
     const ci = e.charIndex ?? 0;
@@ -1344,7 +1359,11 @@ function speak(text){
     for(let k=0;k<b.wordTimings.length;k++) if(ci >= b.wordTimings[k][0]) i = k;
     highlight(i);
   };
-  u.onend   = () => finish('');
+  u.onend   = () => {
+    if(t0) { measured[b.id] = Math.round(performance.now() - t0);
+             if(curBeat().id === b.id) render0(); }
+    finish('');
+  };
   u.onerror = () => finish('음성 재생 실패 · 무음으로 진행합니다');
   try { speechSynthesis.speak(u); }
   catch(e){ finish('음성을 쓸 수 없습니다 · 무음으로 진행합니다'); return; }
@@ -1443,7 +1462,14 @@ $('#bVoice').onclick  = e => {
   if(on){ stopSpeak(); vState(''); }
   else if(st.playing && st.phase==='beat'){ clk.spoke=false; speak(curBeat().text); }
 };
-$('#sRate').oninput = e => { rate = +e.target.value/100; $('#vRate').textContent = rate.toFixed(2); };
+$('#sRate').oninput = e => {
+  rate = +e.target.value/100; $('#vRate').textContent = rate.toFixed(2);
+  if(st.phase==='beat') render0();          // 자막 길이 표시 갱신
+};
+$('#sRate').onchange = () => {              // 놓는 순간 새 속도로 이 비트를 다시
+  if(st.playing && st.phase==='beat'){ clk.t0 = performance.now(); clk.spoke=false;
+    clk.boundary=false; highlight(-1); if(voiceOn()) speak(curBeat().text); }
+};
 
 const SL = [['#sBlur','#vBlur','blur',v=>`${(v/10).toFixed(1)}px`],
             ['#sBri','#vBri','bri',v=>`${v}%`], ['#sSat','#vSat','sat',v=>`${v}%`]];
