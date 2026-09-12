@@ -109,6 +109,9 @@ story = {
                 beat("b_intro_02", "나무를 하다가 그만, 도끼를 연못에 빠뜨렸어요.", {
                     "background": "bg_pond_day", "camera": "panRight",
                     "transitionIn": "pageTurn", "fx": "none",
+                    # 빛이 쏟아지기 직전. 여기를 눌러둬야 다음 비트가 밝아 보인다.
+                    # 다음 비트는 기본값(밝기 100)으로 돌아오는 것만으로 빛이 쏟아진다.
+                    "bgTreatment": {"blurPx": 1.0, "brightness": 68, "saturate": 52},
                     "actors": [
                         woodcutter("sad", enter="none"),
                         {"asset": "props/axe_iron", "x": 0.62, "y": 0.72,
