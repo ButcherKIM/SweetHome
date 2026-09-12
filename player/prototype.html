@@ -1483,12 +1483,27 @@ $('#bReset').onclick   = () => setFxVals(0,100,100);
 $('#bSuggest').onclick = () => setFxVals(12,92,88);
 
 $('#bApply').onclick = () => {
+  const box = $('#vout');
+  const shout = () => box.scrollIntoView({block:'center', behavior:'smooth'});
   let parsed;
   try{ parsed = JSON.parse($('#ta').value); }
-  catch(err){ $('#vout').innerHTML = `<div class="e">✗ JSON 문법 오류 — ${err.message}</div>`;
-    $('#chVal').textContent='문법 오류'; $('#chVal').className='chip err'; return; }
-  if(!showValidation(parsed)) return;
-  story = parsed; buildSlots(); goto(story.rootNode, 0, true);
+  catch(err){
+    box.innerHTML = `<div class="e">✗ JSON 문법 오류 — ${err.message}</div>`
+      + `<div class="e">✗ <b>적용하지 않았습니다.</b> 화면은 그대로입니다.</div>`;
+    $('#chVal').textContent='문법 오류'; $('#chVal').className='chip err'; shout(); return;
+  }
+  if(!showValidation(parsed)){
+    // 거절을 조용히 하면 "왜 안 바뀌지" 가 된다
+    box.insertAdjacentHTML('afterbegin',
+      `<div class="e">✗ <b>적용하지 않았습니다.</b> 아래 오류를 고쳐야 화면이 바뀝니다.</div>`);
+    shout(); return;
+  }
+  // 편집한 자리를 지킨다. 처음으로 되돌리면 무엇이 바뀌었는지 볼 수가 없다
+  const node = parsed.nodes[st.node] ? st.node : parsed.rootNode;
+  const beat = Math.min(st.beat, parsed.nodes[node].beats.length - 1);
+  story = parsed; buildSlots(); goto(node, beat, true);
+  box.insertAdjacentHTML('afterbegin',
+    `<div class="k">적용했습니다 — ${node} · 비트 ${beat+1} 부터 재생</div>`);
 };
 $('#bRevert').onclick = () => { story = clone(DEFAULT_STORY);
   $('#ta').value = JSON.stringify(story,null,2); buildSlots(); showValidation(story); goto(story.rootNode,0,false); };
