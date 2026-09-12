@@ -194,6 +194,22 @@ def v11_wordtimings(story, r):
             r.warn("V11", f"{nid}: 선택지 질문에 promptWordTimings 없음")
 
 
+def v13_bg_treatment(story, r):
+    """배경 후처리 값이 범위를 벗어나면 배경이 뭉개지거나 캐릭터를 덮는다."""
+    LIM = {"blurPx": (0, 6), "brightness": (40, 140), "saturate": (0, 150)}
+
+    def check(t, where):
+        for k, v in (t or {}).items():
+            if k not in LIM:
+                r.err("V13", f"{where}: bgTreatment 에 알 수 없는 항목 '{k}'")
+            elif not LIM[k][0] <= v <= LIM[k][1]:
+                r.err("V13", f"{where}: bgTreatment.{k}={v} 가 범위 {LIM[k]} 밖")
+
+    check(story["stage"].get("bgTreatment"), "stage")
+    for nid, b in iter_beats(story):
+        check(b["scene"].get("bgTreatment"), b["id"])
+
+
 def v12_subtitle_area(story, r):
     """자막이 그림을 가리지 않도록 하단 영역을 비워 둔다 (Spec §6.3)."""
     for nid, b in iter_beats(story):
@@ -222,6 +238,7 @@ def main():
     v10_coords(story, r)
     v11_wordtimings(story, r)
     v12_subtitle_area(story, r)
+    v13_bg_treatment(story, r)
 
     print(f"검증 대상: {path}")
     for w in r.warns:  print(f"  ⚠  {w}")
@@ -229,7 +246,7 @@ def main():
     if r.errors:
         print(f"\n실패 — 오류 {len(r.errors)}건, 경고 {len(r.warns)}건")
         return 1
-    print(f"\n통과 — V1~V12 이상 없음 (경고 {len(r.warns)}건)")
+    print(f"\n통과 — V1~V13 이상 없음 (경고 {len(r.warns)}건)")
     return 0
 
 

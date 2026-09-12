@@ -228,7 +228,10 @@ a{color:var(--accent)}
   <details>
     <summary>배경 보정<span class="hint">배경이 캐릭터를 잡아먹으면 여기서 물러나게</span></summary>
     <div class="body">
-      <p class="note">에셋을 다시 뽑지 않고 배경만 뒤로 물리는 실험입니다. 값이 정해지면 <code>story.json</code> 에 필드로 넣습니다.</p>
+      <p class="note">배경을 한 발 물려 캐릭터를 앞으로 내보냅니다. 기본값은 <code>stage.bgTreatment</code>,
+        비트별로 <code>scene.bgTreatment</code> 로 덮어씁니다 — <b>같은 배경으로 명암 대조를 만들 때</b> 쓰세요.
+        예를 들어 빛이 쏟아지기 직전 비트를 <code>brightness 70 · saturate 55</code> 로 눌러두면,
+        다음 비트가 100% 로 돌아오는 것만으로 빛이 쏟아집니다.</p>
       <div class="sliders">
         <div class="sl"><label>흐림 <b id="vBlur">0.0px</b></label>
           <input type="range" id="sBlur" min="0" max="60" value="0"></div>
@@ -237,8 +240,9 @@ a{color:var(--accent)}
         <div class="sl"><label>채도 <b id="vSat">100%</b></label>
           <input type="range" id="sSat" min="0" max="140" value="100"></div>
       </div>
-      <div class="bar"><button class="btn" id="bReset">원래대로</button>
-        <button class="btn" id="bSuggest">추천값 (흐림 1.2 · 밝기 92 · 채도 88)</button></div>
+      <div class="bar"><button class="btn pri" id="bCapture">이 값을 이 비트에 넣기</button>
+        <button class="btn" id="bSuggest">추천값 (흐림 1.0)</button>
+        <button class="btn" id="bReset">story.json 값으로</button></div>
     </div>
   </details>
 
@@ -275,7 +279,12 @@ const DEFAULT_STORY = {
   "stage": {
     "width": 1920,
     "height": 1080,
-    "safeArea": 0.05
+    "safeArea": 0.05,
+    "bgTreatment": {
+      "blurPx": 1.0,
+      "brightness": 100,
+      "saturate": 100
+    }
   },
   "rootNode": "n_intro",
   "canonicalEnding": "n_end_honest",
@@ -954,6 +963,9 @@ let imgs = {};                       // "bg_pond_glow" | "characters/woodcutter:
 let st = { node:null, beat:0, playing:false, phase:'beat', seen:new Set() };
 let clk = { t0:0, dur:0, raf:0, wi:-1, boundary:false, spoke:false };
 let bgFx = { blur:0, bri:100, sat:100 };
+const DEF_TREAT = { blurPx:0, brightness:100, saturate:100 };
+const treatOf = b => ({ ...DEF_TREAT, ...(story.stage.bgTreatment||{}), ...(b.scene.bgTreatment||{}) });
+let liveFx = false;                   // 슬라이더를 만지는 중이면 그 값을 쓴다
 let rate = .75;
 const REF_RATE = .75;                 // 4~7세 기준으로 맞춘 값 (글자당 290ms)
 const pace  = () => REF_RATE / rate;  // 느리게 하면 자막도 같이 길어진다
@@ -1165,6 +1177,8 @@ function render(){
   else { bg.style.backgroundImage='none'; bg.classList.add('shape'); }
   bg.style.background_ = '';
   bg.style.backgroundColor = imgs[sc.background] ? 'transparent' : (bgAsset.tint || '#5A6B64');
+  if(!liveFx){ const t = treatOf(b);
+    setFxVals(Math.round(t.blurPx*10), t.brightness, t.saturate, true); }
   bg.style.filter = `blur(${bgFx.blur/10}px) brightness(${bgFx.bri}%) saturate(${bgFx.sat}%)`;
 
   // 카메라
@@ -1379,9 +1393,18 @@ const E_ANIM=['none','breathe','sway','bob','driftIn'];
 const E_ENTER=['none','fadeIn','popIn','slideIn'];
 const E_TRANS=['crossfade','pageTurn','wipe','cut'];
 const E_FX=['none','petals','snow','fireflies','sparkle','rain','dust'];
+const TREAT_LIM = { blurPx:[0,6], brightness:[40,140], saturate:[0,150] };
+function checkTreat(t, where, er){
+  for(const k in (t||{})){
+    if(!TREAT_LIM[k]) er.push(`V13 ${where}: bgTreatment 에 알 수 없는 항목 '${k}'`);
+    else if(t[k] < TREAT_LIM[k][0] || t[k] > TREAT_LIM[k][1])
+      er.push(`V13 ${where}: bgTreatment.${k}=${t[k]} 가 범위 [${TREAT_LIM[k]}] 밖`);
+  }
+}
 function validate(s){
   const er=[], wa=[];
   const beats=[]; for(const id in s.nodes) for(const b of s.nodes[id].beats) beats.push([id,b]);
+  checkTreat(s.stage?.bgTreatment, 'stage', er);
   for(const [nid,b] of beats){
     const sc=b.scene;
     if(!s.assets.backgrounds[sc.background]) er.push(`V2 ${b.id}: 배경 '${sc.background}' 미선언`);
@@ -1398,6 +1421,7 @@ function validate(s){
     if(!E_CAM.includes(sc.camera??'still')) er.push(`V6 ${b.id}: camera='${sc.camera}' 허용값 아님 (${E_CAM.join(' · ')})`);
     if(!E_TRANS.includes(sc.transitionIn??'crossfade')) er.push(`V6 ${b.id}: transitionIn='${sc.transitionIn}' 허용값 아님`);
     if(!E_FX.includes(sc.fx??'none')) er.push(`V6 ${b.id}: fx='${sc.fx}' 허용값 아님`);
+    checkTreat(sc.bgTreatment, b.id, er);
     if(b.durationMs<6000||b.durationMs>15000) er.push(`V7 ${b.id}: ${(b.durationMs/1000).toFixed(1)}초 — 6~12초(최대 15)`);
     else if(b.durationMs>12000) wa.push(`V7 ${b.id}: ${(b.durationMs/1000).toFixed(1)}초 — 분할 검토`);
     if(!b.wordTimings?.length) er.push(`V11 ${b.id}: wordTimings 없음 — 어절 하이라이트 불가`);
@@ -1432,7 +1456,7 @@ function showValidation(s){
   const {er,wa} = validate(s);
   const box = $('#vout'); box.innerHTML='';
   const chip = $('#chVal');
-  if(!er.length && !wa.length){ box.innerHTML = `<div class="k">V1~V12 통과</div>`;
+  if(!er.length && !wa.length){ box.innerHTML = `<div class="k">V1~V13 통과</div>`;
     chip.textContent='검증 통과'; chip.className='chip'; }
   else {
     er.forEach(t=>box.insertAdjacentHTML('beforeend',`<div class="e">✗ ${t}</div>`));
@@ -1473,14 +1497,24 @@ $('#sRate').onchange = () => {              // 놓는 순간 새 속도로 이 �
 
 const SL = [['#sBlur','#vBlur','blur',v=>`${(v/10).toFixed(1)}px`],
             ['#sBri','#vBri','bri',v=>`${v}%`], ['#sSat','#vSat','sat',v=>`${v}%`]];
-SL.forEach(([s,l,k,f])=>{ $(s).oninput = e => { bgFx[k]=+e.target.value; $(l).textContent=f(+e.target.value);
+SL.forEach(([s,l,k,f])=>{ $(s).oninput = e => { liveFx=true; bgFx[k]=+e.target.value; $(l).textContent=f(+e.target.value);
   $('#bg').style.filter=`blur(${bgFx.blur/10}px) brightness(${bgFx.bri}%) saturate(${bgFx.sat}%)`; }; });
-function setFxVals(b,br,sa){ bgFx={blur:b,bri:br,sat:sa};
+function setFxVals(b,br,sa,quiet){ if(!quiet) liveFx=true; bgFx={blur:b,bri:br,sat:sa};
   $('#sBlur').value=b; $('#sBri').value=br; $('#sSat').value=sa;
   $('#vBlur').textContent=(b/10).toFixed(1)+'px'; $('#vBri').textContent=br+'%'; $('#vSat').textContent=sa+'%';
   $('#bg').style.filter=`blur(${b/10}px) brightness(${br}%) saturate(${sa}%)`; }
-$('#bReset').onclick   = () => setFxVals(0,100,100);
-$('#bSuggest').onclick = () => setFxVals(12,92,88);
+$('#bReset').onclick   = () => { liveFx=false; render(); };
+$('#bSuggest').onclick = () => setFxVals(10,100,100);
+// 실험한 값을 이 비트에 붙여 넣는다 — 눈으로 찾은 값이 데이터가 되는 지점
+$('#bCapture').onclick = () => {
+  const s = JSON.parse($('#ta').value);
+  const b = s.nodes[st.node].beats[st.beat];
+  b.scene.bgTreatment = { blurPx:+(bgFx.blur/10).toFixed(1), brightness:bgFx.bri, saturate:bgFx.sat };
+  $('#ta').value = JSON.stringify(s,null,2);
+  story = s; liveFx = false; render();
+  $('#vout').innerHTML = `<div class="k">${b.id} 의 scene.bgTreatment 에 넣었습니다 — `
+    + `blur ${(bgFx.blur/10).toFixed(1)}px · 밝기 ${bgFx.bri}% · 채도 ${bgFx.sat}%</div>`;
+};
 
 $('#bApply').onclick = () => {
   const box = $('#vout');

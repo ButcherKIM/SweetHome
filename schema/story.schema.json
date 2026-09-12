@@ -20,7 +20,8 @@
       "properties": {
         "width":  {"type":"integer"},
         "height": {"type":"integer"},
-        "safeArea":{"type":"number","minimum":0,"maximum":0.2}
+        "safeArea":{"type":"number","minimum":0,"maximum":0.2},
+        "bgTreatment": { "$ref": "#/$defs/bgTreatment" }
       }
     },
     "rootNode":        { "type": "string" },
@@ -136,6 +137,16 @@
       }
     },
 
+    "bgTreatment": {
+      "description": "배경을 뒤로 물리는 후처리. 캐릭터가 앞으로 나온다 (Spec §5.7). scene 에서 덮어쓸 수 있다",
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "blurPx":     { "type":"number",  "minimum":0,  "maximum":6 },
+        "brightness": { "type":"integer", "minimum":40, "maximum":140 },
+        "saturate":   { "type":"integer", "minimum":0,  "maximum":150 }
+      }
+    },
+
     "wordTimings": {
       "description": "어절별 [문자시작, 문자끝(제외), 시작ms, 끝ms]. D14 확정: 어절 단위",
       "type": "array", "minItems": 1,
@@ -149,6 +160,7 @@
       "additionalProperties": false,
       "properties": {
         "background":   { "type":"string" },
+        "bgTreatment":  { "$ref": "#/$defs/bgTreatment" },
         "camera":       { "enum": ["still","pushIn","pullOut","panLeft","panRight","tiltUp"] },
         "transitionIn": { "enum": ["crossfade","pageTurn","wipe","cut"] },
         "fx":           { "enum": ["none","petals","snow","fireflies","sparkle","rain","dust"] },

@@ -135,6 +135,25 @@ Keep this exact character design, same face, same clothes, same colors.
 | `bg_pond_day.png` | a small still forest pond in a Korean mountain valley, pine trees and mossy rocks around the water, calm reflective surface, overcast soft daylight |
 | `bg_pond_glow.png` | the same small forest pond at dusk, warm golden light rising from the water surface and glowing through thin mist, pine trees silhouetted, magical but gentle |
 
+### ⚠️ 같은 장소의 변형은 **구도를 고정**한다
+
+한 장소의 시간대·조명 변형(평범한 연못 → 빛나는 연못)은 **구도가 같아야 대조가 산다.**
+구도까지 바뀌면 "빛이 쏟아졌다" 가 아니라 "장소가 바뀌었다" 로 읽힌다.
+
+1. 기준이 될 한 장을 먼저 확정한다
+2. 그 이미지를 **레퍼런스로 첨부**하고 아래 문장을 넣는다
+3. 바꾸는 것은 **빛뿐**임을 명시한다
+
+```
+The SAME scene as the attached image — identical composition, identical camera angle,
+identical placement of every tree, rock and water edge. Do not move or redesign anything.
+Change ONLY the light.
+```
+
+> **더 싼 방법이 먼저다.** 밝기·채도 차이만으로 충분한 대조라면 배경을 새로 뽑지 말고
+> `scene.bgTreatment` 로 직전 비트를 눌러둔다 ([Spec §5.7](../StoryTellingSpec.md#57-배경-후처리--배경을-한-발-물린다)).
+> 에셋 0장으로 같은 연출이 나온다. 빛줄기나 안개처럼 **없던 것이 생겨야** 할 때만 새로 뽑는다.
+
 **템플릿**
 
 ```

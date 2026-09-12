@@ -56,7 +56,10 @@ story = {
     "locale": "ko-KR",
     "targetAge": [4, 7],
     "styleId": "hanji-watercolor-v1",
-    "stage": {"width": 1920, "height": 1080, "safeArea": 0.05},
+    # bgTreatment: 프로토타입에서 눈으로 맞춘 값. 배경이 한 발 물러나 캐릭터가 앞으로 나온다.
+    # 비트별로 scene.bgTreatment 로 덮어쓸 수 있다 (같은 배경으로 명암 대조를 만들 때).
+    "stage": {"width": 1920, "height": 1080, "safeArea": 0.05,
+              "bgTreatment": {"blurPx": 1.0, "brightness": 100, "saturate": 100}},
     "rootNode": "n_intro",
     "canonicalEnding": "n_end_honest",
 

@@ -12,7 +12,12 @@
   "stage": {
     "width": 1920,
     "height": 1080,
-    "safeArea": 0.05
+    "safeArea": 0.05,
+    "bgTreatment": {
+      "blurPx": 1.0,
+      "brightness": 100,
+      "saturate": 100
+    }
   },
   "rootNode": "n_intro",
   "canonicalEnding": "n_end_honest",
