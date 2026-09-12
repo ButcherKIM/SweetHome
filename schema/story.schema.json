@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ButcherKIM/SweetHome/schema/story.schema.json",
+  "title": "StoryTelling story.json",
+  "description": "분기형 동화 1편. 플레이어는 이 파일만 읽고 재생한다. 스펙: StoryTellingSpec.md",
+  "type": "object",
+  "required": ["schemaVersion","storyId","title","locale","targetAge","stage","rootNode","assets","nodes"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "0.4" },
+    "storyId":  { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "title":    { "type": "string" },
+    "source":   { "type": "string" },
+    "locale":   { "type": "string" },
+    "targetAge":{ "type": "array", "items": {"type":"integer"}, "minItems": 2, "maxItems": 2 },
+    "styleId":  { "type": "string" },
+    "stage": {
+      "type": "object",
+      "required": ["width","height","safeArea"],
+      "properties": {
+        "width":  {"type":"integer"},
+        "height": {"type":"integer"},
+        "safeArea":{"type":"number","minimum":0,"maximum":0.2}
+      }
+    },
+    "rootNode":        { "type": "string" },
+    "canonicalEnding": { "type": "string" },
+    "subtitle": {
+      "type": "object",
+      "description": "자막 규격. 한글 학습이 제품 목표이므로 기본 ON (Spec §6.3)",
+      "properties": {
+        "defaultOn":     { "type": "boolean" },
+        "highlightUnit": { "const": "eojeol", "description": "D14 확정: 어절 단위" },
+        "minFontPx":     { "type": "integer", "minimum": 48 },
+        "wordSpacingEm": { "type": "number" },
+        "maxLines":      { "type": "integer", "maximum": 2 }
+      }
+    },
+
+    "assets": {
+      "type": "object",
+      "required": ["backgrounds","characters"],
+      "additionalProperties": false,
+      "properties": {
+        "backgrounds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["src"],
+            "properties": { "src": {"type":"string"}, "tint": {"type":"string"} }
+          }
+        },
+        "characters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["displayName","poses"],
+            "properties": {
+              "displayName": {"type":"string"},
+              "tint": {"type":"string"},
+              "poses": { "type":"object", "minProperties": 1,
+                         "additionalProperties": {"type":"string"} }
+            }
+          }
+        },
+        "props": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["src"],
+            "properties": { "src": {"type":"string"}, "tint": {"type":"string"} }
+          }
+        }
+      }
+    },
+
+    "nodes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/node" }
+    }
+  },
+
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": ["type","beats"],
+      "additionalProperties": false,
+      "properties": {
+        "type":         { "enum": ["narrative","ending"] },
+        "beats":        { "type":"array", "minItems":1, "items": {"$ref":"#/$defs/beat"} },
+        "choice":       { "$ref": "#/$defs/choice" },
+        "endingTitle":  { "type":"string" },
+        "isCanonical":  { "type":"boolean" },
+        "lesson":       { "type":"string" }
+      }
+    },
+
+    "choice": {
+      "type": "object",
+      "required": ["promptText","options"],
+      "additionalProperties": false,
+      "properties": {
+        "promptText":  { "type":"string" },
+        "promptAudio": { "type":"string" },
+        "promptWordTimings": { "$ref": "#/$defs/wordTimings" },
+        "options": {
+          "type":"array", "minItems":3, "maxItems":3,
+          "items": {
+            "type":"object",
+            "required": ["id","label","next"],
+            "additionalProperties": false,
+            "properties": {
+              "id":    { "enum": ["a","b","c"] },
+              "label": { "type":"string", "maxLength": 12 },
+              "image": { "type":"string" },
+              "tint":  { "type":"string" },
+              "next":  { "type":"string" }
+            }
+          }
+        }
+      }
+    },
+
+    "beat": {
+      "type": "object",
+      "required": ["id","text","durationMs","wordTimings","scene"],
+      "additionalProperties": false,
+      "properties": {
+        "id":          { "type":"string" },
+        "text":        { "type":"string" },
+        "audio":       { "type":"string" },
+        "durationMs":  { "type":"integer", "minimum": 6000, "maximum": 15000 },
+        "wordTimings": { "$ref": "#/$defs/wordTimings" },
+        "scene":       { "$ref": "#/$defs/scene" }
+      }
+    },
+
+    "wordTimings": {
+      "description": "어절별 [문자시작, 문자끝(제외), 시작ms, 끝ms]. D14 확정: 어절 단위",
+      "type": "array", "minItems": 1,
+      "items": { "type":"array", "minItems":4, "maxItems":4,
+                 "items": {"type":"integer","minimum":0} }
+    },
+
+    "scene": {
+      "type": "object",
+      "required": ["background"],
+      "additionalProperties": false,
+      "properties": {
+        "background":   { "type":"string" },
+        "camera":       { "enum": ["still","pushIn","pullOut","panLeft","panRight","tiltUp"] },
+        "transitionIn": { "enum": ["crossfade","pageTurn","wipe","cut"] },
+        "fx":           { "enum": ["none","petals","snow","fireflies","sparkle","rain","dust"] },
+        "actors":       { "type":"array", "maxItems": 4, "items": {"$ref":"#/$defs/actor"} }
+      }
+    },
+
+    "actor": {
+      "type": "object",
+      "required": ["asset","x","y"],
+      "additionalProperties": false,
+      "properties": {
+        "asset": { "type":"string", "pattern": "^(characters|props)/[a-z0-9_]+$" },
+        "pose":  { "type":"string" },
+        "x":     { "type":"number", "minimum": 0, "maximum": 1 },
+        "y":     { "type":"number", "minimum": 0, "maximum": 1 },
+        "scale": { "type":"number", "exclusiveMinimum": 0 },
+        "flip":  { "type":"boolean" },
+        "z":     { "type":"integer" },
+        "anim":  { "enum": ["none","breathe","sway","bob","driftIn"] },
+        "enter": { "enum": ["none","fadeIn","popIn","slideIn"] }
+      }
+    }
+  }
+}

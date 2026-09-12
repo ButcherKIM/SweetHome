@@ -1,0 +1,685 @@
+{
+  "schemaVersion": "0.4",
+  "storyId": "goldaxe",
+  "title": "금도끼 은도끼",
+  "source": "한국 전래동화 (public domain)",
+  "locale": "ko-KR",
+  "targetAge": [
+    4,
+    7
+  ],
+  "styleId": "hanji-watercolor-v1",
+  "stage": {
+    "width": 1920,
+    "height": 1080,
+    "safeArea": 0.05
+  },
+  "rootNode": "n_intro",
+  "canonicalEnding": "n_end_honest",
+  "subtitle": {
+    "defaultOn": true,
+    "highlightUnit": "eojeol",
+    "minFontPx": 64,
+    "wordSpacingEm": 0.3,
+    "maxLines": 2
+  },
+  "assets": {
+    "backgrounds": {
+      "bg_forest_day": {
+        "src": "bg/bg_forest_day.png",
+        "tint": "#7C9A6B"
+      },
+      "bg_pond_day": {
+        "src": "bg/bg_pond_day.png",
+        "tint": "#6E8CA8"
+      },
+      "bg_pond_glow": {
+        "src": "bg/bg_pond_glow.png",
+        "tint": "#C9A24B"
+      }
+    },
+    "characters": {
+      "woodcutter": {
+        "displayName": "나무꾼",
+        "tint": "#4A7FB5",
+        "poses": {
+          "idle": "char/woodcutter_idle.png",
+          "sad": "char/woodcutter_sad.png",
+          "surprise": "char/woodcutter_surprise.png",
+          "happy": "char/woodcutter_happy.png"
+        }
+      },
+      "spirit": {
+        "displayName": "산신령",
+        "tint": "#E8C86A",
+        "poses": {
+          "calm": "char/spirit_calm.png",
+          "smile": "char/spirit_smile.png"
+        }
+      }
+    },
+    "props": {
+      "axe_iron": {
+        "src": "prop/axe_iron.png",
+        "tint": "#8A8F98"
+      },
+      "axe_gold": {
+        "src": "prop/axe_gold.png",
+        "tint": "#E3B341"
+      },
+      "axe_silver": {
+        "src": "prop/axe_silver.png",
+        "tint": "#C6CBD1"
+      }
+    }
+  },
+  "nodes": {
+    "n_intro": {
+      "type": "narrative",
+      "beats": [
+        {
+          "id": "b_intro_01",
+          "text": "산속 깊은 곳에 마음씨 착한 나무꾼이 살았어요.",
+          "audio": "audio/b_intro_01.opus",
+          "durationMs": 7700,
+          "wordTimings": [
+            [
+              0,
+              2,
+              0,
+              811
+            ],
+            [
+              3,
+              5,
+              811,
+              1622
+            ],
+            [
+              6,
+              8,
+              1622,
+              2433
+            ],
+            [
+              9,
+              12,
+              2433,
+              3649
+            ],
+            [
+              13,
+              15,
+              3649,
+              4460
+            ],
+            [
+              16,
+              20,
+              4460,
+              6081
+            ],
+            [
+              21,
+              26,
+              6081,
+              7700
+            ]
+          ],
+          "scene": {
+            "background": "bg_forest_day",
+            "camera": "pushIn",
+            "transitionIn": "crossfade",
+            "fx": "dust",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.32,
+                "y": 0.88,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "idle",
+                "enter": "fadeIn"
+              }
+            ]
+          }
+        },
+        {
+          "id": "b_intro_02",
+          "text": "나무를 하다가 그만, 도끼를 연못에 빠뜨렸어요.",
+          "audio": "audio/b_intro_02.opus",
+          "durationMs": 8010,
+          "wordTimings": [
+            [
+              0,
+              3,
+              0,
+              1265
+            ],
+            [
+              4,
+              7,
+              1265,
+              2530
+            ],
+            [
+              8,
+              11,
+              2530,
+              3373
+            ],
+            [
+              12,
+              15,
+              3373,
+              4638
+            ],
+            [
+              16,
+              19,
+              4638,
+              5903
+            ],
+            [
+              20,
+              26,
+              5903,
+              8010
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_day",
+            "camera": "panRight",
+            "transitionIn": "pageTurn",
+            "fx": "none",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.32,
+                "y": 0.88,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "sad",
+                "enter": "none"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.62,
+                "y": 0.72,
+                "scale": 0.5,
+                "z": 25,
+                "anim": "bob",
+                "enter": "slideIn"
+              }
+            ]
+          }
+        },
+        {
+          "id": "b_intro_03",
+          "text": "그때 연못에서 환한 빛이 쏟아졌어요.",
+          "audio": "audio/b_intro_03.opus",
+          "durationMs": 6460,
+          "wordTimings": [
+            [
+              0,
+              2,
+              0,
+              861
+            ],
+            [
+              3,
+              7,
+              861,
+              2584
+            ],
+            [
+              8,
+              10,
+              2584,
+              3445
+            ],
+            [
+              11,
+              13,
+              3445,
+              4306
+            ],
+            [
+              14,
+              20,
+              4306,
+              6460
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "pushIn",
+            "transitionIn": "crossfade",
+            "fx": "sparkle",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.26,
+                "y": 0.88,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "surprise",
+                "enter": "none"
+              }
+            ]
+          }
+        },
+        {
+          "id": "b_intro_04",
+          "text": "산신령이 나타나 금도끼를 들어 보였어요.",
+          "audio": "audio/b_intro_04.opus",
+          "durationMs": 7080,
+          "wordTimings": [
+            [
+              0,
+              4,
+              0,
+              1666
+            ],
+            [
+              5,
+              8,
+              1666,
+              2915
+            ],
+            [
+              9,
+              13,
+              2915,
+              4581
+            ],
+            [
+              14,
+              16,
+              4581,
+              5414
+            ],
+            [
+              17,
+              22,
+              5414,
+              7080
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "still",
+            "transitionIn": "cut",
+            "fx": "sparkle",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.22,
+                "y": 0.88,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "surprise",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "pose": "calm",
+                "x": 0.7,
+                "y": 0.74,
+                "scale": 1.25,
+                "z": 20,
+                "anim": "bob",
+                "enter": "fadeIn"
+              },
+              {
+                "asset": "props/axe_gold",
+                "x": 0.56,
+                "y": 0.6,
+                "scale": 0.55,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          }
+        }
+      ],
+      "choice": {
+        "promptText": "이것이 네 도끼냐?",
+        "promptAudio": "audio/n_intro_choice.opus",
+        "promptWordTimings": [
+          [
+            0,
+            3,
+            0,
+            1114
+          ],
+          [
+            4,
+            5,
+            1114,
+            1485
+          ],
+          [
+            6,
+            10,
+            1485,
+            2600
+          ]
+        ],
+        "options": [
+          {
+            "id": "a",
+            "label": "쇠도끼를 가리킨다",
+            "tint": "#8A8F98",
+            "image": "icon/choice_point_iron.png",
+            "next": "n_end_honest"
+          },
+          {
+            "id": "b",
+            "label": "금도끼를 받는다",
+            "tint": "#E3B341",
+            "image": "icon/choice_take_gold.png",
+            "next": "n_end_greedy"
+          },
+          {
+            "id": "c",
+            "label": "모르겠다고 한다",
+            "tint": "#9B8FB5",
+            "image": "icon/choice_shrug.png",
+            "next": "n_end_unsure"
+          }
+        ]
+      }
+    },
+    "n_end_honest": {
+      "type": "ending",
+      "isCanonical": true,
+      "endingTitle": "정직한 나무꾼",
+      "lesson": "정직한 마음은 반짝반짝 빛난단다.",
+      "beats": [
+        {
+          "id": "b_honest_01",
+          "text": "아니라고 말하자, 산신령은 도끼 세 자루를 모두 주었어요.",
+          "audio": "audio/b_honest_01.opus",
+          "durationMs": 9250,
+          "wordTimings": [
+            [
+              0,
+              4,
+              0,
+              1609
+            ],
+            [
+              5,
+              9,
+              1609,
+              2816
+            ],
+            [
+              10,
+              14,
+              2816,
+              4425
+            ],
+            [
+              15,
+              17,
+              4425,
+              5229
+            ],
+            [
+              18,
+              19,
+              5229,
+              5631
+            ],
+            [
+              20,
+              23,
+              5631,
+              6838
+            ],
+            [
+              24,
+              26,
+              6838,
+              7642
+            ],
+            [
+              27,
+              32,
+              7642,
+              9250
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "pullOut",
+            "transitionIn": "crossfade",
+            "fx": "sparkle",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.28,
+                "y": 0.88,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "happy",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "pose": "smile",
+                "x": 0.7,
+                "y": 0.74,
+                "scale": 1.25,
+                "z": 20,
+                "anim": "bob",
+                "enter": "none"
+              },
+              {
+                "asset": "props/axe_gold",
+                "x": 0.5,
+                "y": 0.56,
+                "scale": 0.45,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/axe_silver",
+                "x": 0.58,
+                "y": 0.58,
+                "scale": 0.45,
+                "z": 34,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "n_end_greedy": {
+      "type": "ending",
+      "endingTitle": "사라진 금빛",
+      "lesson": "내 것을 아끼는 마음이 가장 반짝인단다.",
+      "beats": [
+        {
+          "id": "b_greedy_01",
+          "text": "손을 뻗자 빛이 사라졌지만, 나무꾼은 제 쇠도끼를 되찾았어요.",
+          "audio": "audio/b_greedy_01.opus",
+          "durationMs": 9870,
+          "wordTimings": [
+            [
+              0,
+              2,
+              0,
+              790
+            ],
+            [
+              3,
+              5,
+              790,
+              1580
+            ],
+            [
+              6,
+              8,
+              1580,
+              2370
+            ],
+            [
+              9,
+              15,
+              2370,
+              4344
+            ],
+            [
+              16,
+              20,
+              4344,
+              5923
+            ],
+            [
+              21,
+              22,
+              5923,
+              6318
+            ],
+            [
+              23,
+              27,
+              6318,
+              7897
+            ],
+            [
+              28,
+              34,
+              7897,
+              9870
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_day",
+            "camera": "pullOut",
+            "transitionIn": "wipe",
+            "fx": "none",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.34,
+                "y": 0.88,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "happy",
+                "enter": "none"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.56,
+                "y": 0.66,
+                "scale": 0.5,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "n_end_unsure": {
+      "type": "ending",
+      "endingTitle": "함께 찾은 도끼",
+      "lesson": "모를 땐 같이 찾아보면 된단다.",
+      "beats": [
+        {
+          "id": "b_unsure_01",
+          "text": "모르겠다고 하자, 산신령이 함께 연못을 들여다봐 주었어요.",
+          "audio": "audio/b_unsure_01.opus",
+          "durationMs": 9560,
+          "wordTimings": [
+            [
+              0,
+              5,
+              0,
+              1992
+            ],
+            [
+              6,
+              9,
+              1992,
+              2789
+            ],
+            [
+              10,
+              14,
+              2789,
+              4382
+            ],
+            [
+              15,
+              17,
+              4382,
+              5179
+            ],
+            [
+              18,
+              21,
+              5179,
+              6374
+            ],
+            [
+              22,
+              26,
+              6374,
+              7967
+            ],
+            [
+              27,
+              32,
+              7967,
+              9560
+            ]
+          ],
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "tiltUp",
+            "transitionIn": "crossfade",
+            "fx": "fireflies",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.3,
+                "y": 0.88,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "idle",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "pose": "smile",
+                "x": 0.62,
+                "y": 0.78,
+                "scale": 1.1,
+                "z": 20,
+                "anim": "bob",
+                "enter": "none"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
