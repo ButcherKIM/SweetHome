@@ -1139,6 +1139,10 @@ function curNode(){ return story.nodes[st.node]; }
 function curBeat(){ return curNode().beats[st.beat]; }
 
 function render(){
+  // 비트를 그린다는 건 곧 비트 상태로 돌아간다는 뜻이다.
+  // 오버레이 제거를 이 한 곳이 책임져야 prev/next/goto 어느 경로로 와도 남지 않는다.
+  st.phase = 'beat';
+  $('#stage').querySelectorAll('.overlay').forEach(e => e.remove());
   const b = curBeat(), sc = b.scene;
   const cam = $('#cam'), bg = $('#bg'), la = $('#actors');
 
@@ -1238,8 +1242,7 @@ function pause(){
 }
 function goto(nodeId, beat, autoplay){
   speechSynthesis.cancel();
-  st.node=nodeId; st.beat=beat; st.phase='beat';
-  $('#stage').querySelectorAll('.overlay').forEach(e=>e.remove());
+  st.node=nodeId; st.beat=beat;
   render();
   if(autoplay) play(); else { pause(); highlight(-1); $('#prog').style.width='0%'; }
 }
@@ -1250,6 +1253,7 @@ function next(){
   if(n.choice) showChoice(n); else showEnding(n);
 }
 function prev(){
+  if(st.phase!=='beat'){ render(); return; }   // 오버레이만 닫고 방금 그 비트로
   if(st.beat>0){ st.beat--; render(); if(st.playing) play(); }
   else goto(story.rootNode, 0, false);
 }
@@ -1383,7 +1387,11 @@ function showValidation(s){
 
 /* ── 배선 ───────────────────────────────── */
 $('#bPlay').onclick   = () => st.playing ? pause() : play();
-$('#bNext').onclick   = () => { const n=curNode(); if(st.beat<n.beats.length-1){st.beat++;render();} else next(); };
+$('#bNext').onclick   = () => {
+  if(st.phase!=='beat') return;                // 선택지는 골라야 넘어간다
+  const n=curNode();
+  if(st.beat<n.beats.length-1){ st.beat++; render(); if(st.playing) play(); } else next();
+};
 $('#bPrev').onclick   = prev;
 $('#bRestart').onclick= () => goto(story.rootNode, 0, false);
 $('#stage').onclick   = e => { if(st.phase!=='beat'||e.target.closest('.overlay')) return;
