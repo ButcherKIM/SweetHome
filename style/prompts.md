@@ -79,6 +79,27 @@ No shadow, no ground, no cast shadow, no floor line.
 > **반드시 해당 캐릭터 시트를 레퍼런스 이미지로 첨부하고**, 프롬프트 끝에
 > `Keep this exact character design, same face, same clothes, same colors.` 를 붙인다.
 
+### ⚠️ 방향 규칙 — 전부 **오른쪽을 향해** 뽑는다
+
+무대 연출의 기본은 **인물이 무대 안쪽(상대역 쪽)을 본다**는 것이다. 왼쪽에 선 인물이
+왼쪽을 보면 화면 밖을 보는 꼴이 되어 어색하다.
+
+에셋을 방향별로 두 벌 만들 필요는 없다. **전부 오른쪽을 향해 한 벌만** 만들고,
+오른쪽에 배치할 때 `story.json` 에서 뒤집는다.
+
+```jsonc
+{ "asset": "characters/woodcutter", "pose": "surprise", "x": 0.28, "y": 0.80 }              // 왼쪽 — 그대로 (오른쪽을 본다)
+{ "asset": "characters/spirit",     "pose": "calm",     "x": 0.70, "y": 0.74, "flip": true } // 오른쪽 — 뒤집어 왼쪽을 본다
+```
+
+프롬프트에 아래 문장을 넣는다.
+
+```
+Facing slightly to the RIGHT, three-quarter view turned toward the right side of the frame.
+```
+
+이미 왼쪽을 보는 에셋을 뽑았다면 다시 뽑을 것 없이 `"flip": true` 만 붙이면 된다.
+
 | 파일명 | 포즈 설명 (아래 `{POSE}` 자리에 넣는다) |
 |---|---|
 | `char_woodcutter_idle.png` | standing calmly, holding an axe over his shoulder, faint friendly smile |
@@ -94,6 +115,7 @@ No shadow, no ground, no cast shadow, no floor line.
 [공통 스타일 토큰]
 
 Full body single character, {POSE}.
+Facing slightly to the RIGHT, three-quarter view turned toward the right side of the frame.
 Isolated on a plain flat magenta #FF00FF background.
 No shadow, no ground, no cast shadow, no floor line, no other objects.
 Keep this exact character design, same face, same clothes, same colors.
@@ -168,6 +190,7 @@ Isolated on a plain flat magenta #FF00FF background. No shadow, no ground, no te
 받은 이미지를 저장하기 전에 매번 본다.
 
 - [ ] **캐릭터 시트와 같은 사람인가** ← 가장 중요. 아니면 다시
+- [ ] **오른쪽을 향하고 있는가** (§3 방향 규칙)
 - [ ] 배경이 고른 마젠타인가 (얼룩·그라데이션 없이)
 - [ ] **발밑에 그림자나 바닥선이 없는가** ← 있으면 컷아웃 후 회색 얼룩이 남는다
 - [ ] 손발이 잘리지 않았는가
@@ -184,6 +207,8 @@ Isolated on a plain flat magenta #FF00FF background. No shadow, no ground, no te
 | 캐릭터가 매번 달라진다 | 시트를 첨부했는지 확인. 첨부해도 안 되면 시트를 다시 만든다 |
 | 21:9가 안 나온다 | `extremely wide panoramic banner composition, much wider than tall` 을 덧붙인다 |
 | 그림체가 매번 다르다 | 공통 스타일 토큰을 **통째로** 앞에 붙였는지 확인 (요약하면 안 된다) |
+| 인물이 화면 밖을 본다 | 다시 뽑지 말고 `story.json` 에 `"flip": true` 추가 (§3 방향 규칙) |
+| 구석에 반짝이·장식이 붙는다 | **프롬프트로는 막을 수 없다.** 플레이어가 마젠타를 걷어낼 때 가장 큰 덩어리만 남겨 자동 제거한다 |
 
 ## 9. 파일 저장
 

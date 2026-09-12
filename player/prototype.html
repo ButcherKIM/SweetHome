@@ -53,7 +53,9 @@ h1{font-family:var(--story);font-size:26px;font-weight:700;margin:0;letter-spaci
 .bg.shape{background-image:none!important}
 .layer{position:absolute;inset:0}
 .actor{position:absolute;transform:translateX(-50%);will-change:transform}
-.actor>.inner{transform-origin:50% 100%}
+.actor .ent{height:100%}
+.actor .flp{height:100%}
+.actor .inner{height:100%;transform-origin:50% 100%}
 .actor img{display:block;height:100%;width:auto;max-width:none}
 .shapeA{border-radius:44% 44% 30% 30%/50% 50% 26% 26%;height:100%;
   display:flex;align-items:center;justify-content:center;
@@ -204,6 +206,7 @@ a{color:var(--accent)}
     <span class="spacer"></span>
     <button class="btn" id="bSubs" aria-pressed="true">자막</button>
     <button class="btn" id="bVoice" aria-pressed="false">음성</button>
+    <span class="pos" id="voiceState"></span>
     <span class="pos" id="pos">—</span>
   </div>
 
@@ -1175,10 +1178,12 @@ function render(){
     wrap.className='actor';
     const baseH = isChar ? 45 : 16;
     wrap.style.cssText = `left:${a.x*100}%;bottom:${(1-a.y)*100}%;height:${baseH*(a.scale??1)}cqh;
-      z-index:${a.z??10};${a.flip?'transform:translateX(-50%) scaleX(-1);':''}`;
+      z-index:${a.z??10};`;
+    const ent = document.createElement('div'); ent.className='ent';
+    const flp = document.createElement('div'); flp.className='flp';
+    if(a.flip) flp.style.transform = 'scaleX(-1)';
     const inner = document.createElement('div');
     inner.className='inner';
-    inner.style.height='100%';
     const an = a.anim||'none';
     if(an==='breathe') inner.style.animation='breathe 3.6s ease-in-out infinite';
     else if(an==='sway') inner.style.animation='sway 4.2s ease-in-out infinite';
@@ -1193,8 +1198,8 @@ function render(){
       inner.appendChild(sh);
     }
     const en = a.enter||'none';
-    if(en!=='none') wrap.style.animation = `${en} .5s ease both`;
-    wrap.appendChild(inner); la.appendChild(wrap);
+    if(en!=='none') ent.style.animation = `${en} .5s ease both`;
+    flp.appendChild(inner); ent.appendChild(flp); wrap.appendChild(ent); la.appendChild(wrap);
   }
 
   setFx(sc.fx);
@@ -1238,10 +1243,10 @@ function play(){
 }
 function pause(){
   st.playing=false; $('#bPlay').textContent='▶  재생';
-  cancelAnimationFrame(clk.raf); speechSynthesis.cancel();
+  cancelAnimationFrame(clk.raf); stopSpeak();
 }
 function goto(nodeId, beat, autoplay){
-  speechSynthesis.cancel();
+  stopSpeak();
   st.node=nodeId; st.beat=beat;
   render();
   if(autoplay) play(); else { pause(); highlight(-1); $('#prog').style.width='0%'; }
@@ -1289,21 +1294,41 @@ function showEnding(n){
 }
 
 /* ── 음성 (Web Speech, 무료) ────────────── */
-let koVoice = null;
+let koVoice = null, vTries = 0, speakId = 0, guard1 = 0, guard2 = 0;
+const HAS_TTS = typeof speechSynthesis !== 'undefined';
+
+function vState(t){ $('#voiceState').textContent = t; }
 function pickVoice(){
-  const vs = speechSynthesis.getVoices();
-  koVoice = vs.find(v=>v.lang && v.lang.toLowerCase().startsWith('ko')) || null;
-  const btn = $('#bVoice');
-  if(!koVoice){ btn.disabled=true; btn.title='이 브라우저에 한국어 음성이 없습니다'; }
+  if(!HAS_TTS){ $('#bVoice').disabled = true; vState('이 브라우저는 음성 미지원'); return; }
+  const vs = speechSynthesis.getVoices() || [];
+  koVoice = vs.find(v => (v.lang||'').toLowerCase().startsWith('ko')) || null;
+  $('#bVoice').disabled = false;                 // 목록이 늦게 와도 다시 켠다
+  if(koVoice) vState('');
+  else if(vs.length) vState('한국어 음성 없음 · 기본 음성으로 재생');
+  else if(vTries++ < 16){ vState('음성 목록 읽는 중…'); setTimeout(pickVoice, 250); }
+  else vState('음성을 찾지 못했습니다');
 }
-speechSynthesis.onvoiceschanged = pickVoice; pickVoice();
-const voiceOn = () => $('#bVoice').getAttribute('aria-pressed')==='true' && koVoice;
+if(HAS_TTS) speechSynthesis.onvoiceschanged = pickVoice;
+pickVoice();
+const voiceOn = () => HAS_TTS && $('#bVoice').getAttribute('aria-pressed')==='true';
+function stopSpeak(){ speakId++; clearTimeout(guard1); clearTimeout(guard2);
+  if(HAS_TTS) speechSynthesis.cancel(); }
 
 function speak(text){
-  speechSynthesis.cancel();
+  stopSpeak();
+  const my = ++speakId, b = curBeat();
+  let done = false, started = false;
+  // 음성이 끝났든 막혔든, 재생이 멈추지 않게 한 곳으로 모은다
+  const finish = why => {
+    if(done || my !== speakId) return;
+    done = true; clearTimeout(guard1); clearTimeout(guard2);
+    if(why) vState(why);
+    if(st.playing && st.phase==='beat') next();
+  };
   const u = new SpeechSynthesisUtterance(text);
-  u.voice = koVoice; u.lang='ko-KR'; u.rate=.92; u.pitch=1.05;
-  const b = curBeat();
+  if(koVoice) u.voice = koVoice;
+  u.lang='ko-KR'; u.rate=.92; u.pitch=1.05;
+  u.onstart = () => { started = true; };
   u.onboundary = e => {
     clk.boundary = true;
     const ci = e.charIndex ?? 0;
@@ -1311,8 +1336,14 @@ function speak(text){
     for(let k=0;k<b.wordTimings.length;k++) if(ci >= b.wordTimings[k][0]) i = k;
     highlight(i);
   };
-  u.onend = () => { if(st.playing && st.phase==='beat') next(); };
-  speechSynthesis.speak(u);
+  u.onend   = () => finish('');
+  u.onerror = () => finish('음성 재생 실패 · 무음으로 진행합니다');
+  try { speechSynthesis.speak(u); }
+  catch(e){ finish('음성을 쓸 수 없습니다 · 무음으로 진행합니다'); return; }
+  // 음성이 아예 울리지 않는 환경(iframe 차단 등)에서 멈춰 서지 않게
+  guard1 = setTimeout(() => { if(!started) finish('음성이 차단된 것 같습니다 · 무음으로 진행합니다'); },
+                      Math.max(1400, b.durationMs * .45));
+  guard2 = setTimeout(() => finish(''), b.durationMs * 2.4 + 3000);
 }
 
 /* ── 검증 (validate_story.py 의 브라우저판) ── */
@@ -1398,8 +1429,12 @@ $('#stage').onclick   = e => { if(st.phase!=='beat'||e.target.closest('.overlay'
   const n=curNode(); if(st.beat<n.beats.length-1){st.beat++;render();if(st.playing)play();} else next(); };
 $('#bSubs').onclick   = e => { const on = e.target.getAttribute('aria-pressed')==='true';
   e.target.setAttribute('aria-pressed', !on); $('#subs').classList.toggle('off', on); };
-$('#bVoice').onclick  = e => { const on = e.target.getAttribute('aria-pressed')==='true';
-  e.target.setAttribute('aria-pressed', !on); if(on) speechSynthesis.cancel(); };
+$('#bVoice').onclick  = e => {
+  const on = e.target.getAttribute('aria-pressed')==='true';
+  e.target.setAttribute('aria-pressed', !on);
+  if(on){ stopSpeak(); vState(''); }
+  else if(st.playing && st.phase==='beat') speak(curBeat().text);   // 켜자마자 들린다
+};
 
 const SL = [['#sBlur','#vBlur','blur',v=>`${(v/10).toFixed(1)}px`],
             ['#sBri','#vBri','bri',v=>`${v}%`], ['#sSat','#vSat','sat',v=>`${v}%`]];
