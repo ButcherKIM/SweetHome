@@ -217,6 +217,8 @@ a{color:var(--accent)}
     <button class="btn" id="bVoice" aria-pressed="true" title="edge-tts 로 미리 구운 한국어 나레이션">음성</button>
     <label class="rate" title="음성과 자막이 함께 느려집니다">구연 속도
       <input type="range" id="sRate" min="50" max="110" value="75"><b id="vRate">0.75</b></label>
+    <label class="rate" title="자막이 앞서면 +로, 늦으면 -로. 오디오 출력 지연은 기기마다 다릅니다">자막 싱크
+      <input type="range" id="sSync" min="-200" max="500" step="10" value="150"><b id="vSync">+150</b></label>
     <span class="pos" id="voiceState"></span>
     <span class="pos" id="pos">—</span>
   </div>
@@ -1248,6 +1250,7 @@ const DEF_TREAT = { blurPx:0, brightness:100, saturate:100 };
 const treatOf = b => ({ ...DEF_TREAT, ...(story.stage.bgTreatment||{}), ...(b.scene.bgTreatment||{}) });
 let liveFx = false;                   // 슬라이더를 만지는 중이면 그 값을 쓴다
 let rate = .75;
+let subSync = +(localStorage.getItem('goldaxe_sync') ?? 150);   // 자막 지연 보정(ms)
 const REF_RATE = .75;                 // 4~7세 기준으로 맞춘 값 (글자당 290ms)
 const pace  = () => REF_RATE / rate;  // 느리게 하면 자막도 같이 길어진다
 const eDur  = x => Math.round(x.durationMs * pace());          // 줄 하나
@@ -1594,15 +1597,17 @@ function step(now){
   const before = b.lines.slice(0, st.line).reduce((s,x)=>s+x.durationMs,0) * pace();
   $('#prog').style.width = Math.min(100, (before+el)/eBeat(b)*100) + '%';
   const aud = $('#aud');
-  const at = (clk.useAudio && !aud.paused && !aud.ended) ? aud.currentTime*1000 : null;
-  if(at !== null){                       // 오디오가 자막을 끈다 — 어긋날 수가 없다
+  // currentTime 은 디코더 위치라 실제로 귀에 닿는 소리보다 앞선다.
+  // 그 지연만큼 하이라이트를 늦춰야 눈과 귀가 맞는다 (기기마다 다르므로 슬라이더).
+  const at = (clk.useAudio && !aud.paused && !aud.ended) ? aud.currentTime*1000 - subSync : null;
+  if(at !== null){
     let i = -1;
     for(let k=0;k<l.wordTimings.length;k++) if(at >= l.wordTimings[k][2]) i = k;
     highlight(i);
   } else if(!clk.boundary){
     const sc = pace();
     let i = -1;
-    for(let k=0;k<l.wordTimings.length;k++) if(el >= l.wordTimings[k][2]*sc) i = k;
+    for(let k=0;k<l.wordTimings.length;k++) if(el - subSync >= l.wordTimings[k][2]*sc) i = k;
     highlight(i);
   }
   // durationMs 를 채웠고, 음성도 끝났을 때만 넘어간다.
@@ -1857,6 +1862,11 @@ $('#sRate').oninput = e => {
 $('#sRate').onchange = () => {              // 놓는 순간 새 속도로 이 줄을 다시
   if(st.playing && st.phase==='beat') playLine();
 };
+$('#sSync').oninput = e => {
+  subSync = +e.target.value;
+  $('#vSync').textContent = (subSync>0?'+':'') + subSync;
+  try{ localStorage.setItem('goldaxe_sync', subSync); }catch(err){}
+};
 
 const SL = [['#sBlur','#vBlur','blur',v=>`${(v/10).toFixed(1)}px`],
             ['#sBri','#vBri','bri',v=>`${v}%`], ['#sSat','#vSat','sat',v=>`${v}%`]];
@@ -1915,6 +1925,8 @@ addEventListener('resize', fxSize);
 
 load();
 initCloud();
+$('#sSync').value = subSync;
+$('#vSync').textContent = (subSync>0?'+':'') + subSync;
 $('#ta').value = JSON.stringify(story, null, 2);
 buildSlots(); showValidation(story); fxSize(); fxTick(0);
 $('#assetNote').textContent = Object.keys(imgs).length ? `${Object.keys(imgs).length}개 적용됨` : '';
