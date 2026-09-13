@@ -4,7 +4,12 @@
 > 스타일: [style-bible.md](./style-bible.md) `D15 한지 수채 확정`
 > 관련: [Pipeline §S4](../Pipeline.md) · [Spec §5](../StoryTellingSpec.md)
 
-**남은 에셋 16개.** 완료: `bg_pond_glow`, `char_woodcutter_surprise`, 나무꾼 시트.
+**남은 작업 19개** (에셋 18 + 산신령 시트).
+완료: `bg_pond_glow`, `char_woodcutter_surprise`, 나무꾼 시트.
+
+> 🎨 **[에셋 작업판](https://claude.ai/code/artifact/b95966cb-4e21-4f3c-a32a-52fd239f9921)** —
+> 탭 한 번에 복사되고 진행 상황이 기기 간에 저장됩니다. Flow 작업 중에는 그쪽이 편합니다.
+> 이 파일은 원본이자 기록용입니다 (소스: `tools/asset-board.html`).
 
 > **⚠️ 2026-09-13 추가 4개.** 전체 트리(2분기·9결말)를 쓰면서 [§8 추가분](#8-전체-트리-추가분-4개)이
 > 생겼습니다. Flow 작업하는 김에 같이 뽑으시면 한 번에 끝납니다.

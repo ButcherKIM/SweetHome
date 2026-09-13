@@ -1,0 +1,345 @@
+<title>금도끼 에셋 작업판</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#F3ECDD; --surface:#FFFDF7; --sunk:#EDE4D0;
+  --ink:#2C2A24; --muted:#7A7466; --line:#DFD6C1;
+  --gold:#A67C2E; --gold-soft:#F4E8CA;
+  --sage:#6F7F5D; --sage-soft:#E4EADB;
+  --done:#4F6B47; --done-soft:#DFE9DA;
+  --magenta:#B03C8E; --magenta-soft:#F7E2F0;
+  --black:#3A3A3A; --black-soft:#E4E2DE;
+  --shadow:0 1px 2px rgba(44,42,36,.05), 0 6px 18px rgba(44,42,36,.06);
+  --ui:"IBM Plex Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,monospace;
+  --story:"Gowun Batang","IBM Plex Sans KR",serif;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --ground:#191D19; --surface:#222722; --sunk:#141814;
+  --ink:#E9E3D4; --muted:#9A9583; --line:#333A32;
+  --gold:#D9B455; --gold-soft:#312814;
+  --sage:#9BAE86; --sage-soft:#232B20;
+  --done:#8FB683; --done-soft:#1E2A1C;
+  --magenta:#E58BC8; --magenta-soft:#301E2A;
+  --black:#B9B6AE; --black-soft:#26251F;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  --ground:#191D19; --surface:#222722; --sunk:#141814;
+  --ink:#E9E3D4; --muted:#9A9583; --line:#333A32;
+  --gold:#D9B455; --gold-soft:#312814;
+  --sage:#9BAE86; --sage-soft:#232B20;
+  --done:#8FB683; --done-soft:#1E2A1C;
+  --magenta:#E58BC8; --magenta-soft:#301E2A;
+  --black:#B9B6AE; --black-soft:#26251F;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--ui);line-height:1.6;margin:0}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:22px 72px;
+  display:flex;flex-direction:column;gap:20px}
+
+h1{font-family:var(--story);font-size:27px;font-weight:700;margin:0;letter-spacing:-.01em}
+.lede{color:var(--muted);font-size:13.5px;margin:0}
+.lede b{color:var(--ink)}
+
+/* 진행 */
+.prog{position:sticky;top:0;z-index:20;background:var(--ground);
+  padding-block:10px;margin-block:-4px;border-bottom:1px solid var(--line)}
+.prog .row{display:flex;align-items:baseline;gap:10px;margin-bottom:7px}
+.prog .n{font:700 20px/1 var(--mono);color:var(--gold);font-variant-numeric:tabular-nums}
+.prog .t{font-size:13px;color:var(--muted)}
+.prog .sync{margin-left:auto;font:400 11.5px var(--mono);color:var(--muted)}
+.bar{height:5px;background:var(--sunk);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .3s ease}
+
+/* 공통 토큰 */
+.tok{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:14px 15px;box-shadow:var(--shadow)}
+.tok h2{font-size:14px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+.tok p{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+
+/* 섹션 */
+section{display:flex;flex-direction:column;gap:11px}
+.shead{display:flex;align-items:baseline;gap:9px;padding-inline:2px}
+.shead h2{font-size:15px;margin:0}
+.shead span{font:400 12px var(--mono);color:var(--muted);margin-left:auto}
+
+/* 카드 */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  box-shadow:var(--shadow);overflow:hidden;transition:opacity .2s}
+.card.done{opacity:.5}
+.card.done .name{text-decoration:line-through}
+.top{display:flex;align-items:flex-start;gap:11px;padding:13px 14px}
+.chk{flex:none;width:26px;height:26px;border:2px solid var(--line);border-radius:8px;
+  background:var(--sunk);cursor:pointer;display:grid;place-items:center;padding:0;
+  font-size:15px;line-height:1;color:transparent;transition:all .15s}
+.chk[aria-pressed="true"]{background:var(--done-soft);border-color:var(--done);color:var(--done)}
+.meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.name{font:500 13px/1.3 var(--mono);word-break:break-all}
+.desc{font-size:13px;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.tag{font-size:10.5px;font-weight:600;letter-spacing:.03em;padding:2.5px 8px;border-radius:999px;
+  background:var(--sage-soft);color:var(--sage);white-space:nowrap}
+.tag.m{background:var(--magenta-soft);color:var(--magenta)}
+.tag.k{background:var(--black-soft);color:var(--black)}
+.tag.g{background:var(--gold-soft);color:var(--gold)}
+.acts{display:flex;gap:7px;padding:0 14px 13px;flex-wrap:wrap}
+.btn{font:500 12.5px var(--ui);border:1px solid var(--line);background:var(--sunk);
+  color:var(--ink);padding:8px 14px;border-radius:9px;cursor:pointer;min-height:38px}
+.btn:hover{background:var(--gold-soft);border-color:var(--gold)}
+.btn.pri{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.ok{background:var(--done-soft);border-color:var(--done);color:var(--done)}
+pre{margin:0;padding:12px 14px;background:var(--sunk);border-top:1px solid var(--line);
+  font:400 11.5px/1.62 var(--mono);white-space:pre-wrap;word-break:break-word;
+  max-height:340px;overflow:auto}
+.hint{font-size:12px;color:var(--muted);padding:0 14px 12px;margin:0}
+.hint b{color:var(--ink)}
+
+/* 함정 */
+.warn{background:var(--gold-soft);border:1px solid var(--gold);border-radius:12px;padding:13px 15px}
+.warn h2{font-size:13.5px;margin:0 0 7px;color:var(--gold)}
+.warn ul{margin:0;padding-left:18px;font-size:12.5px;display:flex;flex-direction:column;gap:4px}
+.warn code{font:400 11.5px var(--mono);background:var(--surface);padding:1px 5px;border-radius:4px}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (max-width:480px){ h1{font-size:22px} .acts .btn{flex:1} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>금도끼 에셋 작업판</h1>
+    <p class="lede">Flow에 붙여넣을 프롬프트 <b>19개</b>. 탭하면 스타일 토큰까지 통째로 복사됩니다.
+      체크는 기기 간에 저장돼요.</p>
+  </header>
+
+  <div class="prog">
+    <div class="row"><span class="n" id="pn">0 / 19</span>
+      <span class="t" id="pt">시작 전</span><span class="sync" id="sync">확인 중…</span></div>
+    <div class="bar"><i id="pb"></i></div>
+  </div>
+
+  <div class="warn">
+    <h2>자주 걸리는 것</h2>
+    <ul>
+      <li><b>배경색을 확인하세요.</b> 대부분 <code>마젠타</code>인데 <b>빛줄기 하나만 검정</b>입니다</li>
+      <li><b>시트를 먼저.</b> 산신령 시트 없이 ④⑤를 뽑으면 컷마다 다른 사람이 됩니다</li>
+      <li><b>발밑에 그림자·바닥선이 있으면 다시.</b> 오려낸 뒤 회색 얼룩이 남아요</li>
+      <li>영상이 나오면 <b>첫 프레임 캡처</b>. 21:9가 없으면 16:9로 받으셔도 됩니다</li>
+      <li>구석 반짝이는 <b>신경 쓰지 마세요</b> — 플레이어가 자동으로 떼어냅니다</li>
+    </ul>
+  </div>
+
+  <div class="tok">
+    <h2>공통 스타일 토큰</h2>
+    <p>아래 프롬프트에 <b>이미 포함돼 있습니다.</b> 따로 붙일 필요 없어요. 참고용입니다.</p>
+    <button class="btn" id="copyTok">토큰만 복사</button>
+  </div>
+
+  <div id="list"></div>
+
+  <p class="lede">받은 이미지는 <a href="https://claude.ai/code/artifact/76043b70-8fe7-4d9d-a872-c97960e217e6">플레이어</a>의
+    해당 슬롯에 끌어다 놓으면 됩니다. 배경 제거는 브라우저가 알아서 합니다.</p>
+</div>
+
+<script>
+const TOKEN = `Korean folk tale picture-book illustration, hanji paper watercolor with visible paper grain,
+soft brush ink outlines, muted earth palette of sage green, clay ochre and warm grey,
+flat even daylight with no harsh shadows, characters 2.5 heads tall with rounded
+simplified forms and small gentle features, hand-painted children's book art,
+completely static image, single still frame, no camera movement, no motion, no animation,
+no text, no lettering, no watermark, no signature`;
+
+const MAGENTA = `Isolated on a plain flat magenta #FF00FF background.
+No shadow, no ground, no cast shadow, no floor line, no other objects.`;
+const KEEP = `Keep this exact character design, same face, same clothes, same colors.`;
+const BGRULES = `IMPORTANT STYLE RULES:
+Very simple and flat: only three depth layers, large simple shapes, minimal detail.
+Use the SAME thick soft ink outline weight as a children's picture book character.
+The background must stay quiet and recede so a character placed in front of it stands out.
+Leave the lower middle area open and uncluttered.
+Horizon in the lower third, shallow flat perspective like a picture book page.
+
+ABSOLUTELY NO people, NO characters, NO animals, NO human figures anywhere.
+Very wide panoramic composition, aspect ratio 21:9.`;
+
+const face = (dir) =>
+  `Facing slightly to the ${dir}, three-quarter view turned toward the ${dir.toLowerCase()} side of the frame.`;
+const char = (pose, dir) => `${TOKEN}\n\nFull body single character, ${pose}\n${face(dir)}\n${MAGENTA}\n${KEEP}`;
+const bg   = (scene, extra) => `${TOKEN}\n\nA wide establishing shot of ${scene}\n\n${extra}${BGRULES}`;
+const prop = (o) => `${TOKEN}\n\n${o}, single object, centered, seen from the side.\nIsolated on a plain flat magenta #FF00FF background.\nNo shadow, no ground, no cast shadow, no hands, no other objects.`;
+const icon = (a) => `${TOKEN}\n\n${a} Simple clear composition, single focus, large and easy to read at a glance.\nIsolated on a plain flat magenta #FF00FF background.\nNo shadow, no ground, no text.`;
+
+const GROUPS = [
+  { title: "먼저 — 산신령 시트", note: "이게 없으면 ④⑤가 매번 다른 사람이 됩니다", items: [
+    { id:"spirit_sheet", name:"style/refs/spirit_sheet.png", desc:"산신령 캐릭터 시트 — 정면 / 3-4 / 얼굴",
+      tags:[["m","마젠타 배경"],["g","첨부 없음"]],
+      p:`${TOKEN}\n\nCharacter reference sheet of a gentle Korean mountain spirit (sanshin): an elderly sage\nwith a long flowing white beard and long white eyebrows, wearing loose pale robes\nwith soft golden trim, holding a simple wooden staff, a faint warm glow around him,\nkind smiling eyes. He floats slightly rather than standing on the ground.\nShow the SAME character three times side by side in one image:\nfull-body front view, full-body three-quarter view, and a head close-up.\n${MAGENTA}`,
+      hint:"받으면 <b>따로 저장</b>해두세요. ④⑤ 뽑을 때 Ingredients로 넣습니다." },
+  ]},
+  { title: "캐릭터 5개", note: "시트를 Ingredients에 첨부", items: [
+    { id:"char_woodcutter_idle", name:"char_woodcutter_idle", desc:"나무꾼 — 도끼를 어깨에 메고 편안히",
+      tags:[["m","마젠타 배경"],["","나무꾼 시트 첨부"],["g","오른쪽을 봄"]],
+      p: char("standing calmly holding an axe over his shoulder, faint friendly smile.","RIGHT") },
+    { id:"char_woodcutter_sad", name:"char_woodcutter_sad", desc:"나무꾼 — 어깨가 처지고 빈손, 근심",
+      tags:[["m","마젠타 배경"],["","나무꾼 시트 첨부"],["g","오른쪽을 봄"]],
+      p: char("shoulders drooped, both hands empty and open, looking down, worried face.","RIGHT") },
+    { id:"char_woodcutter_happy", name:"char_woodcutter_happy", desc:"나무꾼 — 두 팔 들고 활짝",
+      tags:[["m","마젠타 배경"],["","나무꾼 시트 첨부"],["g","오른쪽을 봄"]],
+      p: char("both arms raised in delight, big open smile, standing upright.","RIGHT") },
+    { id:"char_spirit_calm", name:"char_spirit_calm", desc:"산신령 — 금도끼를 내밀며 잔잔하게",
+      tags:[["m","마젠타 배경"],["","산신령 시트 첨부"],["g","왼쪽을 봄"]],
+      p: char("floating upright, one hand holding a golden axe out toward the viewer, serene expression.","LEFT"),
+      hint:"산신령만 <b>왼쪽</b>입니다 — 오른쪽에 서서 나무꾼을 마주봐야 하니까요." },
+    { id:"char_spirit_smile", name:"char_spirit_smile", desc:"산신령 — 두 팔 벌려 건네주는 미소",
+      tags:[["m","마젠타 배경"],["","산신령 시트 첨부"],["g","왼쪽을 봄"]],
+      p: char("floating upright, both arms open in a giving gesture, warm smile.","LEFT") },
+  ]},
+  { title: "배경 3개", note: "21:9 · 인물 없음 · 하단 가운데 비우기", items: [
+    { id:"bg_forest_day", name:"bg_forest_day", desc:"아침 숲길 — 소나무, 이끼 바위, 고사리",
+      tags:[["","그대로 사용"],["g","21:9"]],
+      p: bg("a quiet Korean mountain forest path in soft morning light,\ntall pine trees, mossy rocks, ferns along the path, a distant ridge.",
+            "Bright and airy with light high-key values. Do NOT make it dark, moody or atmospheric.\n") },
+    { id:"bg_home_night", name:"bg_home_night", desc:"나무꾼의 초가집, 밤 — 창에 등불",
+      tags:[["","그대로 사용"],["g","21:9"]],
+      p: bg("a small humble Korean thatched-roof cottage at night,\nwarm lamplight glowing softly through the paper window, a low stone wall,\na persimmon tree beside the gate, a quiet night sky with a few stars.",
+            "Gentle and calm, NOT dark or scary. Soft blue-grey night tones with warm lamplight.\n"),
+      hint:"4~7세 대상이라 <b>무섭지 않게</b> — 어두운 밤이 아니라 등불이 따뜻한 밤입니다." },
+    { id:"bg_pond_day", name:"bg_pond_day", desc:"평범한 연못 — 빛이 쏟아지기 직전",
+      tags:[["","bg_pond_glow 첨부"],["g","21:9"],["g","선택사항"]],
+      p:`${TOKEN}\n\nThe SAME pond scene as the attached image — identical composition, identical camera angle,\nidentical placement of every pine tree, rock and water edge. Do not move or redesign anything.\n\nChange ONLY the light. This is the ordinary moment BEFORE anything magical happens:\nplain flat overcast daylight, quiet and unremarkable. No golden glow, no light rays,\nno rising mist, no sparkle on the water. The pond surface is dull and still.\nSlightly cooler and duller colors overall.\n\nABSOLUTELY NO people, NO characters, NO animals, NO human figures anywhere.\nVery wide panoramic composition, aspect ratio 21:9.`,
+      hint:"<b>안 뽑아도 됩니다.</b> 이미 밝기·채도로 대조를 만들어놨거든요. 시간 아끼시려면 건너뛰세요." },
+  ]},
+  { title: "소품 3개", note: "", items: [
+    { id:"prop_axe_iron", name:"prop_axe_iron", desc:"낡은 쇠도끼", tags:[["m","마젠타 배경"]],
+      p: prop("a plain old iron axe with a worn wooden handle") },
+    { id:"prop_axe_gold", name:"prop_axe_gold", desc:"금도끼 — 따뜻한 광", tags:[["m","마젠타 배경"]],
+      p: prop("a shining golden axe with an ornate handle and a soft warm glow") },
+    { id:"prop_axe_silver", name:"prop_axe_silver", desc:"은도끼 — 차가운 광", tags:[["m","마젠타 배경"]],
+      p: prop("a shining silver axe with a pale handle and a soft cool glow") },
+  ]},
+  { title: "빛줄기 1개", note: "여기만 검정 배경입니다", items: [
+    { id:"prop_light_rays", name:"prop_light_rays", desc:"연못에서 솟는 황금빛 — 재사용률 1위",
+      tags:[["k","⚠ 순수 검정 배경"]],
+      p:`Hand-painted watercolor soft golden light rays fanning upward and outward from a point\nnear the bottom, with gentle glowing haze, fading out smoothly toward the edges.\nWarm golden tone.\n\nPure solid BLACK background (#000000). Absolutely nothing else in the image —\nno scenery, no objects, no characters, no ground, no border, no text.\nOnly the glow itself on pure black.\nCompletely static image, single still frame, no motion.\nAspect ratio 16:9.`,
+      hint:"빛은 반투명이라 <b>오려낼 수 없어서</b> 검정에 뽑아 더합니다. 뿌옇게 들뜨면 <code>pure #000000 black, absolute black, no grey</code> 추가." },
+  ]},
+  { title: "선택지 그림 6개", note: "글자 없이 그림만으로 구별돼야 합니다", items: [
+    { id:"choice_wade", name:"choice_wade", desc:"분기1 — 연못에 들어간다", tags:[["m","마젠타 배경"]],
+      p: icon("A pair of bare feet stepping into shallow pond water, with ripples spreading.") },
+    { id:"choice_wait", name:"choice_wait", desc:"분기1 — 앉아서 기다린다", tags:[["m","마젠타 배경"],["g","뒷모습 · 시트 불필요"]],
+      p: icon("A person sitting cross-legged beside water, seen from behind, waiting quietly.") },
+    { id:"choice_home", name:"choice_home", desc:"분기1 — 집으로 돌아간다", tags:[["m","마젠타 배경"]],
+      p: icon("A small thatched-roof cottage with a warm glowing window, seen from a distance.") },
+    { id:"choice_point_iron", name:"choice_point_iron", desc:"분기2 — 쇠도끼를 가리킨다", tags:[["m","마젠타 배경"]],
+      p: icon("A hand pointing at a plain old iron axe.") },
+    { id:"choice_take_gold", name:"choice_take_gold", desc:"분기2 — 금도끼를 받는다", tags:[["m","마젠타 배경"]],
+      p: icon("A hand reaching out to grab a shining golden axe.") },
+    { id:"choice_shrug", name:"choice_shrug", desc:"분기2 — 모르겠다고 한다", tags:[["m","마젠타 배경"]],
+      p: icon(`Two open empty hands raised in an "I don't know" gesture.`) },
+  ]},
+];
+
+const ALL = GROUPS.flatMap(g => g.items);
+let done = new Set(), db = null;
+
+/* ── 복사 ── */
+async function copy(text, btn){
+  let ok = false;
+  try{ await navigator.clipboard.writeText(text); ok = true; }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;left:-9999px';
+    document.body.appendChild(ta); ta.select();
+    try{ ok = document.execCommand('copy'); }catch(e2){}
+    ta.remove();
+  }
+  const label = btn.textContent;
+  btn.textContent = ok ? '복사됐어요' : '길게 눌러 복사하세요';
+  btn.classList.toggle('ok', ok);
+  setTimeout(() => { btn.textContent = label; btn.classList.remove('ok'); }, 1600);
+}
+
+/* ── 진행 ── */
+function refresh(){
+  const n = ALL.filter(a => done.has(a.id)).length;
+  document.getElementById('pn').textContent = `${n} / ${ALL.length}`;
+  document.getElementById('pb').style.width = (n / ALL.length * 100) + '%';
+  document.getElementById('pt').textContent =
+    n === 0 ? '시작 전' : n === ALL.length ? '전부 끝났습니다' : `${ALL.length - n}개 남음`;
+  for(const a of ALL){
+    const card = document.getElementById('c_' + a.id);
+    if(!card) continue;
+    const on = done.has(a.id);
+    card.classList.toggle('done', on);
+    const chk = card.querySelector('.chk');
+    chk.setAttribute('aria-pressed', on);
+    chk.textContent = '✓';
+  }
+}
+async function toggle(id){
+  done.has(id) ? done.delete(id) : done.add(id);
+  refresh();
+  try{ localStorage.setItem('goldaxe_assets', JSON.stringify([...done])); }catch(e){}
+  if(db){ try{ await db.doc('assets/progress').set({ done: [...done] }); }catch(e){} }
+}
+
+/* ── 그리기 ── */
+const list = document.getElementById('list');
+let num = 0;
+for(const g of GROUPS){
+  const sec = document.createElement('section');
+  sec.innerHTML = `<div class="shead"><h2>${g.title}</h2>
+    ${g.note ? `<span>${g.note}</span>` : ''}</div>`;
+  for(const a of g.items){
+    num++;
+    const card = document.createElement('div');
+    card.className = 'card'; card.id = 'c_' + a.id;
+    card.innerHTML = `
+      <div class="top">
+        <button class="chk" aria-pressed="false" aria-label="${a.name} 완료"></button>
+        <div class="meta">
+          <span class="name">${num}. ${a.name}</span>
+          <span class="desc">${a.desc}</span>
+          <span class="tags">${a.tags.map(([k, t]) =>
+            `<span class="tag ${k}">${t}</span>`).join('')}</span>
+        </div>
+      </div>
+      <div class="acts">
+        <button class="btn pri js-copy">프롬프트 복사</button>
+        <button class="btn js-show">프롬프트 보기</button>
+      </div>
+      ${a.hint ? `<p class="hint">${a.hint}</p>` : ''}
+      <pre hidden></pre>`;
+    card.querySelector('.chk').onclick = () => toggle(a.id);
+    card.querySelector('.js-copy').onclick = e => copy(a.p, e.currentTarget);
+    const pre = card.querySelector('pre');
+    pre.textContent = a.p;
+    card.querySelector('.js-show').onclick = e => {
+      pre.hidden = !pre.hidden;
+      e.currentTarget.textContent = pre.hidden ? '프롬프트 보기' : '접기';
+    };
+    sec.appendChild(card);
+  }
+  list.appendChild(sec);
+}
+document.getElementById('copyTok').onclick = e => copy(TOKEN, e.currentTarget);
+
+try{ done = new Set(JSON.parse(localStorage.getItem('goldaxe_assets') || '[]')); }catch(e){}
+refresh();
+
+/* ── 기기 간 동기화 ── */
+(async () => {
+  const s = document.getElementById('sync');
+  try{ db = await window.claude?.use?.('db') ?? null; }catch(e){}
+  if(!db){ s.textContent = '이 기기에만 저장'; return; }
+  db.doc('assets/progress').onSnapshot(snap => {
+    const arr = (snap.exists && snap.data()?.done) || [];
+    done = new Set([...done, ...arr]);
+    refresh();
+    s.textContent = '☁ 기기 간 저장';
+  }, () => { s.textContent = '이 기기에만 저장'; });
+})();
+</script>
