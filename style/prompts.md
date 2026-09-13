@@ -4,7 +4,10 @@
 > 스타일: [style-bible.md](./style-bible.md) `D15 한지 수채 확정`
 > 관련: [Pipeline §S4](../Pipeline.md) · [Spec §5](../StoryTellingSpec.md)
 
-**남은 에셋 12개.** 완료: `bg_pond_glow`, `char_woodcutter_surprise`, 나무꾼 시트.
+**남은 에셋 16개.** 완료: `bg_pond_glow`, `char_woodcutter_surprise`, 나무꾼 시트.
+
+> **⚠️ 2026-09-13 추가 4개.** 전체 트리(2분기·9결말)를 쓰면서 [§8 추가분](#8-전체-트리-추가분-4개)이
+> 생겼습니다. Flow 작업하는 김에 같이 뽑으시면 한 번에 끝납니다.
 
 ---
 
@@ -245,7 +248,55 @@ No shadow, no ground, no text.
 
 ---
 
-## 8. 뽑을 때마다 확인
+## 8. 전체 트리 추가분 4개
+
+2분기·9결말 전체 트리에 필요한 것들이다. 나머지는 전부 위 에셋을 재사용한다.
+
+### ⑮ `bg_home_night` — 나무꾼의 집, 밤
+
+```
+[토큰]
+
+A wide establishing shot of a small humble Korean thatched-roof cottage at night,
+warm lamplight glowing softly through the paper window, a low stone wall,
+a persimmon tree beside the gate, a quiet night sky with a few stars.
+
+IMPORTANT STYLE RULES:
+Gentle and calm, not dark or scary. Soft blue-grey night tones with warm lamplight.
+Very simple and flat: only three depth layers, large simple shapes, minimal detail.
+Use the SAME thick soft ink outline weight as a children's picture book character.
+Leave the lower middle area open and uncluttered.
+Horizon in the lower third, shallow flat perspective like a picture book page.
+
+ABSOLUTELY NO people, NO characters, NO animals, NO human figures anywhere.
+Very wide panoramic composition, aspect ratio 21:9.
+```
+
+> 4~7세 대상이므로 **무섭지 않게.** 어두운 밤이 아니라 등불이 따뜻한 밤이다 (Spec §3.4).
+
+### ⑯⑰⑱ 분기1 선택지 그림
+
+도끼를 잃은 나무꾼이 **무엇을 할지** 고르는 자리다. 글자 없이 그림만으로 구별돼야 한다.
+
+```
+[토큰]
+
+{행동}. Simple clear composition, single focus, large and easy to read at a glance.
+Isolated on a plain flat magenta #FF00FF background.
+No shadow, no ground, no text.
+```
+
+| # | 파일 | `{행동}` | 뜻 |
+|---|---|---|---|
+| ⑯ | `choice_wade` | `a pair of bare feet stepping into shallow pond water, with ripples spreading` | 연못에 들어간다 |
+| ⑰ | `choice_wait` | `a person sitting cross-legged beside water, seen from behind, waiting quietly` | 앉아서 기다린다 |
+| ⑱ | `choice_home` | `a small thatched-roof cottage with a warm glowing window, seen from a distance` | 집으로 돌아간다 |
+
+> ⑰은 뒷모습이라 **얼굴이 안 보여도 된다** — 캐릭터 시트를 첨부할 필요가 없다.
+
+---
+
+## 9. 뽑을 때마다 확인
 
 - [ ] **시트와 같은 사람인가** ← 아니면 다시. 제일 중요
 - [ ] **오른쪽(산신령은 왼쪽)을 향하는가**
@@ -255,7 +306,7 @@ No shadow, no ground, no text.
 - [ ] 배경: 사람이 없는가, 충분히 가로로 긴가, 하단 중앙이 비었는가
 - [ ] 글자·서명·워터마크가 없는가
 
-## 9. 잘 안 될 때
+## 10. 잘 안 될 때
 
 | 증상 | 대처 |
 |---|---|
@@ -270,7 +321,7 @@ No shadow, no ground, no text.
 | 인물이 화면 밖을 본다 | 다시 뽑지 말고 `story.json` 에 `"flip": true` |
 | 구석에 반짝이·장식 | **프롬프트로는 못 막는다.** 플레이어가 가장 큰 덩어리만 남겨 자동 제거 |
 
-## 10. 저장 위치
+## 11. 저장 위치
 
 ```
 style/refs/spirit_sheet.png                        산신령 시트

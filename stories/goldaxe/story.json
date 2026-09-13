@@ -20,7 +20,7 @@
     }
   },
   "rootNode": "n_intro",
-  "canonicalEnding": "n_end_honest",
+  "canonicalEnding": "n_end_wade_honest",
   "subtitle": {
     "defaultOn": true,
     "highlightUnit": "eojeol",
@@ -41,6 +41,10 @@
       "bg_pond_glow": {
         "src": "bg/bg_pond_glow.png",
         "tint": "#C9A24B"
+      },
+      "bg_home_night": {
+        "src": "bg/bg_home_night.png",
+        "tint": "#4A5568"
       }
     },
     "characters": {
@@ -213,8 +217,8 @@
             "fx": "none",
             "bgTreatment": {
               "blurPx": 1.0,
-              "brightness": 68,
-              "saturate": 52
+              "brightness": 78,
+              "saturate": 62
             },
             "actors": [
               {
@@ -360,9 +364,204 @@
               ]
             }
           ]
+        }
+      ],
+      "choice": {
+        "promptText": "나무꾼은 어떻게 할까요?",
+        "options": [
+          {
+            "id": "a",
+            "label": "연못에 들어간다",
+            "tint": "#7E94A4",
+            "image": "icon/choice_wade.png",
+            "next": "n_mid_wade"
+          },
+          {
+            "id": "b",
+            "label": "앉아서 기다린다",
+            "tint": "#8C9C7A",
+            "image": "icon/choice_wait.png",
+            "next": "n_mid_wait"
+          },
+          {
+            "id": "c",
+            "label": "집으로 돌아간다",
+            "tint": "#C4A06A",
+            "image": "icon/choice_home.png",
+            "next": "n_mid_home"
+          }
+        ],
+        "promptAudio": "audio/b_intro_01_choice.mp3",
+        "promptWordTimings": [
+          [
+            0,
+            4,
+            119,
+            987
+          ],
+          [
+            5,
+            8,
+            1005,
+            1682
+          ],
+          [
+            9,
+            13,
+            1699,
+            2515
+          ]
+        ]
+      }
+    },
+    "n_mid_wade": {
+      "type": "narrative",
+      "beats": [
+        {
+          "id": "b_wade_01",
+          "scene": {
+            "background": "bg_pond_day",
+            "camera": "pushIn",
+            "transitionIn": "pageTurn",
+            "fx": "none",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.4,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "sad",
+                "enter": "none"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_wade_01_1",
+              "text": "나무꾼은 바지를 걷고 연못에 들어갔어요.",
+              "audio": "audio/b_wade_01_1.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  953
+                ],
+                [
+                  5,
+                  8,
+                  970,
+                  1543
+                ],
+                [
+                  9,
+                  11,
+                  1560,
+                  2185
+                ],
+                [
+                  12,
+                  15,
+                  2203,
+                  3001
+                ],
+                [
+                  16,
+                  22,
+                  3019,
+                  4217
+                ]
+              ]
+            },
+            {
+              "id": "b_wade_01_2",
+              "text": "물이 차갑고 깊어서 도끼가 보이지 않았어요.",
+              "audio": "audio/b_wade_01_2.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  119,
+                  501
+                ],
+                [
+                  3,
+                  6,
+                  519,
+                  1161
+                ],
+                [
+                  7,
+                  10,
+                  1178,
+                  1838
+                ],
+                [
+                  11,
+                  14,
+                  1856,
+                  2550
+                ],
+                [
+                  15,
+                  18,
+                  2567,
+                  3123
+                ],
+                [
+                  19,
+                  24,
+                  3140,
+                  4269
+                ]
+              ]
+            },
+            {
+              "id": "b_wade_01_3",
+              "text": "그때 물속에서 환한 빛이 올라왔어요.",
+              "audio": "audio/b_wade_01_3.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  119,
+                  623
+                ],
+                [
+                  3,
+                  7,
+                  640,
+                  1595
+                ],
+                [
+                  8,
+                  10,
+                  1612,
+                  2064
+                ],
+                [
+                  11,
+                  13,
+                  2081,
+                  2533
+                ],
+                [
+                  14,
+                  20,
+                  2550,
+                  3904
+                ]
+              ]
+            }
+          ]
         },
         {
-          "id": "b_intro_03",
+          "id": "b_wade_02",
           "scene": {
             "background": "bg_pond_glow",
             "camera": "pushIn",
@@ -411,47 +610,9 @@
           },
           "lines": [
             {
-              "id": "b_intro_03_1",
-              "text": "그때 연못에서 환한 빛이 쏟아졌어요.",
-              "audio": "audio/b_intro_03_1.mp3",
-              "durationMs": 6000,
-              "wordTimings": [
-                [
-                  0,
-                  2,
-                  119,
-                  606
-                ],
-                [
-                  3,
-                  7,
-                  623,
-                  1560
-                ],
-                [
-                  8,
-                  10,
-                  1578,
-                  2029
-                ],
-                [
-                  11,
-                  13,
-                  2047,
-                  2463
-                ],
-                [
-                  14,
-                  20,
-                  2481,
-                  3765
-                ]
-              ]
-            },
-            {
-              "id": "b_intro_03_2",
+              "id": "b_wade_02_1",
               "text": "산신령이 스르르 나타났어요.",
-              "audio": "audio/b_intro_03_2.mp3",
+              "audio": "audio/b_wade_02_1.mp3",
               "durationMs": 6000,
               "wordTimings": [
                 [
@@ -475,9 +636,9 @@
               ]
             },
             {
-              "id": "b_intro_03_3",
+              "id": "b_wade_02_2",
               "text": "산신령은 반짝이는 금도끼를 들어 보였어요.",
-              "audio": "audio/b_intro_03_3.mp3",
+              "audio": "audio/b_wade_02_2.mp3",
               "durationMs": 6000,
               "wordTimings": [
                 [
@@ -517,7 +678,30 @@
       ],
       "choice": {
         "promptText": "이것이 네 도끼냐?",
-        "promptAudio": "audio/b_intro_01_choice.mp3",
+        "options": [
+          {
+            "id": "a",
+            "label": "쇠도끼를 가리킨다",
+            "tint": "#8A8F98",
+            "image": "icon/choice_point_iron.png",
+            "next": "n_end_wade_honest"
+          },
+          {
+            "id": "b",
+            "label": "금도끼를 받는다",
+            "tint": "#D9B455",
+            "image": "icon/choice_take_gold.png",
+            "next": "n_end_wade_greedy"
+          },
+          {
+            "id": "c",
+            "label": "모르겠다고 한다",
+            "tint": "#9B8FB5",
+            "image": "icon/choice_shrug.png",
+            "next": "n_end_wade_unsure"
+          }
+        ],
+        "promptAudio": "audio/b_wade_01_choice.mp3",
         "promptWordTimings": [
           [
             0,
@@ -537,40 +721,646 @@
             1126,
             1942
           ]
-        ],
+        ]
+      }
+    },
+    "n_mid_wait": {
+      "type": "narrative",
+      "beats": [
+        {
+          "id": "b_wait_01",
+          "scene": {
+            "background": "bg_pond_day",
+            "camera": "pullOut",
+            "transitionIn": "pageTurn",
+            "fx": "dust",
+            "bgTreatment": {
+              "blurPx": 1.0,
+              "brightness": 84,
+              "saturate": 66
+            },
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.3,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "sad",
+                "enter": "none"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_wait_01_1",
+              "text": "나무꾼은 연못가에 앉아 한참을 기다렸어요.",
+              "audio": "audio/b_wait_01_1.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  970
+                ],
+                [
+                  5,
+                  9,
+                  988,
+                  1838
+                ],
+                [
+                  10,
+                  12,
+                  1856,
+                  2290
+                ],
+                [
+                  13,
+                  16,
+                  2307,
+                  3036
+                ],
+                [
+                  17,
+                  23,
+                  3053,
+                  4182
+                ]
+              ]
+            },
+            {
+              "id": "b_wait_01_2",
+              "text": "해가 기울고 물안개가 스르르 피어올랐어요.",
+              "audio": "audio/b_wait_01_2.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  119,
+                  571
+                ],
+                [
+                  3,
+                  6,
+                  588,
+                  1335
+                ],
+                [
+                  7,
+                  11,
+                  1352,
+                  2394
+                ],
+                [
+                  12,
+                  15,
+                  2411,
+                  2932
+                ],
+                [
+                  16,
+                  23,
+                  2949,
+                  4338
+                ]
+              ]
+            },
+            {
+              "id": "b_wait_01_3",
+              "text": "그때 안개 속에서 환한 빛이 쏟아졌어요.",
+              "audio": "audio/b_wait_01_3.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  119,
+                  606
+                ],
+                [
+                  3,
+                  5,
+                  623,
+                  1005
+                ],
+                [
+                  6,
+                  9,
+                  1022,
+                  1647
+                ],
+                [
+                  10,
+                  12,
+                  1665,
+                  2116
+                ],
+                [
+                  13,
+                  15,
+                  2133,
+                  2585
+                ],
+                [
+                  16,
+                  22,
+                  2602,
+                  3922
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b_wait_02",
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "pushIn",
+            "transitionIn": "crossfade",
+            "fx": "sparkle",
+            "bgTreatment": {
+              "blurPx": 1.0,
+              "brightness": 88,
+              "saturate": 70
+            },
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.22,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "surprise",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "pose": "calm",
+                "x": 0.7,
+                "y": 0.74,
+                "scale": 1.25,
+                "z": 20,
+                "anim": "bob",
+                "enter": "fadeIn"
+              },
+              {
+                "asset": "props/axe_gold",
+                "x": 0.56,
+                "y": 0.6,
+                "scale": 0.55,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.62,
+                "y": 0.5,
+                "scale": 1.0,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "fadeIn"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_wait_02_1",
+              "text": "산신령이 스르르 나타났어요.",
+              "audio": "audio/b_wait_02_1.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1178
+                ],
+                [
+                  5,
+                  8,
+                  1196,
+                  1734
+                ],
+                [
+                  9,
+                  15,
+                  1751,
+                  3071
+                ]
+              ]
+            },
+            {
+              "id": "b_wait_02_2",
+              "text": "산신령은 반짝이는 금도끼를 들어 보였어요.",
+              "audio": "audio/b_wait_02_2.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1109
+                ],
+                [
+                  5,
+                  9,
+                  1126,
+                  2081
+                ],
+                [
+                  10,
+                  14,
+                  2099,
+                  2967
+                ],
+                [
+                  15,
+                  17,
+                  2984,
+                  3314
+                ],
+                [
+                  18,
+                  23,
+                  3331,
+                  4338
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "choice": {
+        "promptText": "이것이 네 도끼냐?",
         "options": [
           {
             "id": "a",
             "label": "쇠도끼를 가리킨다",
             "tint": "#8A8F98",
             "image": "icon/choice_point_iron.png",
-            "next": "n_end_honest"
+            "next": "n_end_wait_honest"
           },
           {
             "id": "b",
             "label": "금도끼를 받는다",
-            "tint": "#E3B341",
+            "tint": "#D9B455",
             "image": "icon/choice_take_gold.png",
-            "next": "n_end_greedy"
+            "next": "n_end_wait_greedy"
           },
           {
             "id": "c",
             "label": "모르겠다고 한다",
             "tint": "#9B8FB5",
             "image": "icon/choice_shrug.png",
-            "next": "n_end_unsure"
+            "next": "n_end_wait_unsure"
           }
+        ],
+        "promptAudio": "audio/b_wait_01_choice.mp3",
+        "promptWordTimings": [
+          [
+            0,
+            3,
+            119,
+            814
+          ],
+          [
+            4,
+            5,
+            831,
+            1109
+          ],
+          [
+            6,
+            10,
+            1126,
+            1942
+          ]
         ]
       }
     },
-    "n_end_honest": {
+    "n_mid_home": {
+      "type": "narrative",
+      "beats": [
+        {
+          "id": "b_home_01",
+          "scene": {
+            "background": "bg_home_night",
+            "camera": "panLeft",
+            "transitionIn": "pageTurn",
+            "fx": "fireflies",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.36,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "sad",
+                "enter": "none"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_home_01_1",
+              "text": "나무꾼은 터덜터덜 집으로 돌아갔어요.",
+              "audio": "audio/b_home_01_1.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  987
+                ],
+                [
+                  5,
+                  9,
+                  1005,
+                  1890
+                ],
+                [
+                  10,
+                  13,
+                  1908,
+                  2394
+                ],
+                [
+                  14,
+                  20,
+                  2411,
+                  3626
+                ]
+              ]
+            },
+            {
+              "id": "b_home_01_2",
+              "text": "밤새 뒤척이다 새벽에 다시 연못으로 갔어요.",
+              "audio": "audio/b_home_01_2.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  119,
+                  675
+                ],
+                [
+                  3,
+                  7,
+                  692,
+                  1422
+                ],
+                [
+                  8,
+                  11,
+                  1439,
+                  2099
+                ],
+                [
+                  12,
+                  14,
+                  2116,
+                  2758
+                ],
+                [
+                  15,
+                  19,
+                  2776,
+                  3470
+                ],
+                [
+                  20,
+                  24,
+                  3488,
+                  4442
+                ]
+              ]
+            },
+            {
+              "id": "b_home_01_3",
+              "text": "연못에는 환한 빛이 기다리고 있었어요.",
+              "audio": "audio/b_home_01_3.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1022
+                ],
+                [
+                  5,
+                  7,
+                  1040,
+                  1543
+                ],
+                [
+                  8,
+                  10,
+                  1560,
+                  2029
+                ],
+                [
+                  11,
+                  15,
+                  2047,
+                  2706
+                ],
+                [
+                  16,
+                  21,
+                  2724,
+                  3852
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b_home_02",
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "pushIn",
+            "transitionIn": "crossfade",
+            "fx": "sparkle",
+            "bgTreatment": {
+              "blurPx": 1.0,
+              "brightness": 92,
+              "saturate": 78
+            },
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.22,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "surprise",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "pose": "calm",
+                "x": 0.7,
+                "y": 0.74,
+                "scale": 1.25,
+                "z": 20,
+                "anim": "bob",
+                "enter": "fadeIn"
+              },
+              {
+                "asset": "props/axe_gold",
+                "x": 0.56,
+                "y": 0.6,
+                "scale": 0.55,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.62,
+                "y": 0.5,
+                "scale": 1.0,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "fadeIn"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_home_02_1",
+              "text": "산신령이 스르르 나타났어요.",
+              "audio": "audio/b_home_02_1.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1178
+                ],
+                [
+                  5,
+                  8,
+                  1196,
+                  1734
+                ],
+                [
+                  9,
+                  15,
+                  1751,
+                  3071
+                ]
+              ]
+            },
+            {
+              "id": "b_home_02_2",
+              "text": "산신령은 반짝이는 금도끼를 들어 보였어요.",
+              "audio": "audio/b_home_02_2.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1109
+                ],
+                [
+                  5,
+                  9,
+                  1126,
+                  2081
+                ],
+                [
+                  10,
+                  14,
+                  2099,
+                  2967
+                ],
+                [
+                  15,
+                  17,
+                  2984,
+                  3314
+                ],
+                [
+                  18,
+                  23,
+                  3331,
+                  4338
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "choice": {
+        "promptText": "이것이 네 도끼냐?",
+        "options": [
+          {
+            "id": "a",
+            "label": "쇠도끼를 가리킨다",
+            "tint": "#8A8F98",
+            "image": "icon/choice_point_iron.png",
+            "next": "n_end_home_honest"
+          },
+          {
+            "id": "b",
+            "label": "금도끼를 받는다",
+            "tint": "#D9B455",
+            "image": "icon/choice_take_gold.png",
+            "next": "n_end_home_greedy"
+          },
+          {
+            "id": "c",
+            "label": "모르겠다고 한다",
+            "tint": "#9B8FB5",
+            "image": "icon/choice_shrug.png",
+            "next": "n_end_home_unsure"
+          }
+        ],
+        "promptAudio": "audio/b_home_01_choice.mp3",
+        "promptWordTimings": [
+          [
+            0,
+            3,
+            119,
+            814
+          ],
+          [
+            4,
+            5,
+            831,
+            1109
+          ],
+          [
+            6,
+            10,
+            1126,
+            1942
+          ]
+        ]
+      }
+    },
+    "n_end_wade_honest": {
       "type": "ending",
       "isCanonical": true,
       "endingTitle": "정직한 나무꾼",
       "lesson": "정직한 마음은 반짝반짝 빛난단다.",
       "beats": [
         {
-          "id": "b_honest_01",
+          "id": "b_end_wade_honest",
           "scene": {
             "background": "bg_pond_glow",
             "camera": "pullOut",
@@ -589,39 +1379,39 @@
               },
               {
                 "asset": "characters/spirit",
-                "pose": "smile",
                 "x": 0.7,
                 "y": 0.74,
                 "scale": 1.25,
                 "z": 20,
                 "anim": "bob",
-                "enter": "none"
+                "enter": "none",
+                "pose": "smile"
               },
               {
-                "asset": "props/axe_silver",
-                "x": 0.5,
+                "asset": "props/axe_gold",
+                "x": 0.46,
                 "y": 0.58,
-                "scale": 0.45,
-                "z": 34,
+                "scale": 0.42,
+                "z": 35,
                 "anim": "sway",
                 "enter": "popIn"
               },
               {
-                "asset": "props/light_rays",
-                "x": 0.6,
-                "y": 0.5,
-                "scale": 0.9,
-                "z": 15,
-                "anim": "pulse",
-                "enter": "none"
+                "asset": "props/axe_silver",
+                "x": 0.54,
+                "y": 0.56,
+                "scale": 0.42,
+                "z": 34,
+                "anim": "sway",
+                "enter": "popIn"
               }
             ]
           },
           "lines": [
             {
-              "id": "b_honest_01_1",
+              "id": "b_end_wade_honest_1",
               "text": "나무꾼은 낡은 쇠도끼를 가리켰어요.",
-              "audio": "audio/b_honest_01_1.mp3",
+              "audio": "audio/b_end_wade_honest_1.mp3",
               "durationMs": 6000,
               "wordTimings": [
                 [
@@ -651,9 +1441,9 @@
               ]
             },
             {
-              "id": "b_honest_01_2",
+              "id": "b_end_wade_honest_2",
               "text": "산신령은 빙그레 웃으며 도끼 세 자루를 모두 주었어요.",
-              "audio": "audio/b_honest_01_2.mp3",
+              "audio": "audio/b_end_wade_honest_2.mp3",
               "durationMs": 6667,
               "wordTimings": [
                 [
@@ -710,13 +1500,299 @@
         }
       ]
     },
-    "n_end_greedy": {
+    "n_end_wait_honest": {
       "type": "ending",
-      "endingTitle": "사라진 금빛",
-      "lesson": "내 것을 아끼는 마음이 가장 반짝인단다.",
+      "endingTitle": "기다린 보람",
+      "lesson": "기다릴 줄 아는 마음도 참 고운 마음이란다.",
       "beats": [
         {
-          "id": "b_greedy_01",
+          "id": "b_end_wait_honest",
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "pullOut",
+            "transitionIn": "crossfade",
+            "fx": "sparkle",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.24,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "happy",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "x": 0.7,
+                "y": 0.74,
+                "scale": 1.25,
+                "z": 20,
+                "anim": "bob",
+                "enter": "none",
+                "pose": "smile"
+              },
+              {
+                "asset": "props/axe_gold",
+                "x": 0.46,
+                "y": 0.58,
+                "scale": 0.42,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/axe_silver",
+                "x": 0.54,
+                "y": 0.56,
+                "scale": 0.42,
+                "z": 34,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_end_wait_honest_1",
+              "text": "나무꾼은 낡은 쇠도끼를 가리켰어요.",
+              "audio": "audio/b_end_wait_honest_1.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  987
+                ],
+                [
+                  5,
+                  7,
+                  1005,
+                  1612
+                ],
+                [
+                  8,
+                  12,
+                  1630,
+                  2428
+                ],
+                [
+                  13,
+                  19,
+                  2446,
+                  3731
+                ]
+              ]
+            },
+            {
+              "id": "b_end_wait_honest_2",
+              "text": "오래 기다린 마음이 곱다며 세 자루를 모두 주었어요.",
+              "audio": "audio/b_end_wait_honest_2.mp3",
+              "durationMs": 6372,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  119,
+                  588
+                ],
+                [
+                  3,
+                  6,
+                  606,
+                  1213
+                ],
+                [
+                  7,
+                  10,
+                  1231,
+                  1682
+                ],
+                [
+                  11,
+                  14,
+                  1699,
+                  2602
+                ],
+                [
+                  15,
+                  16,
+                  2619,
+                  3053
+                ],
+                [
+                  17,
+                  20,
+                  3071,
+                  3644
+                ],
+                [
+                  21,
+                  23,
+                  3661,
+                  4060
+                ],
+                [
+                  24,
+                  29,
+                  4078,
+                  5172
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "n_end_home_honest": {
+      "type": "ending",
+      "endingTitle": "다시 온 아침",
+      "lesson": "포기하지 않는 마음은 언젠가 꼭 닿는단다.",
+      "beats": [
+        {
+          "id": "b_end_home_honest",
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "pullOut",
+            "transitionIn": "crossfade",
+            "fx": "sparkle",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.24,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "happy",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "x": 0.7,
+                "y": 0.74,
+                "scale": 1.25,
+                "z": 20,
+                "anim": "bob",
+                "enter": "none",
+                "pose": "smile"
+              },
+              {
+                "asset": "props/axe_gold",
+                "x": 0.46,
+                "y": 0.58,
+                "scale": 0.42,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/axe_silver",
+                "x": 0.54,
+                "y": 0.56,
+                "scale": 0.42,
+                "z": 34,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_end_home_honest_1",
+              "text": "나무꾼은 낡은 쇠도끼를 가리켰어요.",
+              "audio": "audio/b_end_home_honest_1.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  987
+                ],
+                [
+                  5,
+                  7,
+                  1005,
+                  1612
+                ],
+                [
+                  8,
+                  12,
+                  1630,
+                  2428
+                ],
+                [
+                  13,
+                  19,
+                  2446,
+                  3731
+                ]
+              ]
+            },
+            {
+              "id": "b_end_home_honest_2",
+              "text": "다시 찾아온 마음이 기특하다며 세 자루를 주었어요.",
+              "audio": "audio/b_end_home_honest_2.mp3",
+              "durationMs": 6111,
+              "wordTimings": [
+                [
+                  0,
+                  2,
+                  119,
+                  571
+                ],
+                [
+                  3,
+                  6,
+                  588,
+                  1178
+                ],
+                [
+                  7,
+                  10,
+                  1196,
+                  1682
+                ],
+                [
+                  11,
+                  16,
+                  1699,
+                  2845
+                ],
+                [
+                  17,
+                  18,
+                  2862,
+                  3262
+                ],
+                [
+                  19,
+                  22,
+                  3279,
+                  3817
+                ],
+                [
+                  23,
+                  28,
+                  3835,
+                  4911
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "n_end_wade_greedy": {
+      "type": "ending",
+      "endingTitle": "물에 비친 금빛",
+      "lesson": "찾던 것은 늘 가까이에 있단다.",
+      "beats": [
+        {
+          "id": "b_end_wade_greedy",
           "scene": {
             "background": "bg_pond_day",
             "camera": "pullOut",
@@ -746,9 +1822,9 @@
           },
           "lines": [
             {
-              "id": "b_greedy_01_1",
+              "id": "b_end_wade_greedy_1",
               "text": "금도끼로 손을 뻗자 환한 빛이 스르르 사라졌어요.",
-              "audio": "audio/b_greedy_01_1.mp3",
+              "audio": "audio/b_end_wade_greedy_1.mp3",
               "durationMs": 6076,
               "wordTimings": [
                 [
@@ -796,46 +1872,46 @@
               ]
             },
             {
-              "id": "b_greedy_01_2",
-              "text": "그래도 나무꾼의 쇠도끼는 그대로 남아 있었어요.",
-              "audio": "audio/b_greedy_01_2.mp3",
-              "durationMs": 6000,
+              "id": "b_end_wade_greedy_2",
+              "text": "대신 차가운 물속에서 쇠도끼가 반짝 떠올랐어요.",
+              "audio": "audio/b_end_wade_greedy_2.mp3",
+              "durationMs": 6181,
               "wordTimings": [
                 [
                   0,
-                  3,
+                  2,
                   119,
-                  588
+                  658
                 ],
                 [
-                  4,
-                  8,
-                  606,
-                  1369
+                  3,
+                  6,
+                  675,
+                  1231
                 ],
                 [
-                  9,
-                  13,
-                  1387,
-                  2290
+                  7,
+                  11,
+                  1248,
+                  2203
                 ],
                 [
-                  14,
+                  12,
+                  16,
+                  2220,
+                  3158
+                ],
+                [
                   17,
-                  2307,
-                  2949
+                  19,
+                  3175,
+                  3800
                 ],
                 [
-                  18,
                   20,
-                  2967,
-                  3331
-                ],
-                [
-                  21,
                   26,
-                  3349,
-                  4442
+                  3817,
+                  4981
                 ]
               ]
             }
@@ -843,18 +1919,289 @@
         }
       ]
     },
-    "n_end_unsure": {
+    "n_end_wait_greedy": {
       "type": "ending",
-      "endingTitle": "함께 찾은 도끼",
+      "endingTitle": "안개 속으로",
+      "lesson": "내 것을 아끼는 마음이 가장 반짝인단다.",
+      "beats": [
+        {
+          "id": "b_end_wait_greedy",
+          "scene": {
+            "background": "bg_pond_day",
+            "camera": "pullOut",
+            "transitionIn": "wipe",
+            "fx": "none",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.34,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "happy",
+                "enter": "none"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.58,
+                "y": 0.66,
+                "scale": 0.5,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_end_wait_greedy_1",
+              "text": "금도끼로 손을 뻗자 빛이 안개 속으로 사라졌어요.",
+              "audio": "audio/b_end_wait_greedy_1.mp3",
+              "durationMs": 6302,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  987
+                ],
+                [
+                  5,
+                  7,
+                  1005,
+                  1474
+                ],
+                [
+                  8,
+                  10,
+                  1491,
+                  2099
+                ],
+                [
+                  11,
+                  13,
+                  2116,
+                  2828
+                ],
+                [
+                  14,
+                  16,
+                  2845,
+                  3210
+                ],
+                [
+                  17,
+                  20,
+                  3227,
+                  3800
+                ],
+                [
+                  21,
+                  27,
+                  3817,
+                  5102
+                ]
+              ]
+            },
+            {
+              "id": "b_end_wait_greedy_2",
+              "text": "안개가 걷힌 자리에 나무꾼의 쇠도끼가 놓여 있었어요.",
+              "audio": "audio/b_end_wait_greedy_2.mp3",
+              "durationMs": 6406,
+              "wordTimings": [
+                [
+                  0,
+                  3,
+                  119,
+                  744
+                ],
+                [
+                  4,
+                  6,
+                  762,
+                  1248
+                ],
+                [
+                  7,
+                  10,
+                  1265,
+                  1821
+                ],
+                [
+                  11,
+                  15,
+                  1838,
+                  2845
+                ],
+                [
+                  16,
+                  20,
+                  2862,
+                  3696
+                ],
+                [
+                  21,
+                  23,
+                  3713,
+                  4095
+                ],
+                [
+                  24,
+                  29,
+                  4112,
+                  5206
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "n_end_home_greedy": {
+      "type": "ending",
+      "endingTitle": "새벽빛이 걷히고",
+      "lesson": "욕심을 내려놓으면 마음이 가벼워진단다.",
+      "beats": [
+        {
+          "id": "b_end_home_greedy",
+          "scene": {
+            "background": "bg_pond_day",
+            "camera": "pullOut",
+            "transitionIn": "wipe",
+            "fx": "none",
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.34,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "happy",
+                "enter": "none"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.58,
+                "y": 0.66,
+                "scale": 0.5,
+                "z": 35,
+                "anim": "sway",
+                "enter": "popIn"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_end_home_greedy_1",
+              "text": "금도끼로 손을 뻗자 새벽빛이 스르르 사라졌어요.",
+              "audio": "audio/b_end_home_greedy_1.mp3",
+              "durationMs": 6250,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  970
+                ],
+                [
+                  5,
+                  7,
+                  988,
+                  1439
+                ],
+                [
+                  8,
+                  10,
+                  1456,
+                  2081
+                ],
+                [
+                  11,
+                  15,
+                  2099,
+                  3140
+                ],
+                [
+                  16,
+                  19,
+                  3158,
+                  3731
+                ],
+                [
+                  20,
+                  26,
+                  3748,
+                  5050
+                ]
+              ]
+            },
+            {
+              "id": "b_end_home_greedy_2",
+              "text": "그래도 나무꾼의 쇠도끼는 그 자리에 있었어요.",
+              "audio": "audio/b_end_home_greedy_2.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  3,
+                  119,
+                  571
+                ],
+                [
+                  4,
+                  8,
+                  588,
+                  1335
+                ],
+                [
+                  9,
+                  13,
+                  1352,
+                  2290
+                ],
+                [
+                  14,
+                  15,
+                  2307,
+                  2567
+                ],
+                [
+                  16,
+                  19,
+                  2585,
+                  3088
+                ],
+                [
+                  20,
+                  25,
+                  3106,
+                  4182
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "n_end_wade_unsure": {
+      "type": "ending",
+      "endingTitle": "함께 더듬은 물속",
       "lesson": "모를 땐 같이 찾아보면 된단다.",
       "beats": [
         {
-          "id": "b_unsure_01",
+          "id": "b_end_wade_unsure",
           "scene": {
             "background": "bg_pond_glow",
             "camera": "tiltUp",
             "transitionIn": "crossfade",
             "fx": "fireflies",
+            "bgTreatment": {
+              "blurPx": 1.0,
+              "brightness": 94,
+              "saturate": 84
+            },
             "actors": [
               {
                 "asset": "characters/woodcutter",
@@ -868,21 +2215,39 @@
               },
               {
                 "asset": "characters/spirit",
-                "pose": "smile",
                 "x": 0.64,
                 "y": 0.78,
                 "scale": 1.1,
                 "z": 20,
                 "anim": "bob",
+                "enter": "none",
+                "pose": "smile"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.46,
+                "y": 0.64,
+                "scale": 0.42,
+                "z": 35,
+                "anim": "bob",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.6,
+                "y": 0.5,
+                "scale": 0.9,
+                "z": 15,
+                "anim": "pulse",
                 "enter": "none"
               }
             ]
           },
           "lines": [
             {
-              "id": "b_unsure_01_1",
+              "id": "b_end_wade_unsure_1",
               "text": "나무꾼은 잘 모르겠다고 솔직하게 말했어요.",
-              "audio": "audio/b_unsure_01_1.mp3",
+              "audio": "audio/b_end_wade_unsure_1.mp3",
               "durationMs": 6000,
               "wordTimings": [
                 [
@@ -918,40 +2283,348 @@
               ]
             },
             {
-              "id": "b_unsure_01_2",
-              "text": "산신령은 함께 연못을 들여다봐 주었어요.",
-              "audio": "audio/b_unsure_01_2.mp3",
+              "id": "b_end_wade_unsure_2",
+              "text": "산신령은 물속을 함께 더듬어 쇠도끼를 찾아 주었어요.",
+              "audio": "audio/b_end_wade_unsure_2.mp3",
+              "durationMs": 6389,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1040
+                ],
+                [
+                  5,
+                  8,
+                  1057,
+                  1751
+                ],
+                [
+                  9,
+                  11,
+                  1769,
+                  2151
+                ],
+                [
+                  12,
+                  15,
+                  2168,
+                  2862
+                ],
+                [
+                  16,
+                  20,
+                  2880,
+                  3731
+                ],
+                [
+                  21,
+                  23,
+                  3748,
+                  4130
+                ],
+                [
+                  24,
+                  29,
+                  4147,
+                  5189
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "n_end_wait_unsure": {
+      "type": "ending",
+      "endingTitle": "안개가 걷히고",
+      "lesson": "천천히 보면 보이는 것들이 있단다.",
+      "beats": [
+        {
+          "id": "b_end_wait_unsure",
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "tiltUp",
+            "transitionIn": "crossfade",
+            "fx": "fireflies",
+            "bgTreatment": {
+              "blurPx": 1.0,
+              "brightness": 94,
+              "saturate": 84
+            },
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.28,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "idle",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "x": 0.64,
+                "y": 0.78,
+                "scale": 1.1,
+                "z": 20,
+                "anim": "bob",
+                "enter": "none",
+                "pose": "smile"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.46,
+                "y": 0.64,
+                "scale": 0.42,
+                "z": 35,
+                "anim": "bob",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.6,
+                "y": 0.5,
+                "scale": 0.9,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "none"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_end_wait_unsure_1",
+              "text": "나무꾼은 잘 모르겠다고 솔직하게 말했어요.",
+              "audio": "audio/b_end_wait_unsure_1.mp3",
               "durationMs": 6000,
               "wordTimings": [
                 [
                   0,
                   4,
                   119,
-                  1109
+                  1040
+                ],
+                [
+                  5,
+                  6,
+                  1057,
+                  1439
+                ],
+                [
+                  7,
+                  12,
+                  1456,
+                  2498
+                ],
+                [
+                  13,
+                  17,
+                  2515,
+                  3401
+                ],
+                [
+                  18,
+                  23,
+                  3418,
+                  4564
+                ]
+              ]
+            },
+            {
+              "id": "b_end_wait_unsure_2",
+              "text": "산신령이 안개를 걷어 주자 쇠도끼가 보였어요.",
+              "audio": "audio/b_end_wait_unsure_2.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1005
+                ],
+                [
+                  5,
+                  8,
+                  1022,
+                  1612
+                ],
+                [
+                  9,
+                  11,
+                  1630,
+                  1994
+                ],
+                [
+                  12,
+                  14,
+                  2012,
+                  2394
+                ],
+                [
+                  15,
+                  19,
+                  2411,
+                  3210
+                ],
+                [
+                  20,
+                  25,
+                  3227,
+                  4321
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "n_end_home_unsure": {
+      "type": "ending",
+      "endingTitle": "함께 맞은 아침",
+      "lesson": "혼자보다 둘이 더 잘 찾는단다.",
+      "beats": [
+        {
+          "id": "b_end_home_unsure",
+          "scene": {
+            "background": "bg_pond_glow",
+            "camera": "tiltUp",
+            "transitionIn": "crossfade",
+            "fx": "fireflies",
+            "bgTreatment": {
+              "blurPx": 1.0,
+              "brightness": 94,
+              "saturate": 84
+            },
+            "actors": [
+              {
+                "asset": "characters/woodcutter",
+                "x": 0.28,
+                "y": 0.8,
+                "scale": 1.0,
+                "z": 30,
+                "anim": "breathe",
+                "pose": "idle",
+                "enter": "none"
+              },
+              {
+                "asset": "characters/spirit",
+                "x": 0.64,
+                "y": 0.78,
+                "scale": 1.1,
+                "z": 20,
+                "anim": "bob",
+                "enter": "none",
+                "pose": "smile"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.46,
+                "y": 0.64,
+                "scale": 0.42,
+                "z": 35,
+                "anim": "bob",
+                "enter": "popIn"
+              },
+              {
+                "asset": "props/light_rays",
+                "x": 0.6,
+                "y": 0.5,
+                "scale": 0.9,
+                "z": 15,
+                "anim": "pulse",
+                "enter": "none"
+              }
+            ]
+          },
+          "lines": [
+            {
+              "id": "b_end_home_unsure_1",
+              "text": "나무꾼은 잘 모르겠다고 솔직하게 말했어요.",
+              "audio": "audio/b_end_home_unsure_1.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1040
+                ],
+                [
+                  5,
+                  6,
+                  1057,
+                  1439
+                ],
+                [
+                  7,
+                  12,
+                  1456,
+                  2498
+                ],
+                [
+                  13,
+                  17,
+                  2515,
+                  3401
+                ],
+                [
+                  18,
+                  23,
+                  3418,
+                  4564
+                ]
+              ]
+            },
+            {
+              "id": "b_end_home_unsure_2",
+              "text": "산신령은 해가 뜰 때까지 함께 찾아 주었어요.",
+              "audio": "audio/b_end_home_unsure_2.mp3",
+              "durationMs": 6000,
+              "wordTimings": [
+                [
+                  0,
+                  4,
+                  119,
+                  1126
                 ],
                 [
                   5,
                   7,
-                  1126,
-                  1838
+                  1144,
+                  1526
                 ],
                 [
                   8,
-                  11,
-                  1856,
-                  2498
+                  9,
+                  1543,
+                  1803
                 ],
                 [
-                  12,
+                  10,
+                  13,
+                  1821,
+                  2585
+                ],
+                [
+                  14,
                   16,
-                  2515,
-                  3210
+                  2602,
+                  3088
                 ],
                 [
                   17,
-                  22,
-                  3227,
-                  4321
+                  19,
+                  3106,
+                  3487
+                ],
+                [
+                  20,
+                  25,
+                  3505,
+                  4564
                 ]
               ]
             }
