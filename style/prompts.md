@@ -4,8 +4,11 @@
 > 스타일: [style-bible.md](./style-bible.md) `D15 한지 수채 확정`
 > 관련: [Pipeline §S4](../Pipeline.md) · [Spec §5](../StoryTellingSpec.md)
 
-**남은 작업 19개** (에셋 18 + 산신령 시트).
-완료: `bg_pond_glow`, `char_woodcutter_surprise`, 나무꾼 시트.
+**에셋 20 + 밑그림 2 = 22장.**
+
+> 이 파일은 한 장씩 뽑던 Flow 시절의 원본이다. 지금은
+> [prompts-antigravity.md](./prompts-antigravity.md) 로 5번에 끝낸다.
+> 한 장만 다시 뽑을 때 여기를 쓴다.
 
 > 🎨 **[에셋 만들기 지시서](https://claude.ai/code/artifact/b95966cb-4e21-4f3c-a32a-52fd239f9921)** —
 > 순서·프롬프트·확인할 것이 한 화면에 있고, 탭 한 번에 복사됩니다.

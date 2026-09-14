@@ -1,4 +1,4 @@
-# 안티그라비티 프롬프트 — 5개 메시지로 19장
+# 안티그라비티 프롬프트 — 5개 메시지로 22장
 
 > Flow는 다중 이미지 생성이 안 됐고, 안티그라비티는 됐다.
 > 아래 5개를 순서대로 보내면 끝난다. 저장 경로가 프롬프트에 들어 있으므로
@@ -8,25 +8,19 @@
 
 ## 순서
 
-| # | 메시지 | 장수 | 참조하는 파일 |
+| # | 메시지 | 장수 | 참조 |
 |---|---|---|---|
-| 1 | 산신령 밑그림 + 포즈 | 3 | (1번이 만든 밑그림을 2·3번이 참조) |
-| 2 | 나무꾼 포즈 | 3 | `style/refs/woodcutter_sheet.png` |
+| 1 | 산신령 밑그림 + 포즈 2 | 3 | 1장을 먼저 만들고 2·3이 그걸 읽는다 |
+| 2 | 나무꾼 밑그림 + 포즈 4 | 5 | 1장을 먼저 만들고 2~5가 그걸 읽는다 |
 | 3 | 소품 | 4 | — |
-| 4 | 배경 | 3 | `…/raw/bg_pond_glow.png` |
+| 4 | 배경 | 4 | 2장을 먼저 만들고 3이 그걸 읽는다 |
 | 5 | 선택지 | 6 | — |
 
-**첨부하지 않는다.** 레포에 있는 파일을 경로로 가리킨다.
+**첨부도 없고 미리 올릴 파일도 없다.** 모든 참조는 같은 메시지 안에서
+먼저 만들어 저장한 파일을 경로로 가리킨다. 22장 전부 여기서 나온다.
 
-## 먼저 — 갖고 있는 3장을 레포에 올린다
-
-②④가 이 파일들을 참조하므로, 없으면 참조가 깨진다.
-
-```
-style/refs/woodcutter_sheet.png                        나무꾼 밑그림
-stories/goldaxe/assets/raw/bg_pond_glow.png            빛나는 연못
-stories/goldaxe/assets/raw/char_woodcutter_surprise.png 놀란 나무꾼
-```
+> ①과 ②는 첫 장(밑그림)이 나머지의 기준이다. **밑그림을 눈으로 확인하고 넘어간다.**
+> 밑그림이 틀리면 뒤따라 나온 것이 전부 틀린다.
 
 ---
 
@@ -78,12 +72,12 @@ Same face, same robes, same colours as style/refs/spirit_sheet.png.
 
 ---
 
-## ② 나무꾼 포즈 3 `밑그림 첨부`
+## ② 나무꾼 — 밑그림 + 포즈 4
 
 ```
-Please generate 3 SEPARATE images. Do NOT merge them into one picture.
-Read the reference image at style/refs/woodcutter_sheet.png — all three must show
-the exact same person as that sheet.
+Please generate 5 SEPARATE images. Do NOT merge them into one picture.
+Generate IMAGE 1 first and save it. Then read that saved file back and use it as the
+visual reference for IMAGE 2, 3, 4 and 5 — all five must show the exact same person.
 
 === SHARED STYLE — apply to every image ===
 Korean folk tale picture-book illustration, hanji paper watercolor with visible paper grain,
@@ -93,26 +87,44 @@ simplified forms and small gentle features, hand-painted children's book art,
 completely static image, single still frame, no camera movement, no motion, no animation,
 no text, no lettering, no watermark, no signature
 
-=== SHARED RULES — every image ===
+=== THE CHARACTER ===
+A young Korean woodcutter from an old folk tale: a kind round face with rosy cheeks
+and small gentle eyes, black hair tied in a simple topknot with a plain cloth headband,
+a loose pale beige hemp jacket (jeogori) with a dark sash, dark grey work trousers
+gathered at the ankles, straw sandals. Humble, cheerful, a little clumsy looking.
+He owns almost nothing.
+
+=== [IMAGE 1] reference sheet ===
+Save as: style/refs/woodcutter_sheet.png
+Show the SAME character three times side by side in one image:
+full-body front view, full-body three-quarter view, and a head close-up.
+Background: plain flat MAGENTA #FF00FF, completely even.
+No shadow, no ground, no cast shadow, no floor line.
+
+=== SHARED RULES — images 2, 3, 4 and 5 ===
 Full body, single character, no one else in frame.
 Facing slightly to the RIGHT, three-quarter view turned toward the right side of the frame.
 Background: plain flat MAGENTA #FF00FF, completely even.
 No shadow, no ground, no cast shadow, no floor line, no other objects.
-Keep this exact character design, same face, same clothes, same colours as
-style/refs/woodcutter_sheet.png.
-Same size and same framing in all three.
+Same face, same clothes, same colours as style/refs/woodcutter_sheet.png.
+Same size and same framing in all four.
 
-=== [IMAGE 1] ===
+=== [IMAGE 2] ===
 Save as: stories/goldaxe/assets/raw/char_woodcutter_idle.png
 Standing calmly, holding an axe over his shoulder, faint friendly smile.
 
-=== [IMAGE 2] ===
+=== [IMAGE 3] ===
 Save as: stories/goldaxe/assets/raw/char_woodcutter_sad.png
 Shoulders drooped, both hands empty and open, looking down, worried face.
 
-=== [IMAGE 3] ===
+=== [IMAGE 4] ===
 Save as: stories/goldaxe/assets/raw/char_woodcutter_happy.png
 Both arms raised in delight, big open smile, standing upright.
+
+=== [IMAGE 5] ===
+Save as: stories/goldaxe/assets/raw/char_woodcutter_surprise.png
+Eyes wide open and mouth open in surprise, both hands raised near his chest,
+leaning back slightly. Startled but not frightened.
 ```
 
 ---
@@ -168,10 +180,10 @@ Aspect ratio 16:9.
 
 ---
 
-## ④ 배경 3
+## ④ 배경 4
 
 ```
-Please generate 3 SEPARATE images. Do NOT merge them into one picture.
+Please generate 4 SEPARATE images. Do NOT merge them into one picture.
 
 === SHARED STYLE — apply to every image ===
 Korean folk tale picture-book illustration, hanji paper watercolor with visible paper grain,
@@ -195,15 +207,22 @@ A quiet Korean mountain forest path in soft morning light, tall pine trees,
 mossy rocks, ferns along the path, a distant ridge.
 Bright and airy with light high-key values. Do NOT make it dark, moody or atmospheric.
 
-=== [IMAGE 2] ===
+=== [IMAGE 2] === generate this BEFORE image 3
+Save as: stories/goldaxe/assets/raw/bg_pond_glow.png
+A still forest pond ringed by pine trees and mossy rocks, at the magical moment:
+warm golden light welling up out of the water, a soft glowing haze over the surface,
+gentle mist. Radiant and wondrous, still gentle and calm.
+
+=== [IMAGE 3] ===
 Save as: stories/goldaxe/assets/raw/bg_pond_day.png
-Read stories/goldaxe/assets/raw/bg_pond_glow.png and keep the SAME composition —
-the same camera angle and the same placement of every pine tree, rock and water edge.
+Read the file you just saved at stories/goldaxe/assets/raw/bg_pond_glow.png and keep
+the SAME composition — the same camera angle and the same placement of every pine tree,
+rock and water edge. It must read as the very same place.
 Change ONLY the light: this is the ordinary moment BEFORE anything magical happens.
 Plain quiet overcast daylight, unremarkable. No golden glow, no light rays, no mist,
 no sparkle. Slightly cooler and duller. Bright and airy, NOT dark or moody.
 
-=== [IMAGE 3] ===
+=== [IMAGE 4] ===
 Save as: stories/goldaxe/assets/raw/bg_home_night.png
 A small humble Korean thatched-roof cottage at night, warm lamplight glowing softly
 through the paper window, a low stone wall, a persimmon tree beside the gate,
