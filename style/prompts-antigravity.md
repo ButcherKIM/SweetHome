@@ -8,15 +8,25 @@
 
 ## 순서
 
-| # | 메시지 | 장수 | 첨부 |
+| # | 메시지 | 장수 | 참조하는 파일 |
 |---|---|---|---|
-| 1 | 산신령 밑그림 + 포즈 | 3 | — |
+| 1 | 산신령 밑그림 + 포즈 | 3 | (1번이 만든 밑그림을 2·3번이 참조) |
 | 2 | 나무꾼 포즈 | 3 | `style/refs/woodcutter_sheet.png` |
 | 3 | 소품 | 4 | — |
-| 4 | 배경 | 3 | (7번은 `bg_pond_glow.png`) |
+| 4 | 배경 | 3 | `…/raw/bg_pond_glow.png` |
 | 5 | 선택지 | 6 | — |
 
-**1번을 먼저.** 2·3번 이미지가 1번을 참조하므로 순서를 바꾸면 안 된다.
+**첨부하지 않는다.** 레포에 있는 파일을 경로로 가리킨다.
+
+## 먼저 — 갖고 있는 3장을 레포에 올린다
+
+②④가 이 파일들을 참조하므로, 없으면 참조가 깨진다.
+
+```
+style/refs/woodcutter_sheet.png                        나무꾼 밑그림
+stories/goldaxe/assets/raw/bg_pond_glow.png            빛나는 연못
+stories/goldaxe/assets/raw/char_woodcutter_surprise.png 놀란 나무꾼
+```
 
 ---
 
@@ -24,8 +34,8 @@
 
 ```
 Please generate 3 SEPARATE images. Do NOT merge them into one picture.
-Generate IMAGE 1 first, then use IMAGE 1 as the visual reference for IMAGE 2 and IMAGE 3 —
-they must show the exact same character.
+Generate IMAGE 1 first and save it. Then read that saved file back and use it as the
+visual reference for IMAGE 2 and IMAGE 3 — all three must show the exact same character.
 
 === SHARED STYLE — apply to every image ===
 Korean folk tale picture-book illustration, hanji paper watercolor with visible paper grain,
@@ -55,7 +65,7 @@ serene expression.
 Facing slightly to the LEFT, three-quarter view turned toward the left side of the frame.
 Background: plain flat MAGENTA #FF00FF, completely even.
 No shadow, no ground, no cast shadow, no floor line, no other objects.
-Same face, same robes, same colours as IMAGE 1.
+Same face, same robes, same colours as style/refs/spirit_sheet.png.
 
 === [IMAGE 3] ===
 Save as: stories/goldaxe/assets/raw/char_spirit_smile.png
@@ -63,18 +73,17 @@ Full body, floating upright, both arms open in a giving gesture, warm smile.
 Facing slightly to the LEFT, three-quarter view turned toward the left side of the frame.
 Background: plain flat MAGENTA #FF00FF, completely even.
 No shadow, no ground, no cast shadow, no floor line, no other objects.
-Same face, same robes, same colours as IMAGE 1.
+Same face, same robes, same colours as style/refs/spirit_sheet.png.
 ```
 
 ---
 
 ## ② 나무꾼 포즈 3 `밑그림 첨부`
 
-> `style/refs/woodcutter_sheet.png` 를 첨부한다. 이미 갖고 있는 그림이다.
-
 ```
 Please generate 3 SEPARATE images. Do NOT merge them into one picture.
-The attached image is the character reference — all three must show the exact same person.
+Read the reference image at style/refs/woodcutter_sheet.png — all three must show
+the exact same person as that sheet.
 
 === SHARED STYLE — apply to every image ===
 Korean folk tale picture-book illustration, hanji paper watercolor with visible paper grain,
@@ -89,7 +98,8 @@ Full body, single character, no one else in frame.
 Facing slightly to the RIGHT, three-quarter view turned toward the right side of the frame.
 Background: plain flat MAGENTA #FF00FF, completely even.
 No shadow, no ground, no cast shadow, no floor line, no other objects.
-Keep this exact character design, same face, same clothes, same colours as the attached sheet.
+Keep this exact character design, same face, same clothes, same colours as
+style/refs/woodcutter_sheet.png.
 Same size and same framing in all three.
 
 === [IMAGE 1] ===
@@ -160,9 +170,6 @@ Aspect ratio 16:9.
 
 ## ④ 배경 3
 
-> 7번은 이미 있는 `bg_pond_glow.png` 를 첨부하면 구도가 맞아 대조가 산다.
-> 첨부가 번거로우면 빼도 된다 — 그 경우 두 연못이 다른 장소로 보일 수 있다.
-
 ```
 Please generate 3 SEPARATE images. Do NOT merge them into one picture.
 
@@ -190,10 +197,11 @@ Bright and airy with light high-key values. Do NOT make it dark, moody or atmosp
 
 === [IMAGE 2] ===
 Save as: stories/goldaxe/assets/raw/bg_pond_day.png
-A small still forest pond in a Korean mountain valley, pine trees and mossy rocks
-around the water, a calm reflective surface.
+Read stories/goldaxe/assets/raw/bg_pond_glow.png and keep the SAME composition —
+the same camera angle and the same placement of every pine tree, rock and water edge.
+Change ONLY the light: this is the ordinary moment BEFORE anything magical happens.
 Plain quiet overcast daylight, unremarkable. No golden glow, no light rays, no mist,
-no sparkle. Bright and airy, NOT dark or moody.
+no sparkle. Slightly cooler and duller. Bright and airy, NOT dark or moody.
 
 === [IMAGE 3] ===
 Save as: stories/goldaxe/assets/raw/bg_home_night.png
@@ -256,13 +264,5 @@ Two open empty hands raised in an "I don't know" gesture.
 ---
 
 ## 다 되면
-
-이미 갖고 있는 것도 같은 폴더에 넣는다.
-
-```
-stories/goldaxe/assets/raw/bg_pond_glow.png
-stories/goldaxe/assets/raw/char_woodcutter_surprise.png
-style/refs/woodcutter_sheet.png
-```
 
 푸시하면 끝. 나머지는 `python3 tools/cutout.py` 가 한다.
