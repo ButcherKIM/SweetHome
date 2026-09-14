@@ -100,6 +100,8 @@ a{color:var(--gold)}
   <p class="flow"><b>복사</b> → Flow에 붙여넣기 → <b>□ 확인</b> → 다운로드 →
     <a href="https://claude.ai/code/artifact/76043b70-8fe7-4d9d-a872-c97960e217e6"
        target="_blank" rel="noopener">플레이어</a>의 같은 이름 칸에 넣기 → <b>체크</b></p>
+  <p class="flow"><b>한 장에 3개</b>인 카드는 — 같은 파일을 <b>세 칸에 각각</b> 넣으면
+    매번 “몇 번째를 쓸까요” 를 물어봅니다. 왼쪽부터 1·2·3번입니다.</p>
 
   <div class="prog">
     <div class="row"><span class="n" id="pn">0 / 19</span>
@@ -184,30 +186,65 @@ const G = [
             "Gentle and calm, NOT dark or scary. Soft blue-grey night tones with warm lamplight.\n") },
  ]},
  { title:"소품", items:[
-   { id:"prop_axe_iron", name:"prop_axe_iron", desc:"낡은 쇠도끼", tags:[["m","분홍 배경"]], qc:QC_PROP,
-     p: pr("a plain old iron axe with a worn wooden handle") },
-   { id:"prop_axe_gold", name:"prop_axe_gold", desc:"금도끼", tags:[["m","분홍 배경"]], qc:QC_PROP,
-     p: pr("a shining golden axe with an ornate handle and a soft warm glow") },
-   { id:"prop_axe_silver", name:"prop_axe_silver", desc:"은도끼", tags:[["m","분홍 배경"]], qc:QC_PROP,
-     p: pr("a shining silver axe with a pale handle and a soft cool glow") },
+   { id:"axes3", name:"도끼 3자루 — 한 장에", desc:"왼쪽부터 쇠 · 금 · 은",
+     tags:[["m","분홍 배경"],["","3개 칸에 나눠 넣기"]],
+     qc:["세 자루가 <b>서로 안 닿는가</b> (닿으면 한 덩어리가 됩니다)",
+         "<b>왼쪽부터 쇠·금·은</b> 순서가 맞는가",
+         "셋이 같은 크기·같은 그림체인가"],
+     p:`${TOKEN}
+
+Three different axes side by side in a row, evenly spaced with clear wide gaps between them,
+NOT touching each other. From left to right:
+1) a plain old iron axe with a worn wooden handle,
+2) a shining golden axe with an ornate handle and a soft warm glow,
+3) a shining silver axe with a pale handle and a soft cool glow.
+All three seen from the side, the same size, the same style.
+Isolated on a plain flat magenta #FF00FF background.
+No shadow, no ground, no cast shadow, no hands, no other objects, no text.` },
    { id:"prop_light_rays", name:"prop_light_rays", desc:"연못에서 솟는 황금빛",
      tags:[["k","⚠ 검정 배경"]],
      qc:["배경이 <b>완전한 검정</b>인가 (회색빛 금지)", "빛 말고 <b>다른 게 없는가</b>"],
-     p:`Hand-painted watercolor soft golden light rays fanning upward and outward from a point\nnear the bottom, with gentle glowing haze, fading out smoothly toward the edges.\nWarm golden tone.\n\nPure solid BLACK background (#000000). Absolutely nothing else in the image —\nno scenery, no objects, no characters, no ground, no border, no text.\nOnly the glow itself on pure black.\nCompletely static image, single still frame, no motion.\nAspect ratio 16:9.` },
+     p:`Hand-painted watercolor soft golden light rays fanning upward and outward from a point
+near the bottom, with gentle glowing haze, fading out smoothly toward the edges.
+Warm golden tone.
+
+Pure solid BLACK background (#000000). Absolutely nothing else in the image —
+no scenery, no objects, no characters, no ground, no border, no text.
+Only the glow itself on pure black.
+Completely static image, single still frame, no motion.
+Aspect ratio 16:9.` },
  ]},
  { title:"선택지 그림", items:[
-   { id:"choice_wade", name:"choice_wade", desc:"맨발이 물에 들어가고 물결이 퍼짐",
-     tags:[["m","분홍 배경"]], qc:QC_ICON, p: ic("A pair of bare feet stepping into shallow pond water, with ripples spreading.") },
-   { id:"choice_wait", name:"choice_wait", desc:"물가에 앉아 기다리는 뒷모습",
-     tags:[["m","분홍 배경"]], qc:QC_ICON, p: ic("A person sitting cross-legged beside water, seen from behind, waiting quietly.") },
-   { id:"choice_home", name:"choice_home", desc:"멀리 보이는 초가집, 창에 불빛",
-     tags:[["m","분홍 배경"]], qc:QC_ICON, p: ic("A small thatched-roof cottage with a warm glowing window, seen from a distance.") },
-   { id:"choice_point_iron", name:"choice_point_iron", desc:"손이 쇠도끼를 가리킴",
-     tags:[["m","분홍 배경"]], qc:QC_ICON, p: ic("A hand pointing at a plain old iron axe.") },
-   { id:"choice_take_gold", name:"choice_take_gold", desc:"손이 금도끼를 잡으러 뻗음",
-     tags:[["m","분홍 배경"]], qc:QC_ICON, p: ic("A hand reaching out to grab a shining golden axe.") },
-   { id:"choice_shrug", name:"choice_shrug", desc:"두 손을 펴 든 모르겠다 몸짓",
-     tags:[["m","분홍 배경"]], qc:QC_ICON, p: ic(`Two open empty hands raised in an "I don't know" gesture.`) },
+   { id:"choice1", name:"첫 번째 선택 3개 — 한 장에", desc:"왼쪽부터 물에 들어감 · 앉아 기다림 · 집",
+     tags:[["m","분홍 배경"],["","3개 칸에 나눠 넣기"]],
+     qc:["셋이 <b>서로 안 닿는가</b>",
+         "<b>글자 없이</b> 각각 뭔지 알아보겠는가",
+         "왼쪽부터 <b>물 · 앉음 · 집</b> 순서가 맞는가"],
+     p:`${TOKEN}
+
+Three simple icon-like illustrations side by side in a row, evenly spaced with clear wide gaps,
+NOT touching each other. From left to right:
+1) a pair of bare feet stepping into shallow pond water, with ripples spreading,
+2) a person sitting cross-legged beside water, seen from behind, waiting quietly,
+3) a small thatched-roof cottage with a warm glowing window, seen from a distance.
+Each one simple and clear, single focus, easy to read at a glance, all the same size.
+Isolated on a plain flat magenta #FF00FF background.
+No shadow, no ground, no text.` },
+   { id:"choice2", name:"두 번째 선택 3개 — 한 장에", desc:"왼쪽부터 쇠도끼 가리킴 · 금도끼 잡음 · 모르겠다",
+     tags:[["m","분홍 배경"],["","3개 칸에 나눠 넣기"]],
+     qc:["셋이 <b>서로 안 닿는가</b>",
+         "<b>글자 없이</b> 각각 뭔지 알아보겠는가",
+         "왼쪽부터 <b>가리킴 · 잡음 · 모르겠다</b> 순서가 맞는가"],
+     p:`${TOKEN}
+
+Three simple icon-like illustrations side by side in a row, evenly spaced with clear wide gaps,
+NOT touching each other. From left to right:
+1) a hand pointing at a plain old iron axe,
+2) a hand reaching out to grab a shining golden axe,
+3) two open empty hands raised in an "I don't know" gesture.
+Each one simple and clear, single focus, easy to read at a glance, all the same size.
+Isolated on a plain flat magenta #FF00FF background.
+No shadow, no ground, no text.` },
  ]},
 ];
 
