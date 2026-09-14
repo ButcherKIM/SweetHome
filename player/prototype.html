@@ -2959,13 +2959,27 @@ function keyOut(img){
   cx.drawImage(img,0,0,w,h);
   const im = cx.getImageData(0,0,w,h), d = im.data, n = w*h;
 
-  // 1) 마젠타 → 투명 (경계는 부드럽게)
-  for(let i=0;i<n;i++){
-    const o=i*4, r=d[o], g=d[o+1], b=d[o+2];
-    if(r>110 && b>110){
-      const mn = Math.min(r,b), ratio = g/mn;
-      if(ratio < .72) d[o+3]=0;
-      else if(ratio < .88) d[o+3] = Math.min(d[o+3], Math.round(255*(ratio-.72)/.16));
+  // 1) 배경색을 이미지에서 직접 읽는다 — 진한 마젠타든 연분홍이든 자주든 상관없게.
+  //    분홍 정도를 K = (R+B)/2 - G 로 재면 피사체와 잘 갈린다.
+  //    (연분홍 #FFB6E1 → K 58, 볼 홍조 → K 15, 살구 피부 → K 1, 미색 옷 → K -3)
+  const kOf = (r,g,b) => (r + b) / 2 - g;
+  const patch = Math.max(2, Math.round(Math.min(w, h) * .02));
+  const corners = [[0,0],[w-patch,0],[0,h-patch],[w-patch,h-patch],
+                   [(w-patch)>>1,0],[(w-patch)>>1,h-patch]];
+  const ks = [];
+  for(const [cx,cy] of corners)
+    for(let y=cy;y<cy+patch;y++) for(let x=cx;x<cx+patch;x++){
+      const o=((y*w)+x)*4; ks.push(kOf(d[o],d[o+1],d[o+2]));
+    }
+  ks.sort((a,b2)=>a-b2);
+  const kBg = ks[ks.length>>1];                 // 모서리의 중앙값 = 배경의 분홍 정도
+
+  if(kBg >= 22){                                // 분홍 계열 배경이 맞을 때만 지운다
+    const hi = kBg * .82, lo = kBg * .45;       // hi 이상은 완전 투명, lo~hi 는 부드럽게
+    for(let i=0;i<n;i++){
+      const o=i*4, k = kOf(d[o], d[o+1], d[o+2]);
+      if(k >= hi) d[o+3] = 0;
+      else if(k > lo) d[o+3] = Math.min(d[o+3], Math.round(255 * (1 - (k-lo)/(hi-lo))));
     }
   }
   // 2) 최대 연결 덩어리만 남긴다 → 구석 반짝이·부스러기 제거
@@ -2993,12 +3007,13 @@ function keyOut(img){
     if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;
     // 가장자리 마젠타 잔상 억제
     const o=i*4;
-    if(d[o+3]<250){
-      const r=d[o], g=d[o+1], b=d[o+2], av=(r+b)/2;
-      if(av>g){ const f=Math.min(1,(av-g)/70)*.7; d[o]=r-(r-g)*f; d[o+2]=b-(b-g)*f; }
+    if(d[o+3]<250 && kBg >= 22){
+      const r=d[o], g=d[o+1], b=d[o+2], k=kOf(r,g,b);
+      if(k>0){ const f=Math.min(1, k/(kBg*.6))*.7; d[o]=r-(r-g)*f; d[o+2]=b-(b-g)*f; }
     }
   }
   cx.putImageData(im,0,0);
+  if(kBg < 22) return {canvas:c, dropped, noKey:true};   // 분홍 배경이 아니었다
   if(x1<=x0||y1<=y0) return {canvas:c, dropped};
 
   // 3) 여백 트림 (기준점 = 하단 중앙)
@@ -3021,6 +3036,7 @@ function loadFile(file, key, kind){
     im.onload = () => {
       const flat = (kind==='bg' || kind==='glow');
       const r = flat ? {canvas:plainResize(im), dropped:0} : keyOut(im);
+      if(r.noKey) $('#assetNote').textContent = `${key}: 분홍 배경을 못 찾아 그대로 넣었습니다`;
       const type = flat ? 'image/jpeg' : 'image/png';
       imgs[key] = r.canvas.toDataURL(type, .88);   // 이 기기에서 바로 보이게
       buildSlots(); render(); save();
