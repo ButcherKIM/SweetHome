@@ -7,8 +7,8 @@
   · 배경색은 모서리에서 직접 읽는다. 분홍의 진하기는 상관없다
   · 분홍 정도를 K = (R+B)/2 - G 로 재면 배경과 피사체가 잘 갈린다
     (연분홍 58 · 자주 77 인 반면 볼 홍조 15 · 살구 피부 1 · 미색 의복 -3)
-  · 의미 있는 덩어리를 모두 남긴다. 한 장에 여러 개를 뽑았으면 왼쪽부터 _1 _2 _3
-  · 부스러기(반짝이 등)는 버린다 — 가장 큰 덩어리의 12% 미만
+  · 한 파일은 한 에셋이다. 떨어져 있는 부분(두 손, 지팡이 등)은 모두 살려 합친다
+  · 부스러기(반짝이 등)만 버린다 — 가장 큰 덩어리의 12% 미만
 
   · bg_*   배경이므로 키잉하지 않는다
   · *light*, *glow*  발광체는 검은 배경에 screen 으로 얹으므로 키잉하지 않는다
@@ -59,7 +59,11 @@ def blobs_of(alpha):
 
 
 def cut(img):
-    """배경을 걷어내고 덩어리별 RGBA 이미지를 왼쪽부터 돌려준다."""
+    """배경을 걷어내고 RGBA 이미지 하나를 돌려준다.
+
+    떨어져 있는 덩어리도 같은 그림의 부분이므로 합친다 — "모르겠다" 아이콘의
+    두 손처럼 서로 안 닿는 경우가 있다. 부스러기만 크기로 걸러낸다.
+    """
     a = np.asarray(img.convert("RGBA")).astype(np.int16)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     k = (r + b) / 2 - g
@@ -86,19 +90,17 @@ def cut(img):
 
     label, sizes = blobs_of(a[..., 3])
     if not sizes:
-        return [], k_bg
+        return None, k_bg, 0
     biggest = max(sizes)
-    keep = [i for i, s in enumerate(sizes) if s >= max(400, biggest * MIN_BLOB)]
+    keep = {i for i, s in enumerate(sizes) if s >= max(400, biggest * MIN_BLOB)}
+    dropped = sum(s for i, s in enumerate(sizes) if i not in keep)
 
-    out = []
-    for L in keep:
-        ys, xs = np.where(label == L)
-        y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
-        sub = a[y0:y1+1, x0:x1+1].copy()
-        sub[..., 3] = np.where(label[y0:y1+1, x0:x1+1] == L, sub[..., 3], 0)
-        out.append((int(x0), Image.fromarray(sub.clip(0, 255).astype(np.uint8), "RGBA")))
-    out.sort(key=lambda t: t[0])                      # 왼쪽부터
-    return [im for _, im in out], k_bg
+    alive = np.isin(label, list(keep))
+    a[..., 3] = np.where(alive, a[..., 3], 0)
+    ys, xs = np.where(alive)
+    y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
+    sub = a[y0:y1+1, x0:x1+1]
+    return Image.fromarray(sub.clip(0, 255).astype(np.uint8), "RGBA"), k_bg, dropped
 
 
 def fit(img, px):
@@ -138,24 +140,19 @@ def main():
             made += 1
             continue
 
-        parts, k_bg = cut(img)
+        cutout, k_bg, dropped = cut(img)
         folder = {"char": "char", "icon": "icon"}.get(kind, "prop")
-        if not parts:
-            dst = base / folder / f"{p.stem}.png"
-            dst.parent.mkdir(parents=True, exist_ok=True)
+        dst = base / folder / f"{p.stem}.png"
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        if cutout is None:
             fit(img.convert("RGBA"), MASTER_PX).save(dst)
             print(f"  {p.name:<28} ⚠ 분홍 배경을 못 찾음 (K={k_bg:.0f}) → 원본 그대로")
-            made += 1
-            continue
-
-        for i, part in enumerate(parts, 1):
-            stem = p.stem if len(parts) == 1 else f"{p.stem}_{i}"
-            dst = base / folder / f"{stem}.png"
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            fit(part, MASTER_PX).save(dst)
+        else:
+            fit(cutout, MASTER_PX).save(dst)
+            note = f"  부스러기 {dropped}px 제거" if dropped > 200 else ""
             print(f"  {p.name:<28} {kind:<5} K={k_bg:>3.0f} "
-                  f"{part.width}x{part.height:<5} → {dst.relative_to(base)}")
-            made += 1
+                  f"{cutout.width}x{cutout.height:<5} → {dst.relative_to(base)}{note}")
+        made += 1
 
     print(f"\n원본 {len(files)}개 → 에셋 {made}개  ({base})")
 

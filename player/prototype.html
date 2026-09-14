@@ -238,7 +238,6 @@ a{color:var(--accent)}
     <div class="body">
       <p class="note"><b>올린 에셋은 기기 간에 공유됩니다</b> — 컴퓨터에서 넣고 폰에서 이어서 보셔도 됩니다.
         마젠타 배경째로 넣으세요. 브라우저가 <b>마젠타를 걷어내고, 가장 큰 덩어리만 남깁니다</b> — 구석의 반짝이는 자동으로 떨어집니다. 배경(<code>bg_</code>)은 그대로 씁니다.</p>
-      <div class="picker" id="picker" hidden></div>
       <div class="slots" id="slots"></div>
       <div class="bar"><button class="btn" id="bClear">에셋 모두 지우기</button>
         <span class="note" id="assetNote"></span>
@@ -3011,48 +3010,32 @@ function keyOut(img){
     if(sz>bestN) bestN=sz;
     cur++;
   }
-  // 3) 덩어리별로 잘라낸다. 한 장에 소품 여러 개를 뽑았을 때 골라 쓰기 위함이다.
-  //    부스러기(반짝이 등)는 버리고, 의미 있는 크기만 남긴다.
-  const boxes = new Map();
+  // 3) 부스러기만 버리고 나머지는 합친다.
+  //    "모르겠다" 아이콘의 두 손처럼 서로 안 닿는 부분도 같은 그림이다.
+  const sizes = new Map();
+  for(let i=0;i<n;i++){ const L=label[i]; if(L>=0) sizes.set(L,(sizes.get(L)||0)+1); }
+  const keep = new Set([...sizes].filter(([,v]) => v >= Math.max(400, bestN*.12)).map(([k])=>k));
+  let x0=w, y0=h, x1=0, y1=0, dropped=0;
   for(let i=0;i<n;i++){
     const L = label[i];
     if(L < 0) continue;
+    if(!keep.has(L)){ if(d[i*4+3]>0) dropped++; d[i*4+3]=0; continue; }
     const x = i % w, y = (i - x) / w;
-    const bx = boxes.get(L);
-    if(!bx) boxes.set(L, {x0:x, y0:y, x1:x, y1:y, area:1});
-    else { if(x<bx.x0)bx.x0=x; if(x>bx.x1)bx.x1=x;
-           if(y<bx.y0)bx.y0=y; if(y>bx.y1)bx.y1=y; bx.area++; }
-  }
-  const keep = [...boxes.entries()]
-    .filter(([, b]) => b.area >= Math.max(400, bestN * .12))
-    .sort((a, b) => a[1].x0 - b[1].x0);        // 왼쪽부터 순서대로
-  const dropped = n ? [...boxes.values()].reduce((t,b)=>t+b.area,0)
-                    - keep.reduce((t,[,b])=>t+b.area,0) : 0;
-
-  const blobs = keep.map(([L, b]) => {
-    const tw = b.x1 - b.x0 + 1, th = b.y1 - b.y0 + 1;
-    const t = document.createElement('canvas'); t.width = tw; t.height = th;
-    const tcx = t.getContext('2d');
-    const out = tcx.createImageData(tw, th), od = out.data;
-    for(let y=0;y<th;y++) for(let x=0;x<tw;x++){
-      const si = ((b.y0 + y) * w + (b.x0 + x)), di = (y * tw + x) * 4;
-      if(label[si] !== L) continue;
-      const so = si * 4;
-      od[di] = d[so]; od[di+1] = d[so+1]; od[di+2] = d[so+2];
-      let a = d[so+3];
-      if(a < 250 && kBg >= 22){                       // 가장자리 분홍 잔상 억제
-        const r=od[di], g=od[di+1], bl=od[di+2], k=kOf(r,g,bl);
-        if(k>0){ const f=Math.min(1, k/(kBg*.6))*.7;
-                 od[di]=r-(r-g)*f; od[di+2]=bl-(bl-g)*f; }
-      }
-      od[di+3] = a;
+    if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;
+    const o = i*4;
+    if(d[o+3] < 250 && kBg >= 22){                  // 가장자리 분홍 잔상 억제
+      const r=d[o], g=d[o+1], b=d[o+2], k=kOf(r,g,b);
+      if(k>0){ const f=Math.min(1, k/(kBg*.6))*.7; d[o]=r-(r-g)*f; d[o+2]=b-(b-g)*f; }
     }
-    tcx.putImageData(out, 0, 0);
-    return { canvas: t, area: b.area };
-  });
+  }
+  cx.putImageData(im,0,0);
+  if(kBg < 22) return {canvas:c, dropped, noKey:true};
+  if(x1<=x0||y1<=y0) return {canvas:c, dropped};
 
-  if(!blobs.length) return { canvas: c, dropped, noKey: kBg < 22 };
-  return { blobs, canvas: blobs[0].canvas, dropped, noKey: kBg < 22 };
+  const tw=x1-x0+1, th=y1-y0+1;
+  const t=document.createElement('canvas'); t.width=tw; t.height=th;
+  t.getContext('2d').drawImage(c, x0,y0,tw,th, 0,0,tw,th);
+  return {canvas:t, dropped};
 }
 
 function plainResize(img){
@@ -3069,24 +3052,6 @@ function accept(key, canvas, type, note){
   canvas.toBlob(b => b && upload(key, b, type), type, .88);
 }
 
-// 한 장에 소품 여러 개를 뽑았을 때 어느 것을 쓸지 고른다
-function askWhich(key, blobs){
-  const box = $('#picker');
-  box.innerHTML = `<p class="note"><b>${key}</b> 칸에 쓸 것을 고르세요 —
-    이 그림에서 ${blobs.length}개를 찾았습니다</p><div class="picks"></div>`;
-  const row = box.querySelector('.picks');
-  blobs.forEach((b, i) => {
-    const el = document.createElement('button');
-    el.className = 'pick';
-    el.innerHTML = `<img alt="${i+1}번째" src="${b.canvas.toDataURL('image/png')}"><em>${i+1}</em>`;
-    el.onclick = () => { box.hidden = true; box.innerHTML = '';
-                         accept(key, b.canvas, 'image/png', `  ·  ${blobs.length}개 중 ${i+1}번째`); };
-    row.appendChild(el);
-  });
-  box.hidden = false;
-  box.scrollIntoView({block:'nearest', behavior:'smooth'});
-}
-
 function loadFile(file, key, kind){
   const fr = new FileReader();
   fr.onload = () => {
@@ -3097,7 +3062,6 @@ function loadFile(file, key, kind){
       const r = keyOut(im);
       if(r.noKey){ $('#assetNote').textContent = `${key}: 분홍 배경을 못 찾아 그대로 넣었습니다`;
                    return accept(key, r.canvas, 'image/png'); }
-      if(r.blobs && r.blobs.length > 1) return askWhich(key, r.blobs);
       accept(key, r.canvas, 'image/png',
              r.dropped > 200 ? `  ·  ${key}: 부스러기 제거됨` : '');
     };
