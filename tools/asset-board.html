@@ -97,6 +97,34 @@ pre{margin:0;padding:12px 14px;background:var(--sunk);border-top:1px solid var(-
 .hint{font-size:12px;color:var(--muted);padding:0 14px 12px;margin:0}
 .hint b{color:var(--ink)}
 
+/* 시작 안내 */
+.how{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:15px 17px;box-shadow:var(--shadow)}
+.how h2{font-size:14.5px;margin:0 0 9px}
+.how ol{margin:0;padding-left:20px;font-size:13.5px;display:flex;flex-direction:column;gap:7px}
+.how ol .tag{display:inline-block;vertical-align:baseline}
+.how .note{font-size:12.5px;color:var(--muted);margin:11px 0 0;
+  padding-top:11px;border-top:1px solid var(--line)}
+
+p.lead{font-size:13px;color:var(--muted);margin:0 0 2px;padding-inline:2px;line-height:1.65}
+p.lead b{color:var(--ink)}
+p.lead code{font:400 11.5px var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px}
+.check{font-size:12.5px;margin:0;padding:10px 14px;background:var(--gold-soft);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.check b{color:var(--gold)}
+.chk.static{border:2px solid var(--done);border-radius:8px;background:var(--done-soft);
+  color:var(--done);width:26px;height:26px;display:grid;place-items:center;
+  font-size:15px;line-height:1;flex:none}
+.tag.done{background:var(--done-soft);color:var(--done)}
+
+/* 어디에 쓰나 */
+.where{font-size:12.5px;color:var(--sage);display:flex;gap:6px;align-items:baseline}
+.where b{color:var(--ink);font-weight:500}
+
+/* 재료 카드 */
+.card.ing{border-style:dashed;border-color:var(--sage);background:var(--sage-soft)}
+.card.ing .top{padding-bottom:9px}
+
 /* 함정 */
 .warn{background:var(--gold-soft);border:1px solid var(--gold);border-radius:12px;padding:13px 15px}
 .warn h2{font-size:13.5px;margin:0 0 7px;color:var(--gold)}
@@ -110,9 +138,9 @@ a{color:var(--gold)}
 
 <div class="wrap">
   <header>
-    <h1>금도끼 에셋 작업판</h1>
-    <p class="lede">Flow에 붙여넣을 프롬프트 <b>19개</b>. 탭하면 스타일 토큰까지 통째로 복사됩니다.
-      체크는 기기 간에 저장돼요.</p>
+    <h1>금도끼 에셋 만들기</h1>
+    <p class="lede">Flow에서 그림 <b>18장</b>을 뽑아 플레이어에 넣는 작업입니다.
+      위에서부터 순서대로 따라오시면 됩니다.</p>
   </header>
 
   <div class="prog">
@@ -121,14 +149,29 @@ a{color:var(--gold)}
     <div class="bar"><i id="pb"></i></div>
   </div>
 
+  <div class="how">
+    <h2>한 장을 만드는 순서</h2>
+    <ol>
+      <li><b>[프롬프트 복사]</b> 를 누릅니다 — 스타일 지시까지 통째로 복사됩니다</li>
+      <li><b>Flow</b>에 붙여넣습니다. 카드에 <span class="tag">첨부</span> 표시가 있으면
+        그 그림을 <b>Ingredients</b>로 같이 넣습니다</li>
+      <li>결과를 보고 <b>아래 “확인할 것”</b>에 걸리면 다시 생성합니다</li>
+      <li>마음에 들면 <b>다운로드</b>합니다. 영상이 나오면 첫 프레임을 캡처하세요</li>
+      <li><a id="playerLink" href="https://claude.ai/code/artifact/76043b70-8fe7-4d9d-a872-c97960e217e6"
+        target="_blank" rel="noopener">플레이어</a>를 열어 <b>같은 이름의 칸</b>에 끌어다 놓습니다</li>
+      <li>돌아와서 <b>체크</b>합니다</li>
+    </ol>
+    <p class="note">마젠타(분홍) 배경째로 넣으시면 됩니다. 지우는 건 플레이어가 알아서 합니다.
+      구석에 붙는 작은 반짝이도 자동으로 떨어집니다.</p>
+  </div>
+
   <div class="warn">
-    <h2>자주 걸리는 것</h2>
+    <h2>제일 자주 틀리는 것</h2>
     <ul>
-      <li><b>배경색을 확인하세요.</b> 대부분 <code>마젠타</code>인데 <b>빛줄기 하나만 검정</b>입니다</li>
-      <li><b>시트를 먼저.</b> 산신령 시트 없이 ④⑤를 뽑으면 컷마다 다른 사람이 됩니다</li>
-      <li><b>발밑에 그림자·바닥선이 있으면 다시.</b> 오려낸 뒤 회색 얼룩이 남아요</li>
-      <li>영상이 나오면 <b>첫 프레임 캡처</b>. 21:9가 없으면 16:9로 받으셔도 됩니다</li>
-      <li>구석 반짝이는 <b>신경 쓰지 마세요</b> — 플레이어가 자동으로 떼어냅니다</li>
+      <li><b>배경색.</b> 17장은 <code>마젠타(분홍)</code>인데 <b>빛줄기 하나만 검정</b>입니다</li>
+      <li><b>발밑 그림자·바닥선.</b> 있으면 오려낸 뒤 회색 얼룩이 남습니다 — 다시 뽑으세요</li>
+      <li><b>바라보는 방향.</b> 나무꾼은 오른쪽, 산신령은 왼쪽입니다.
+        반대로 나와도 다시 뽑을 필요는 없어요 — 말씀해주시면 코드에서 뒤집습니다</li>
     </ul>
   </div>
 
@@ -140,8 +183,18 @@ a{color:var(--gold)}
 
   <div id="list"></div>
 
-  <p class="lede">받은 이미지는 <a href="https://claude.ai/code/artifact/76043b70-8fe7-4d9d-a872-c97960e217e6">플레이어</a>의
-    해당 슬롯에 끌어다 놓으면 됩니다. 배경 제거는 브라우저가 알아서 합니다.</p>
+  <div class="how">
+    <h2>다 만들고 나면</h2>
+    <ol>
+      <li><a href="https://claude.ai/code/artifact/76043b70-8fe7-4d9d-a872-c97960e217e6"
+        target="_blank" rel="noopener">플레이어</a>를 열고 <b>재생</b>을 눌러 처음부터 봅니다</li>
+      <li>선택을 두 번 하면 결말이 나옵니다. <b>결말이 9개</b>라 여러 번 볼 수 있어요</li>
+      <li><b>아이에게 보여주세요.</b> 그게 이 데모의 목적입니다 —
+        끝까지 앉아 있는지, 글자 없이 선택지를 고르는지, 다른 결말을 보려고 다시 하는지</li>
+    </ol>
+    <p class="note">이상하거나 아쉬운 게 보이면 그대로 말씀해주세요.
+      그림을 다시 뽑아야 하는 것과 코드로 고칠 수 있는 것을 구분해 알려드리겠습니다.</p>
+  </div>
 </div>
 
 <script>
@@ -172,77 +225,160 @@ const bg   = (scene, extra) => `${TOKEN}\n\nA wide establishing shot of ${scene}
 const prop = (o) => `${TOKEN}\n\n${o}, single object, centered, seen from the side.\nIsolated on a plain flat magenta #FF00FF background.\nNo shadow, no ground, no cast shadow, no hands, no other objects.`;
 const icon = (a) => `${TOKEN}\n\n${a} Simple clear composition, single focus, large and easy to read at a glance.\nIsolated on a plain flat magenta #FF00FF background.\nNo shadow, no ground, no text.`;
 
+const SHEET_W = `${TOKEN}
+
+Character reference sheet of a kind young Korean woodcutter in his early twenties.
+He wears a simple undyed hemp jeogori jacket and baji trousers with a dark cloth waist sash,
+straw shoes, and his hair tied in a small topknot with a plain headband.
+Show the SAME character three times side by side in one image:
+full-body front view, full-body side view, and a head close-up with a neutral expression.
+Relaxed standing pose, arms at his sides.
+${MAGENTA}`;
+
+const SHEET_S = `${TOKEN}
+
+Character reference sheet of a gentle Korean mountain spirit (sanshin): an elderly sage
+with a long flowing white beard and long white eyebrows, wearing loose pale robes
+with soft golden trim, holding a simple wooden staff, a faint warm glow around him,
+kind smiling eyes. He floats slightly rather than standing on the ground.
+Show the SAME character three times side by side in one image:
+full-body front view, full-body three-quarter view, and a head close-up.
+${MAGENTA}`;
+
 const GROUPS = [
-  { title: "먼저 — 산신령 시트", note: "이게 없으면 ④⑤가 매번 다른 사람이 됩니다", items: [
-    { id:"spirit_sheet", name:"style/refs/spirit_sheet.png", desc:"산신령 캐릭터 시트 — 정면 / 3-4 / 얼굴",
-      tags:[["m","마젠타 배경"],["g","첨부 없음"]],
-      p:`${TOKEN}\n\nCharacter reference sheet of a gentle Korean mountain spirit (sanshin): an elderly sage\nwith a long flowing white beard and long white eyebrows, wearing loose pale robes\nwith soft golden trim, holding a simple wooden staff, a faint warm glow around him,\nkind smiling eyes. He floats slightly rather than standing on the ground.\nShow the SAME character three times side by side in one image:\nfull-body front view, full-body three-quarter view, and a head close-up.\n${MAGENTA}`,
-      hint:"받으면 <b>따로 저장</b>해두세요. ④⑤ 뽑을 때 Ingredients로 넣습니다." },
-  ]},
-  { title: "캐릭터 5개", note: "시트를 Ingredients에 첨부", items: [
-    { id:"char_woodcutter_idle", name:"char_woodcutter_idle", desc:"나무꾼 — 도끼를 어깨에 메고 편안히",
-      tags:[["m","마젠타 배경"],["","나무꾼 시트 첨부"],["g","오른쪽을 봄"]],
-      p: char("standing calmly holding an axe over his shoulder, faint friendly smile.","RIGHT") },
-    { id:"char_woodcutter_sad", name:"char_woodcutter_sad", desc:"나무꾼 — 어깨가 처지고 빈손, 근심",
-      tags:[["m","마젠타 배경"],["","나무꾼 시트 첨부"],["g","오른쪽을 봄"]],
-      p: char("shoulders drooped, both hands empty and open, looking down, worried face.","RIGHT") },
-    { id:"char_woodcutter_happy", name:"char_woodcutter_happy", desc:"나무꾼 — 두 팔 들고 활짝",
-      tags:[["m","마젠타 배경"],["","나무꾼 시트 첨부"],["g","오른쪽을 봄"]],
-      p: char("both arms raised in delight, big open smile, standing upright.","RIGHT") },
-    { id:"char_spirit_calm", name:"char_spirit_calm", desc:"산신령 — 금도끼를 내밀며 잔잔하게",
-      tags:[["m","마젠타 배경"],["","산신령 시트 첨부"],["g","왼쪽을 봄"]],
-      p: char("floating upright, one hand holding a golden axe out toward the viewer, serene expression.","LEFT"),
-      hint:"산신령만 <b>왼쪽</b>입니다 — 오른쪽에 서서 나무꾼을 마주봐야 하니까요." },
-    { id:"char_spirit_smile", name:"char_spirit_smile", desc:"산신령 — 두 팔 벌려 건네주는 미소",
-      tags:[["m","마젠타 배경"],["","산신령 시트 첨부"],["g","왼쪽을 봄"]],
-      p: char("floating upright, both arms open in a giving gesture, warm smile.","LEFT") },
-  ]},
-  { title: "배경 3개", note: "21:9 · 인물 없음 · 하단 가운데 비우기", items: [
-    { id:"bg_forest_day", name:"bg_forest_day", desc:"아침 숲길 — 소나무, 이끼 바위, 고사리",
-      tags:[["","그대로 사용"],["g","21:9"]],
-      p: bg("a quiet Korean mountain forest path in soft morning light,\ntall pine trees, mossy rocks, ferns along the path, a distant ridge.",
-            "Bright and airy with light high-key values. Do NOT make it dark, moody or atmospheric.\n") },
-    { id:"bg_home_night", name:"bg_home_night", desc:"나무꾼의 초가집, 밤 — 창에 등불",
-      tags:[["","그대로 사용"],["g","21:9"]],
-      p: bg("a small humble Korean thatched-roof cottage at night,\nwarm lamplight glowing softly through the paper window, a low stone wall,\na persimmon tree beside the gate, a quiet night sky with a few stars.",
-            "Gentle and calm, NOT dark or scary. Soft blue-grey night tones with warm lamplight.\n"),
-      hint:"4~7세 대상이라 <b>무섭지 않게</b> — 어두운 밤이 아니라 등불이 따뜻한 밤입니다." },
-    { id:"bg_pond_day", name:"bg_pond_day", desc:"평범한 연못 — 빛이 쏟아지기 직전",
-      tags:[["","bg_pond_glow 첨부"],["g","21:9"],["g","선택사항"]],
-      p:`${TOKEN}\n\nThe SAME pond scene as the attached image — identical composition, identical camera angle,\nidentical placement of every pine tree, rock and water edge. Do not move or redesign anything.\n\nChange ONLY the light. This is the ordinary moment BEFORE anything magical happens:\nplain flat overcast daylight, quiet and unremarkable. No golden glow, no light rays,\nno rising mist, no sparkle on the water. The pond surface is dull and still.\nSlightly cooler and duller colors overall.\n\nABSOLUTELY NO people, NO characters, NO animals, NO human figures anywhere.\nVery wide panoramic composition, aspect ratio 21:9.`,
-      hint:"<b>안 뽑아도 됩니다.</b> 이미 밝기·채도로 대조를 만들어놨거든요. 시간 아끼시려면 건너뛰세요." },
-  ]},
-  { title: "소품 3개", note: "", items: [
-    { id:"prop_axe_iron", name:"prop_axe_iron", desc:"낡은 쇠도끼", tags:[["m","마젠타 배경"]],
-      p: prop("a plain old iron axe with a worn wooden handle") },
-    { id:"prop_axe_gold", name:"prop_axe_gold", desc:"금도끼 — 따뜻한 광", tags:[["m","마젠타 배경"]],
-      p: prop("a shining golden axe with an ornate handle and a soft warm glow") },
-    { id:"prop_axe_silver", name:"prop_axe_silver", desc:"은도끼 — 차가운 광", tags:[["m","마젠타 배경"]],
-      p: prop("a shining silver axe with a pale handle and a soft cool glow") },
-  ]},
-  { title: "빛줄기 1개", note: "여기만 검정 배경입니다", items: [
-    { id:"prop_light_rays", name:"prop_light_rays", desc:"연못에서 솟는 황금빛 — 재사용률 1위",
-      tags:[["k","⚠ 순수 검정 배경"]],
-      p:`Hand-painted watercolor soft golden light rays fanning upward and outward from a point\nnear the bottom, with gentle glowing haze, fading out smoothly toward the edges.\nWarm golden tone.\n\nPure solid BLACK background (#000000). Absolutely nothing else in the image —\nno scenery, no objects, no characters, no ground, no border, no text.\nOnly the glow itself on pure black.\nCompletely static image, single still frame, no motion.\nAspect ratio 16:9.`,
-      hint:"빛은 반투명이라 <b>오려낼 수 없어서</b> 검정에 뽑아 더합니다. 뿌옇게 들뜨면 <code>pure #000000 black, absolute black, no grey</code> 추가." },
-  ]},
-  { title: "선택지 그림 6개", note: "글자 없이 그림만으로 구별돼야 합니다", items: [
-    { id:"choice_wade", name:"choice_wade", desc:"분기1 — 연못에 들어간다", tags:[["m","마젠타 배경"]],
-      p: icon("A pair of bare feet stepping into shallow pond water, with ripples spreading.") },
-    { id:"choice_wait", name:"choice_wait", desc:"분기1 — 앉아서 기다린다", tags:[["m","마젠타 배경"],["g","뒷모습 · 시트 불필요"]],
-      p: icon("A person sitting cross-legged beside water, seen from behind, waiting quietly.") },
-    { id:"choice_home", name:"choice_home", desc:"분기1 — 집으로 돌아간다", tags:[["m","마젠타 배경"]],
-      p: icon("A small thatched-roof cottage with a warm glowing window, seen from a distance.") },
-    { id:"choice_point_iron", name:"choice_point_iron", desc:"분기2 — 쇠도끼를 가리킨다", tags:[["m","마젠타 배경"]],
-      p: icon("A hand pointing at a plain old iron axe.") },
-    { id:"choice_take_gold", name:"choice_take_gold", desc:"분기2 — 금도끼를 받는다", tags:[["m","마젠타 배경"]],
-      p: icon("A hand reaching out to grab a shining golden axe.") },
-    { id:"choice_shrug", name:"choice_shrug", desc:"분기2 — 모르겠다고 한다", tags:[["m","마젠타 배경"]],
-      p: icon(`Two open empty hands raised in an "I don't know" gesture.`) },
-  ]},
+  { kind:"ing", title:"먼저 — 재료 2개",
+    note:"앱에 안 들어갑니다. Flow에 첨부하는 밑그림이에요",
+    lead:`캐릭터를 뽑을 때마다 <b>같은 사람</b>이 나오게 하는 밑그림입니다.
+      이게 없으면 컷마다 얼굴과 옷이 달라져서, 나중에 전부 다시 뽑아야 합니다.
+      한 번 만들어 <b>사진첩에 저장</b>해두고 계속 씁니다.`,
+    items: [
+      { id:"sheet_woodcutter", name:"나무꾼 밑그림", desc:"정면 · 측면 · 얼굴 세 장면을 한 그림에",
+        tags:[["done","이미 갖고 계심"]], nonum:true, skipCount:true,
+        where:"1 · 2 · 3번(나무꾼 포즈)을 뽑을 때 첨부",
+        p: SHEET_W,
+        hint:"처음에 뽑으신 그 그림입니다. <b>다시 뽑지 마세요</b> — 이미 그걸 기준으로 나무꾼이 만들어져 있습니다. 프롬프트는 혹시 잃어버렸을 때를 위한 것입니다." },
+      { id:"sheet_spirit", name:"산신령 밑그림", desc:"정면 · 3/4 · 얼굴 세 장면을 한 그림에",
+        tags:[["m","마젠타(분홍) 배경"],["g","첨부 없이 바로"]], nonum:true,
+        where:"4 · 5번(산신령 포즈)을 뽑을 때 첨부",
+        p: SHEET_S,
+        check:"세 장면의 <b>수염 길이 · 옷 · 지팡이가 서로 같은지</b> 보세요. 다르면 다시.",
+        hint:"받으면 <b>반드시 저장</b>해두세요. 4번과 5번에서 씁니다." },
+    ]},
+
+  { title:"캐릭터 5개", note:"밑그림을 Ingredients로 첨부",
+    lead:`프롬프트 끝에 <code>Keep this exact character design…</code> 가 들어 있습니다.
+      밑그림과 이 문장이 짝이라, 둘 중 하나라도 빠지면 다른 사람이 나옵니다.`,
+    items: [
+      { id:"char_woodcutter_idle", name:"char_woodcutter_idle", desc:"도끼를 어깨에 메고 편안히 선 모습",
+        tags:[["m","마젠타(분홍)"],["","나무꾼 밑그림 첨부"],["g","오른쪽을 봄"]],
+        where:"도입 1컷 “나무를 하러 올라갔어요” 외 3곳",
+        p: char("standing calmly holding an axe over his shoulder, faint friendly smile.","RIGHT") },
+      { id:"char_woodcutter_sad", name:"char_woodcutter_sad", desc:"어깨가 처지고 빈손, 근심스러운 얼굴",
+        tags:[["m","마젠타(분홍)"],["","나무꾼 밑그림 첨부"],["g","오른쪽을 봄"]],
+        where:"도입 2컷 “주저앉고 말았어요” 외 3곳",
+        p: char("shoulders drooped, both hands empty and open, looking down, worried face.","RIGHT") },
+      { id:"char_woodcutter_happy", name:"char_woodcutter_happy", desc:"두 팔 들고 활짝 웃는 모습",
+        tags:[["m","마젠타(분홍)"],["","나무꾼 밑그림 첨부"],["g","오른쪽을 봄"]],
+        where:"결말 6곳 전부 — 가장 많이 쓰입니다",
+        p: char("both arms raised in delight, big open smile, standing upright.","RIGHT") },
+      { id:"char_spirit_calm", name:"char_spirit_calm", desc:"금도끼를 내밀며 잔잔한 표정",
+        tags:[["m","마젠타(분홍)"],["","산신령 밑그림 첨부"],["g","왼쪽을 봄"]],
+        where:"“이것이 네 도끼냐” 묻는 3곳",
+        p: char("floating upright, one hand holding a golden axe out toward the viewer, serene expression.","LEFT"),
+        hint:"산신령만 <b>왼쪽</b>을 봅니다 — 화면 오른쪽에 서서 나무꾼을 마주봐야 하니까요." },
+      { id:"char_spirit_smile", name:"char_spirit_smile", desc:"두 팔 벌려 건네주는 미소",
+        tags:[["m","마젠타(분홍)"],["","산신령 밑그림 첨부"],["g","왼쪽을 봄"]],
+        where:"결말 6곳",
+        p: char("floating upright, both arms open in a giving gesture, warm smile.","LEFT") },
+    ]},
+
+  { title:"배경 3개", note:"가로로 아주 긴 그림 · 사람 없이",
+    lead:`배경은 <b>화면보다 넓게</b> 받아야 카메라가 좌우로 움직일 때 가장자리가 안 비칩니다.
+      21:9를 못 고르면 16:9로 받으셔도 됩니다 — 말씀해주시면 그 장면은 카메라를 고정하겠습니다.
+      <b>하단 가운데는 비워두세요.</b> 캐릭터가 설 자리입니다.`,
+    items: [
+      { id:"bg_forest_day", name:"bg_forest_day", desc:"아침 숲길 — 소나무, 이끼 바위, 고사리",
+        tags:[["","배경 그대로"],["g","21:9"]],
+        where:"도입 1컷 — 이야기가 시작되는 화면",
+        p: bg("a quiet Korean mountain forest path in soft morning light,\ntall pine trees, mossy rocks, ferns along the path, a distant ridge.",
+              "Bright and airy with light high-key values. Do NOT make it dark, moody or atmospheric.\n"),
+        check:"<b>사람이 안 들어갔는지</b>, 가로로 충분히 긴지, 하단 가운데가 비었는지." },
+      { id:"bg_pond_day", name:"bg_pond_day", desc:"평범한 연못 — 빛이 쏟아지기 전",
+        tags:[["","배경 그대로"],["g","21:9"],["g","가장 많이 쓰임"]],
+        where:"도입 2컷 외 5곳 — 6번 나옵니다",
+        p: bg("a small still forest pond in a Korean mountain valley,\npine trees and mossy rocks around the water, a calm reflective surface.",
+              "Plain quiet overcast daylight, unremarkable. No golden glow, no light rays, no mist.\nBright and airy, NOT dark or moody.\n"),
+        hint:"빛나는 연못(<code>bg_pond_glow</code>)은 이미 갖고 계십니다. 이건 <b>빛나기 전</b>의 평범한 연못이에요. 둘이 <b>같은 장소로 보이면</b> 대조가 살아납니다 — 빛나는 연못을 Ingredients로 같이 넣으면 구도가 비슷해집니다." },
+      { id:"bg_home_night", name:"bg_home_night", desc:"나무꾼의 초가집, 밤 — 창에 등불",
+        tags:[["","배경 그대로"],["g","21:9"]],
+        where:"“집으로 돌아간다” 1컷",
+        p: bg("a small humble Korean thatched-roof cottage at night,\nwarm lamplight glowing softly through the paper window, a low stone wall,\na persimmon tree beside the gate, a quiet night sky with a few stars.",
+              "Gentle and calm, NOT dark or scary. Soft blue-grey night tones with warm lamplight.\n"),
+        check:"<b>무섭지 않은지.</b> 4~7세가 볼 화면이라, 어두운 밤이 아니라 등불이 따뜻한 밤이어야 합니다." },
+    ]},
+
+  { title:"소품 3개", note:"이야기의 핵심 물건",
+    lead:`도끼 세 자루가 이 이야기의 전부입니다. <b>세 개가 한눈에 구별</b>돼야 해요 —
+      낡은 쇠 / 반짝이는 금 / 반짝이는 은.`,
+    items: [
+      { id:"prop_axe_iron", name:"prop_axe_iron", desc:"낡고 평범한 쇠도끼", tags:[["m","마젠타(분홍)"]],
+        where:"7곳 — 연못에 빠뜨릴 때, 되찾을 때",
+        p: prop("a plain old iron axe with a worn wooden handle") },
+      { id:"prop_axe_gold", name:"prop_axe_gold", desc:"금도끼 — 따뜻한 광", tags:[["m","마젠타(분홍)"]],
+        where:"산신령이 들어 보이는 6곳",
+        p: prop("a shining golden axe with an ornate handle and a soft warm glow") },
+      { id:"prop_axe_silver", name:"prop_axe_silver", desc:"은도끼 — 차가운 광", tags:[["m","마젠타(분홍)"]],
+        where:"세 자루를 다 받는 결말 3곳",
+        p: prop("a shining silver axe with a pale handle and a soft cool glow") },
+    ]},
+
+  { title:"빛줄기 1개", note:"⚠ 여기만 검정 배경입니다",
+    lead:`빛은 <b>반투명이라 오려낼 수가 없습니다.</b> 그래서 마젠타가 아니라
+      <b>순수한 검정</b>에 뽑습니다 — 검정은 화면에 얹을 때 저절로 사라지고 빛만 더해집니다.`,
+    items: [
+      { id:"prop_light_rays", name:"prop_light_rays", desc:"연못에서 솟아오르는 황금빛",
+        tags:[["k","⚠ 순수 검정 배경"],["g","재사용 1위"]],
+        where:"“환한 빛이 쏟아졌어요” 6곳",
+        p:`Hand-painted watercolor soft golden light rays fanning upward and outward from a point
+near the bottom, with gentle glowing haze, fading out smoothly toward the edges.
+Warm golden tone.
+
+Pure solid BLACK background (#000000). Absolutely nothing else in the image —
+no scenery, no objects, no characters, no ground, no border, no text.
+Only the glow itself on pure black.
+Completely static image, single still frame, no motion.
+Aspect ratio 16:9.`,
+        check:"<b>배경이 완전한 검정인지.</b> 회색빛이 돌면 화면 전체가 뿌옇게 들뜹니다.",
+        hint:"안 되면 <code>pure #000000 black, absolute black, no grey</code> 를 맨 뒤에 붙이세요. 이 한 장으로 산신령 등장·결말·다음 동화까지 다 씁니다." },
+    ]},
+
+  { title:"선택지 그림 6개", note:"글자 없이 그림만으로 알아야 합니다",
+    lead:`4~7세는 선택지를 <b>읽지 않고 그림으로 고릅니다.</b>
+      셋이 나란히 놓였을 때 <b>한눈에 달라 보이는지</b>가 전부예요.`,
+    items: [
+      { id:"choice_wade", name:"choice_wade", desc:"맨발이 물에 들어가고 물결이 퍼짐",
+        tags:[["m","마젠타(분홍)"]], where:"첫 번째 선택 — “연못에 들어간다”",
+        p: icon("A pair of bare feet stepping into shallow pond water, with ripples spreading.") },
+      { id:"choice_wait", name:"choice_wait", desc:"물가에 앉아 기다리는 뒷모습",
+        tags:[["m","마젠타(분홍)"],["g","뒷모습 · 밑그림 불필요"]], where:"첫 번째 선택 — “앉아서 기다린다”",
+        p: icon("A person sitting cross-legged beside water, seen from behind, waiting quietly."),
+        hint:"뒷모습이라 <b>얼굴이 안 보입니다</b> — 밑그림을 첨부할 필요가 없어요." },
+      { id:"choice_home", name:"choice_home", desc:"멀리 보이는 초가집, 창에 불빛",
+        tags:[["m","마젠타(분홍)"]], where:"첫 번째 선택 — “집으로 돌아간다”",
+        p: icon("A small thatched-roof cottage with a warm glowing window, seen from a distance.") },
+      { id:"choice_point_iron", name:"choice_point_iron", desc:"손이 낡은 쇠도끼를 가리킴",
+        tags:[["m","마젠타(분홍)"]], where:"두 번째 선택 — “쇠도끼를 가리킨다” (3곳)",
+        p: icon("A hand pointing at a plain old iron axe.") },
+      { id:"choice_take_gold", name:"choice_take_gold", desc:"손이 금도끼를 잡으러 뻗음",
+        tags:[["m","마젠타(분홍)"]], where:"두 번째 선택 — “금도끼를 받는다” (3곳)",
+        p: icon("A hand reaching out to grab a shining golden axe.") },
+      { id:"choice_shrug", name:"choice_shrug", desc:"두 손을 펴 든 “모르겠어요” 몸짓",
+        tags:[["m","마젠타(분홍)"]], where:"두 번째 선택 — “모르겠다고 한다” (3곳)",
+        p: icon(`Two open empty hands raised in an "I don't know" gesture.`) },
+    ]},
 ];
 
-const ALL = GROUPS.flatMap(g => g.items);
+const ALL = GROUPS.flatMap(g => g.items).filter(a => !a.skipCount);
 let done = new Set(), db = null;
 
 /* ── 복사 ── */
@@ -269,12 +405,14 @@ function refresh(){
   document.getElementById('pb').style.width = (n / ALL.length * 100) + '%';
   document.getElementById('pt').textContent =
     n === 0 ? '시작 전' : n === ALL.length ? '전부 끝났습니다' : `${ALL.length - n}개 남음`;
+  document.getElementById('pn').textContent = `${n} / ${ALL.length}`;
   for(const a of ALL){
     const card = document.getElementById('c_' + a.id);
     if(!card) continue;
     const on = done.has(a.id);
     card.classList.toggle('done', on);
-    const chk = card.querySelector('.chk');
+    const chk = card.querySelector('button.chk');
+    if(!chk) continue;
     chk.setAttribute('aria-pressed', on);
     chk.textContent = '✓';
   }
@@ -292,28 +430,34 @@ let num = 0;
 for(const g of GROUPS){
   const sec = document.createElement('section');
   sec.innerHTML = `<div class="shead"><h2>${g.title}</h2>
-    ${g.note ? `<span>${g.note}</span>` : ''}</div>`;
+    ${g.note ? `<span>${g.note}</span>` : ''}</div>
+    ${g.lead ? `<p class="lead">${g.lead}</p>` : ''}`;
   for(const a of g.items){
-    num++;
+    if(!a.nonum) num++;
     const card = document.createElement('div');
-    card.className = 'card'; card.id = 'c_' + a.id;
+    card.className = 'card' + (g.kind === 'ing' ? ' ing' : '');
+    card.id = 'c_' + a.id;
     card.innerHTML = `
       <div class="top">
-        <button class="chk" aria-pressed="false" aria-label="${a.name} 완료"></button>
+        ${a.skipCount ? `<span class="chk static" aria-hidden="true">✓</span>`
+                      : `<button class="chk" aria-pressed="false" aria-label="${a.name} 완료"></button>`}
         <div class="meta">
-          <span class="name">${num}. ${a.name}</span>
+          <span class="name">${a.nonum ? '' : num + '. '}${a.name}</span>
           <span class="desc">${a.desc}</span>
+          ${a.where ? `<span class="where">▸ <b>${a.where}</b></span>` : ''}
           <span class="tags">${a.tags.map(([k, t]) =>
             `<span class="tag ${k}">${t}</span>`).join('')}</span>
         </div>
       </div>
+      ${a.check ? `<p class="check"><b>확인할 것</b> — ${a.check}</p>` : ''}
       <div class="acts">
         <button class="btn pri js-copy">프롬프트 복사</button>
         <button class="btn js-show">프롬프트 보기</button>
       </div>
       ${a.hint ? `<p class="hint">${a.hint}</p>` : ''}
       <pre hidden></pre>`;
-    card.querySelector('.chk').onclick = () => toggle(a.id);
+    const chk = card.querySelector('button.chk');
+    if(chk) chk.onclick = () => toggle(a.id);
     card.querySelector('.js-copy').onclick = e => copy(a.p, e.currentTarget);
     const pre = card.querySelector('pre');
     pre.textContent = a.p;
