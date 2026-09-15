@@ -1,0 +1,226 @@
+/*
+  금도끼 은도끼 플레이어 — Spec §6.3 자막 · §4.5 움직임 어휘 · §8.3 4~7세 UI.
+  치수는 1080p 기준을 cqh 로 환산한다: 64px = 5.9cqh, 320px = 29.6cqh, 120px = 11.1cqh.
+*/
+:root {
+  --ui: "IBM Plex Sans KR", system-ui, -apple-system, "Malgun Gothic", sans-serif;
+  --story: "Gowun Batang", "IBM Plex Sans KR", serif;
+  --ground: #15181A;
+  --ink: #F4F7F5;
+  --gold: #FFE08A;
+  --warm: #A67C2E;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--ground); color: var(--ink); font-family: var(--ui); }
+
+.app { height: 100%; display: grid; place-items: center; padding: 0; }
+.stage {
+  position: relative; overflow: hidden;
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: min(100vh, calc(100vw * 9 / 16));
+  background: #0E1110;
+  container-type: size;
+  user-select: none; -webkit-user-select: none; touch-action: manipulation;
+}
+
+/* ── 씬 ─────────────────────────────────────── */
+.scene { position: absolute; inset: 0; }
+.bg {
+  position: absolute; inset: -6%;
+  background-size: cover; background-position: center;
+  will-change: transform;
+}
+.tap { position: absolute; inset: 0; z-index: 800; border: 0; background: none; cursor: pointer; }
+
+.actor {
+  position: absolute; z-index: 10;
+  transform: translate(-50%, -100%);
+  will-change: transform;
+}
+.art {
+  height: calc(var(--scale, 1) * 46cqh);
+  aspect-ratio: 5 / 8;
+  background-size: contain; background-position: bottom center; background-repeat: no-repeat;
+  transform-origin: bottom center;
+}
+.actor.screen { mix-blend-mode: screen; }
+.actor.screen .art { aspect-ratio: 16 / 9; height: calc(var(--scale, 1) * 100cqh); }
+
+/* ── 움직임 어휘 — Spec §4.5 ─────────────────── */
+/* camera (6) */
+@keyframes camStill   { from { transform: scale(1.02) } to { transform: scale(1.02) } }
+@keyframes camPushIn  { from { transform: scale(1.00) } to { transform: scale(1.13) } }
+@keyframes camPullOut { from { transform: scale(1.13) } to { transform: scale(1.00) } }
+@keyframes camPanLeft  { from { transform: scale(1.06) translateX(-3.5%) } to { transform: scale(1.06) translateX(3.5%) } }
+@keyframes camPanRight { from { transform: scale(1.06) translateX(3.5%) }  to { transform: scale(1.06) translateX(-3.5%) } }
+@keyframes camTiltUp   { from { transform: scale(1.06) translateY(2.6%) }  to { transform: scale(1.06) translateY(-2.6%) } }
+.cam-still    { animation: camStill   26s linear both; }
+.cam-pushIn   { animation: camPushIn  26s linear both; }
+.cam-pullOut  { animation: camPullOut 26s linear both; }
+.cam-panLeft  { animation: camPanLeft  26s linear both; }
+.cam-panRight { animation: camPanRight 26s linear both; }
+.cam-tiltUp   { animation: camTiltUp   26s linear both; }
+
+/* actor.anim (6) */
+@keyframes breathe { 0%, 100% { transform: scaleY(1) translateY(0) } 50% { transform: scaleY(1.018) translateY(-.6%) } }
+@keyframes sway    { 0%, 100% { transform: rotate(-1.6deg) } 50% { transform: rotate(1.6deg) } }
+@keyframes bob     { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-3.4%) } }
+@keyframes pulse   { 0%, 100% { opacity: .8 } 50% { opacity: 1 } }
+@keyframes driftIn { from { transform: translateX(-7%) } to { transform: translateX(0) } }
+.a-breathe { animation: breathe 4.6s ease-in-out infinite; }
+.a-sway    { animation: sway 5.4s ease-in-out infinite; }
+.a-bob     { animation: bob 4s ease-in-out infinite; }
+.a-pulse   { animation: pulse 3.2s ease-in-out infinite; }
+.a-driftIn { animation: driftIn 3.4s ease-out both; }
+
+/* enter (4) */
+@keyframes fadeIn  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes popIn   { 0% { opacity: 0; transform: scale(.6) } 70% { transform: scale(1.07) } 100% { opacity: 1; transform: scale(1) } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-26%) } to { opacity: 1; transform: translateX(0) } }
+.e-fadeIn  { animation: fadeIn .7s ease both; }
+.e-popIn   { animation: popIn .6s cubic-bezier(.2,1.4,.4,1) both; }
+.e-slideIn { animation: slideIn .8s ease-out both; }
+
+/* transitionIn (4) */
+@keyframes tCross { from { opacity: 0 } to { opacity: 1 } }
+@keyframes tPage  { from { opacity: .15; transform: perspective(1200px) rotateY(-22deg) translateX(9%) }
+                    to   { opacity: 1; transform: none } }
+@keyframes tWipe  { from { clip-path: inset(0 100% 0 0) } to { clip-path: inset(0 0 0 0) } }
+.t-crossfade { animation: tCross .6s ease both; }
+.t-pageTurn  { animation: tPage .7s ease-out both; transform-origin: left center; }
+.t-wipe      { animation: tWipe .6s ease-out both; }
+
+/* ── 자막 — Spec §6.3 ────────────────────────── */
+.subs { position: absolute; left: 5%; right: 5%; bottom: 3.6%; z-index: 900; text-align: center; }
+.subs .box {
+  display: inline-block; max-width: 100%; margin: 0;
+  padding: .34em .78em; border-radius: 8px;
+  background: rgba(14, 17, 16, .72);
+  font: 700 5.9cqh/1.42 var(--ui);      /* 64px @1080p */
+  letter-spacing: .02em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .55);
+}
+.subs .w {
+  display: inline-block;
+  margin-inline-end: var(--gap, .3em);  /* 어절 간격 — inline-block 은 word-spacing 이 안 먹는다 */
+  transition: color .12s, transform .12s;
+}
+.subs .w:last-child { margin-inline-end: 0; }
+.subs .w.on { color: var(--gold); transform: scale(1.08); }
+
+/* ── 오버레이 공통 ───────────────────────────── */
+.overlay {
+  position: absolute; inset: 0; z-index: 1000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.6cqh; padding: 4cqh 5%;
+  background: rgba(10, 13, 12, .64); backdrop-filter: blur(2px);
+  text-align: center;
+}
+
+/* ── 선택지 — Spec §3.5 · §8.3 ───────────────── */
+.choice { justify-content: flex-end; padding-bottom: 5cqh; }
+.choice .ask { margin: 0 0 1cqh; font: 700 5.4cqh/1.35 var(--story); text-wrap: balance; }
+.opts {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 3cqh;
+  width: 100%; max-width: 92%;
+  height: 50cqh;                         /* 화면 하단 1/2 */
+}
+.opt {
+  min-width: 11.1cqh; min-height: 11.1cqh;   /* 터치 타겟 120px @1080p */
+  display: flex; flex-direction: column; align-items: center; gap: 1.4cqh;
+  padding: 2cqh; border-radius: 14px; cursor: pointer;
+  background: rgba(255, 255, 255, .1); border: 2px solid rgba(255, 255, 255, .3);
+  color: inherit; transition: transform .22s, opacity .22s, border-color .22s, background .22s;
+}
+.opt .thumb {
+  width: 100%; flex: 1; min-height: 29.6cqh;  /* 그림 320px @1080p */
+  border-radius: 10px;
+  background-size: contain; background-position: center; background-repeat: no-repeat;
+}
+.opt b { font: 600 4.2cqh/1.25 var(--ui); }   /* 44px 이상 @1080p */
+.opt:hover, .opt:focus-visible { transform: translateY(-.8cqh); border-color: var(--gold); }
+.opt.reading { border-color: var(--gold); background: rgba(255, 224, 138, .16); }
+.opt.taken { transform: scale(1.1); border-color: var(--gold); background: rgba(255, 224, 138, .26); }
+.opt.faded { opacity: .28; }
+.choice .hint { margin: 0; font-size: 3cqh; opacity: .7; }
+
+/* ── 결말 ────────────────────────────────────── */
+.ending .badge {
+  padding: 1cqh 2.4cqh; border-radius: 999px;
+  background: var(--gold); color: #2A2410; font: 700 3.4cqh var(--ui);
+}
+.ending .t { margin: 0; font: 700 7cqh/1.2 var(--story); }
+.ending .l { margin: 0; font: 400 4.2cqh/1.5 var(--story); max-width: 72%; text-wrap: balance; }
+.ending .count { margin: 0; font-size: 3.2cqh; opacity: .75; }
+
+/* ── 표지 ────────────────────────────────────── */
+.title {
+  position: absolute; inset: 0; z-index: 1000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2cqh;
+  padding: 4cqh 5%; text-align: center;
+  background: radial-gradient(120% 90% at 50% 15%, #2A332C 0%, #15181A 70%);
+}
+.title .src { margin: 0; font-size: 3cqh; opacity: .6; }
+.title h1 { margin: 0; font: 700 11cqh/1.1 var(--story); letter-spacing: .02em; }
+.title .start {
+  margin-top: 1cqh; min-height: 11.1cqh; padding: 0 6cqh; border: 0; border-radius: 999px;
+  background: var(--gold); color: #2A2410; font: 700 5cqh var(--ui); cursor: pointer;
+}
+.title .start:hover { filter: brightness(1.06); }
+.collected { margin-top: 2cqh; }
+.collected h2 { margin: 0 0 1.2cqh; font: 600 3.2cqh var(--ui); opacity: .75; }
+.collected ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 1cqh; margin: 0; padding: 0; list-style: none; }
+.collected li {
+  padding: .8cqh 2cqh; border-radius: 999px; font-size: 2.8cqh;
+  background: rgba(255, 255, 255, .07); color: rgba(244, 247, 245, .45);
+}
+.collected li.got { background: rgba(255, 224, 138, .16); color: var(--gold); }
+.collected li em { margin-left: .5em; font-style: normal; font-weight: 700; }
+
+/* ── 설정 게이트 — Spec §8.3 ─────────────────── */
+.gate {
+  position: absolute; right: 1.6cqh; top: 1.6cqh; z-index: 1100;
+  width: 7cqh; height: 7cqh; border-radius: 50%; cursor: pointer;
+  background: rgba(10, 13, 12, .3); border: 1px solid rgba(255, 255, 255, .18);
+  display: grid; place-items: center;
+}
+.gate span { width: 1.2cqh; height: 1.2cqh; border-radius: 50%; background: rgba(244, 247, 245, .5); }
+.gate.holding { background: rgba(255, 224, 138, .3); transition: background .8s linear; }
+
+.settings { gap: 2cqh; }
+.settings h2 { margin: 0; font: 700 5cqh var(--story); }
+.settings .row {
+  display: flex; align-items: center; justify-content: space-between; gap: 3cqh;
+  width: min(74%, 620px); font-size: 3.4cqh;
+}
+.settings .row.buttons { justify-content: center; }
+.settings input[type="range"] { flex: 1; }
+.settings .note { margin: 0; max-width: 74%; font-size: 2.6cqh; opacity: .6; }
+.settings small { opacity: .6; font-weight: 400; }
+.btn {
+  min-height: 8cqh; padding: 0 3cqh; border-radius: 10px; cursor: pointer;
+  background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .25);
+  color: inherit; font: 600 3.4cqh var(--ui);
+}
+.btn.pri { background: var(--gold); border-color: var(--gold); color: #2A2410; }
+
+/* ── 로딩 — 정지 화면 금지 ───────────────────── */
+.loading {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3cqh; text-align: center; padding: 0 5%;
+}
+.loading p { margin: 0; font-size: 3.4cqh; opacity: .75; }
+.dots { display: flex; gap: 1.4cqh; }
+.dots i { width: 1.8cqh; height: 1.8cqh; border-radius: 50%; background: var(--warm); animation: hop 1.1s ease-in-out infinite; }
+.dots i:nth-child(2) { animation-delay: .14s; }
+.dots i:nth-child(3) { animation-delay: .28s; }
+@keyframes hop { 0%, 100% { transform: translateY(0); opacity: .5 } 50% { transform: translateY(-1.4cqh); opacity: 1 } }
+
+.fx { position: absolute; inset: 0; z-index: 700; pointer-events: none; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

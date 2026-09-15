@@ -374,21 +374,66 @@
             "label": "연못에 들어간다",
             "tint": "#7E94A4",
             "image": "icon/choice_wade.png",
-            "next": "n_mid_wade"
+            "next": "n_mid_wade",
+            "audio": "audio/b_intro_01_opt_a.mp3",
+            "wordTimings": [
+              [
+                0,
+                3,
+                119,
+                831
+              ],
+              [
+                4,
+                8,
+                849,
+                1873
+              ]
+            ]
           },
           {
             "id": "b",
             "label": "앉아서 기다린다",
             "tint": "#8C9C7A",
             "image": "icon/choice_wait.png",
-            "next": "n_mid_wait"
+            "next": "n_mid_wait",
+            "audio": "audio/b_intro_01_opt_b.mp3",
+            "wordTimings": [
+              [
+                0,
+                3,
+                119,
+                901
+              ],
+              [
+                4,
+                8,
+                918,
+                1994
+              ]
+            ]
           },
           {
             "id": "c",
             "label": "집으로 돌아간다",
             "tint": "#C4A06A",
             "image": "icon/choice_home.png",
-            "next": "n_mid_home"
+            "next": "n_mid_home",
+            "audio": "audio/b_intro_01_opt_c.mp3",
+            "wordTimings": [
+              [
+                0,
+                3,
+                119,
+                727
+              ],
+              [
+                4,
+                8,
+                744,
+                1821
+              ]
+            ]
           }
         ],
         "promptAudio": "audio/b_intro_01_choice.mp3",
@@ -684,21 +729,66 @@
             "label": "쇠도끼를 가리킨다",
             "tint": "#8A8F98",
             "image": "icon/choice_point_iron.png",
-            "next": "n_end_wade_honest"
+            "next": "n_end_wade_honest",
+            "audio": "audio/b_wade_01_opt_a.mp3",
+            "wordTimings": [
+              [
+                0,
+                4,
+                119,
+                1022
+              ],
+              [
+                5,
+                9,
+                1040,
+                2133
+              ]
+            ]
           },
           {
             "id": "b",
             "label": "금도끼를 받는다",
             "tint": "#D9B455",
             "image": "icon/choice_take_gold.png",
-            "next": "n_end_wade_greedy"
+            "next": "n_end_wade_greedy",
+            "audio": "audio/b_wade_01_opt_b.mp3",
+            "wordTimings": [
+              [
+                0,
+                4,
+                119,
+                1022
+              ],
+              [
+                5,
+                8,
+                1040,
+                1960
+              ]
+            ]
           },
           {
             "id": "c",
             "label": "모르겠다고 한다",
             "tint": "#9B8FB5",
             "image": "icon/choice_shrug.png",
-            "next": "n_end_wade_unsure"
+            "next": "n_end_wade_unsure",
+            "audio": "audio/b_wade_01_opt_c.mp3",
+            "wordTimings": [
+              [
+                0,
+                5,
+                119,
+                1178
+              ],
+              [
+                6,
+                8,
+                1196,
+                1856
+              ]
+            ]
           }
         ],
         "promptAudio": "audio/b_wade_01_choice.mp3",
@@ -1004,21 +1094,66 @@
             "label": "쇠도끼를 가리킨다",
             "tint": "#8A8F98",
             "image": "icon/choice_point_iron.png",
-            "next": "n_end_wait_honest"
+            "next": "n_end_wait_honest",
+            "audio": "audio/b_wait_01_opt_a.mp3",
+            "wordTimings": [
+              [
+                0,
+                4,
+                119,
+                1022
+              ],
+              [
+                5,
+                9,
+                1040,
+                2133
+              ]
+            ]
           },
           {
             "id": "b",
             "label": "금도끼를 받는다",
             "tint": "#D9B455",
             "image": "icon/choice_take_gold.png",
-            "next": "n_end_wait_greedy"
+            "next": "n_end_wait_greedy",
+            "audio": "audio/b_wait_01_opt_b.mp3",
+            "wordTimings": [
+              [
+                0,
+                4,
+                119,
+                1022
+              ],
+              [
+                5,
+                8,
+                1040,
+                1960
+              ]
+            ]
           },
           {
             "id": "c",
             "label": "모르겠다고 한다",
             "tint": "#9B8FB5",
             "image": "icon/choice_shrug.png",
-            "next": "n_end_wait_unsure"
+            "next": "n_end_wait_unsure",
+            "audio": "audio/b_wait_01_opt_c.mp3",
+            "wordTimings": [
+              [
+                0,
+                5,
+                119,
+                1178
+              ],
+              [
+                6,
+                8,
+                1196,
+                1856
+              ]
+            ]
           }
         ],
         "promptAudio": "audio/b_wait_01_choice.mp3",
@@ -1313,21 +1448,66 @@
             "label": "쇠도끼를 가리킨다",
             "tint": "#8A8F98",
             "image": "icon/choice_point_iron.png",
-            "next": "n_end_home_honest"
+            "next": "n_end_home_honest",
+            "audio": "audio/b_home_01_opt_a.mp3",
+            "wordTimings": [
+              [
+                0,
+                4,
+                119,
+                1022
+              ],
+              [
+                5,
+                9,
+                1040,
+                2133
+              ]
+            ]
           },
           {
             "id": "b",
             "label": "금도끼를 받는다",
             "tint": "#D9B455",
             "image": "icon/choice_take_gold.png",
-            "next": "n_end_home_greedy"
+            "next": "n_end_home_greedy",
+            "audio": "audio/b_home_01_opt_b.mp3",
+            "wordTimings": [
+              [
+                0,
+                4,
+                119,
+                1022
+              ],
+              [
+                5,
+                8,
+                1040,
+                1960
+              ]
+            ]
           },
           {
             "id": "c",
             "label": "모르겠다고 한다",
             "tint": "#9B8FB5",
             "image": "icon/choice_shrug.png",
-            "next": "n_end_home_unsure"
+            "next": "n_end_home_unsure",
+            "audio": "audio/b_home_01_opt_c.mp3",
+            "wordTimings": [
+              [
+                0,
+                5,
+                119,
+                1178
+              ],
+              [
+                6,
+                8,
+                1196,
+                1856
+              ]
+            ]
           }
         ],
         "promptAudio": "audio/b_home_01_choice.mp3",

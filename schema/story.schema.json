@@ -4,63 +4,147 @@
   "title": "StoryTelling story.json",
   "description": "분기형 동화 1편. 플레이어는 이 파일만 읽고 재생한다. 스펙: StoryTellingSpec.md",
   "type": "object",
-  "required": ["schemaVersion","storyId","title","locale","targetAge","stage","rootNode","assets","nodes"],
+  "required": [
+    "schemaVersion",
+    "storyId",
+    "title",
+    "locale",
+    "targetAge",
+    "stage",
+    "rootNode",
+    "assets",
+    "nodes"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schemaVersion": { "const": "0.5" },
-    "storyId":  { "type": "string", "pattern": "^[a-z0-9_]+$" },
-    "title":    { "type": "string" },
-    "source":   { "type": "string" },
-    "locale":   { "type": "string" },
-    "targetAge":{ "type": "array", "items": {"type":"integer"}, "minItems": 2, "maxItems": 2 },
-    "styleId":  { "type": "string" },
+    "schemaVersion": {
+      "const": "0.5"
+    },
+    "storyId": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "targetAge": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "styleId": {
+      "type": "string"
+    },
     "stage": {
       "type": "object",
-      "required": ["width","height","safeArea"],
+      "required": [
+        "width",
+        "height",
+        "safeArea"
+      ],
       "properties": {
-        "width":  {"type":"integer"},
-        "height": {"type":"integer"},
-        "safeArea":{"type":"number","minimum":0,"maximum":0.2},
-        "bgTreatment": { "$ref": "#/$defs/bgTreatment" }
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "safeArea": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.2
+        },
+        "bgTreatment": {
+          "$ref": "#/$defs/bgTreatment"
+        }
       }
     },
-    "rootNode":        { "type": "string" },
-    "canonicalEnding": { "type": "string" },
+    "rootNode": {
+      "type": "string"
+    },
+    "canonicalEnding": {
+      "type": "string"
+    },
     "subtitle": {
       "type": "object",
       "description": "자막 규격. 한글 학습이 제품 목표이므로 기본 ON (Spec §6.3)",
       "properties": {
-        "defaultOn":     { "type": "boolean" },
-        "highlightUnit": { "const": "eojeol", "description": "D14 확정: 어절 단위" },
-        "minFontPx":     { "type": "integer", "minimum": 48 },
-        "wordSpacingEm": { "type": "number" },
-        "maxLines":      { "type": "integer", "maximum": 2 }
+        "defaultOn": {
+          "type": "boolean"
+        },
+        "highlightUnit": {
+          "const": "eojeol",
+          "description": "D14 확정: 어절 단위"
+        },
+        "minFontPx": {
+          "type": "integer",
+          "minimum": 48
+        },
+        "wordSpacingEm": {
+          "type": "number"
+        },
+        "maxLines": {
+          "type": "integer",
+          "maximum": 2
+        }
       }
     },
-
     "assets": {
       "type": "object",
-      "required": ["backgrounds","characters"],
+      "required": [
+        "backgrounds",
+        "characters"
+      ],
       "additionalProperties": false,
       "properties": {
         "backgrounds": {
           "type": "object",
           "additionalProperties": {
             "type": "object",
-            "required": ["src"],
-            "properties": { "src": {"type":"string"}, "tint": {"type":"string"} }
+            "required": [
+              "src"
+            ],
+            "properties": {
+              "src": {
+                "type": "string"
+              },
+              "tint": {
+                "type": "string"
+              }
+            }
           }
         },
         "characters": {
           "type": "object",
           "additionalProperties": {
             "type": "object",
-            "required": ["displayName","poses"],
+            "required": [
+              "displayName",
+              "poses"
+            ],
             "properties": {
-              "displayName": {"type":"string"},
-              "tint": {"type":"string"},
-              "poses": { "type":"object", "minProperties": 1,
-                         "additionalProperties": {"type":"string"} }
+              "displayName": {
+                "type": "string"
+              },
+              "tint": {
+                "type": "string"
+              },
+              "poses": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -68,12 +152,21 @@
           "type": "object",
           "additionalProperties": {
             "type": "object",
-            "required": ["src"],
+            "required": [
+              "src"
+            ],
             "properties": {
-              "src":  {"type":"string"},
-              "tint": {"type":"string"},
+              "src": {
+                "type": "string"
+              },
+              "tint": {
+                "type": "string"
+              },
               "blend": {
-                "enum": ["normal","screen"],
+                "enum": [
+                  "normal",
+                  "screen"
+                ],
                 "description": "screen = 발광체(빛·불·안개). 검은 배경에 생성해 더하기 합성한다. 오려내지 않으며 화면 전체를 덮는 오버레이로 배치된다 (x,y 는 중심)"
               }
             }
@@ -81,127 +174,309 @@
         }
       }
     },
-
     "nodes": {
       "type": "object",
       "minProperties": 1,
-      "additionalProperties": { "$ref": "#/$defs/node" }
+      "additionalProperties": {
+        "$ref": "#/$defs/node"
+      }
     }
   },
-
   "$defs": {
     "node": {
       "type": "object",
-      "required": ["type","beats"],
+      "required": [
+        "type",
+        "beats"
+      ],
       "additionalProperties": false,
       "properties": {
-        "type":         { "enum": ["narrative","ending"] },
-        "beats":        { "type":"array", "minItems":1, "items": {"$ref":"#/$defs/beat"} },
-        "choice":       { "$ref": "#/$defs/choice" },
-        "endingTitle":  { "type":"string" },
-        "isCanonical":  { "type":"boolean" },
-        "lesson":       { "type":"string" }
+        "type": {
+          "enum": [
+            "narrative",
+            "ending"
+          ]
+        },
+        "beats": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/beat"
+          }
+        },
+        "choice": {
+          "$ref": "#/$defs/choice"
+        },
+        "endingTitle": {
+          "type": "string"
+        },
+        "isCanonical": {
+          "type": "boolean"
+        },
+        "lesson": {
+          "type": "string"
+        }
       }
     },
-
     "choice": {
       "type": "object",
-      "required": ["promptText","options"],
+      "required": [
+        "promptText",
+        "options"
+      ],
       "additionalProperties": false,
       "properties": {
-        "promptText":  { "type":"string" },
-        "promptAudio": { "type":"string" },
-        "promptWordTimings": { "$ref": "#/$defs/wordTimings" },
+        "promptText": {
+          "type": "string"
+        },
+        "promptAudio": {
+          "type": "string"
+        },
+        "promptWordTimings": {
+          "$ref": "#/$defs/wordTimings"
+        },
         "options": {
-          "type":"array", "minItems":3, "maxItems":3,
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
           "items": {
-            "type":"object",
-            "required": ["id","label","next"],
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "next"
+            ],
             "additionalProperties": false,
             "properties": {
-              "id":    { "enum": ["a","b","c"] },
-              "label": { "type":"string", "maxLength": 12 },
-              "image": { "type":"string" },
-              "tint":  { "type":"string" },
-              "next":  { "type":"string" }
+              "id": {
+                "enum": [
+                  "a",
+                  "b",
+                  "c"
+                ]
+              },
+              "label": {
+                "type": "string",
+                "maxLength": 12
+              },
+              "image": {
+                "type": "string"
+              },
+              "tint": {
+                "type": "string"
+              },
+              "next": {
+                "type": "string"
+              },
+              "audio": {
+                "type": "string",
+                "description": "선택지 낭독 (Spec §3.5 — 순서대로 읽어준다)"
+              },
+              "wordTimings": {
+                "$ref": "#/$defs/wordTimings"
+              }
             }
           }
         }
       }
     },
-
     "beat": {
       "description": "그림 한 장. 그림책의 한 페이지에 해당하며 줄 2~3개를 담는다. 한 줄마다 화면이 바뀌면 그림책이 아니라 애니메이션이 된다. 비트의 길이는 줄 길이의 합이고, 카메라는 그 전체에 걸쳐 움직인다",
       "type": "object",
-      "required": ["id","scene","lines"],
+      "required": [
+        "id",
+        "scene",
+        "lines"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id":    { "type":"string" },
-        "scene": { "$ref": "#/$defs/scene" },
-        "lines": { "type":"array", "minItems":1, "maxItems":4,
-                   "items": {"$ref":"#/$defs/line"} }
+        "id": {
+          "type": "string"
+        },
+        "scene": {
+          "$ref": "#/$defs/scene"
+        },
+        "lines": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/line"
+          }
+        }
       }
     },
-
     "line": {
       "description": "자막 한 문장 + 오디오 하나. 화면은 바뀌지 않는다",
       "type": "object",
-      "required": ["id","text","durationMs","wordTimings"],
+      "required": [
+        "id",
+        "text",
+        "durationMs",
+        "wordTimings"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id":          { "type":"string" },
-        "text":        { "type":"string" },
-        "audio":       { "type":"string" },
-        "durationMs":  { "type":"integer", "minimum": 6000, "maximum": 15000 },
-        "wordTimings": { "$ref": "#/$defs/wordTimings" }
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "audio": {
+          "type": "string"
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 6000,
+          "maximum": 15000
+        },
+        "wordTimings": {
+          "$ref": "#/$defs/wordTimings"
+        }
       }
     },
-
     "bgTreatment": {
       "description": "배경을 뒤로 물리는 후처리. 캐릭터가 앞으로 나온다 (Spec §5.7). scene 에서 덮어쓸 수 있다",
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "properties": {
-        "blurPx":     { "type":"number",  "minimum":0,  "maximum":6 },
-        "brightness": { "type":"integer", "minimum":40, "maximum":140 },
-        "saturate":   { "type":"integer", "minimum":0,  "maximum":150 }
+        "blurPx": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "brightness": {
+          "type": "integer",
+          "minimum": 40,
+          "maximum": 140
+        },
+        "saturate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 150
+        }
       }
     },
-
     "wordTimings": {
       "description": "어절별 [문자시작, 문자끝(제외), 시작ms, 끝ms]. D14 확정: 어절 단위",
-      "type": "array", "minItems": 1,
-      "items": { "type":"array", "minItems":4, "maxItems":4,
-                 "items": {"type":"integer","minimum":0} }
-    },
-
-    "scene": {
-      "type": "object",
-      "required": ["background"],
-      "additionalProperties": false,
-      "properties": {
-        "background":   { "type":"string" },
-        "bgTreatment":  { "$ref": "#/$defs/bgTreatment" },
-        "camera":       { "enum": ["still","pushIn","pullOut","panLeft","panRight","tiltUp"] },
-        "transitionIn": { "enum": ["crossfade","pageTurn","wipe","cut"] },
-        "fx":           { "enum": ["none","petals","snow","fireflies","sparkle","rain","dust"] },
-        "actors":       { "type":"array", "maxItems": 4, "items": {"$ref":"#/$defs/actor"} }
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        }
       }
     },
-
-    "actor": {
+    "scene": {
       "type": "object",
-      "required": ["asset","x","y"],
+      "required": [
+        "background"
+      ],
       "additionalProperties": false,
       "properties": {
-        "asset": { "type":"string", "pattern": "^(characters|props)/[a-z0-9_]+$" },
-        "pose":  { "type":"string" },
-        "x":     { "type":"number", "minimum": 0, "maximum": 1 },
-        "y":     { "type":"number", "minimum": 0, "maximum": 1 },
-        "scale": { "type":"number", "exclusiveMinimum": 0 },
-        "flip":  { "type":"boolean" },
-        "z":     { "type":"integer" },
-        "anim":  { "enum": ["none","breathe","sway","bob","driftIn","pulse"] },
-        "enter": { "enum": ["none","fadeIn","popIn","slideIn"] }
+        "background": {
+          "type": "string"
+        },
+        "bgTreatment": {
+          "$ref": "#/$defs/bgTreatment"
+        },
+        "camera": {
+          "enum": [
+            "still",
+            "pushIn",
+            "pullOut",
+            "panLeft",
+            "panRight",
+            "tiltUp"
+          ]
+        },
+        "transitionIn": {
+          "enum": [
+            "crossfade",
+            "pageTurn",
+            "wipe",
+            "cut"
+          ]
+        },
+        "fx": {
+          "enum": [
+            "none",
+            "petals",
+            "snow",
+            "fireflies",
+            "sparkle",
+            "rain",
+            "dust"
+          ]
+        },
+        "actors": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/actor"
+          }
+        }
+      }
+    },
+    "actor": {
+      "type": "object",
+      "required": [
+        "asset",
+        "x",
+        "y"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "type": "string",
+          "pattern": "^(characters|props)/[a-z0-9_]+$"
+        },
+        "pose": {
+          "type": "string"
+        },
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "scale": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "flip": {
+          "type": "boolean"
+        },
+        "z": {
+          "type": "integer"
+        },
+        "anim": {
+          "enum": [
+            "none",
+            "breathe",
+            "sway",
+            "bob",
+            "driftIn",
+            "pulse"
+          ]
+        },
+        "enter": {
+          "enum": [
+            "none",
+            "fadeIn",
+            "popIn",
+            "slideIn"
+          ]
+        }
       }
     }
   }

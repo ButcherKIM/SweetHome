@@ -80,7 +80,7 @@ async def main():
     story = json.loads(sp.read_text(encoding="utf-8"))
     adir = sp.parent / "audio"
 
-    # 합성 대상: 모든 줄 + 선택지 질문
+    # 합성 대상: 모든 줄 + 선택지 질문 + 선택지 셋
     jobs = []
     for node in story["nodes"].values():
         for b in node["beats"]:
@@ -88,7 +88,11 @@ async def main():
                 jobs.append((ln["id"], ln["text"], ln, "line"))
         ch = node.get("choice")
         if ch:
-            jobs.append((f"{node['beats'][0]['id']}_choice", ch["promptText"], ch, "choice"))
+            stem = node["beats"][0]["id"]
+            jobs.append((f"{stem}_choice", ch["promptText"], ch, "choice"))
+            # Spec §3.5 — 선택지를 순서대로 읽어준다
+            for opt in ch["options"]:
+                jobs.append((f"{stem}_opt_{opt['id']}", opt["label"], opt, "option"))
 
     if args.only:
         jobs = [j for j in jobs if j[0] == args.only]
@@ -102,9 +106,12 @@ async def main():
             holder["audio"] = f"audio/{lid}.mp3"
             holder["durationMs"] = dur
             holder["wordTimings"] = tim
-        else:
+        elif kind == "choice":
             holder["promptAudio"] = f"audio/{lid}.mp3"
             holder["promptWordTimings"] = tim
+        else:
+            holder["audio"] = f"audio/{lid}.mp3"
+            holder["wordTimings"] = tim
         total_ms += dur
         total_bytes += nbytes
         print(f"  {lid:<18} 말 {speech/1000:>5.1f}s → 비트 {dur/1000:>5.1f}s "
