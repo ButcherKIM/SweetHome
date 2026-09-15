@@ -371,7 +371,9 @@ python tools/build_story.py --story {storyId}
 `dist/{storyId}/manifest.json` 에 선행 로드 순서를 기록한다
 (현재 비트 + 다음 비트 + 선택지 3갈래의 첫 비트).
 
-배포는 **GitHub Pages** (무료).
+배포는 데모 단계에서 **GitHub Pages** (무료). 제품화 단계(React Native)에서는 같은 번들을
+앱에 동봉한다 — S0~S8 은 플랫폼과 무관하므로 **이 파이프라인은 그대로 간다**
+([Spec §8.5](./StoryTellingSpec.md#85-플랫폼-2단-경로--d16-확정)).
 
 ---
 
