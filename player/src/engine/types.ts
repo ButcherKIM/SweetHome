@@ -21,7 +21,29 @@ export interface BgTreatment {
   saturate?: number
 }
 
+/** 연출 큐가 가리킬 수 있는 동작 — 닫힌 집합 (Spec §4.6) */
+export type CueDo =
+  | 'appear' | 'vanish' | 'lift' | 'drop' | 'startle' | 'shimmer'   // 배우
+  | 'brighten' | 'darken'                                           // 화면
+  | 'pushIn' | 'pullOut' | 'panLeft' | 'panRight' | 'tiltUp' | 'shake' // 카메라
+
+export interface Cue {
+  /** 이 비트의 몇 번째 줄인가 */
+  line: number
+  /** 그 줄의 이 **어절**이 소리로 나기 시작할 때 터진다 */
+  at: string
+  /** 같은 어절이 한 줄에 여러 번 나오면 몇 번째인가 (기본 1) */
+  nth?: number
+  /** 미세 조정 (-1000~1000ms) */
+  offsetMs?: number
+  /** 배우 `id`, 또는 `camera` · `stage` */
+  target: string
+  do: CueDo
+}
+
 export interface Actor {
+  /** 큐가 가리키는 이름. 큐를 쓰는 배우에게는 필수. */
+  id?: string
   asset: string
   pose?: string
   x: number
@@ -55,6 +77,8 @@ export interface Beat {
   id: string
   scene: Scene
   lines: Line[]
+  /** 연출 큐 (Spec §4.6). 없으면 §4.5 앰비언트만 돈다. */
+  cues?: Cue[]
 }
 
 export interface ChoiceOption {

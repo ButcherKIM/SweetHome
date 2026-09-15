@@ -303,6 +303,13 @@
           "items": {
             "$ref": "#/$defs/line"
           }
+        },
+        "cues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cue"
+          },
+          "maxItems": 8
         }
       }
     },
@@ -475,6 +482,65 @@
             "fadeIn",
             "popIn",
             "slideIn"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "description": "큐가 가리키는 이름 (Spec §4.6)"
+        }
+      }
+    },
+    "cue": {
+      "type": "object",
+      "description": "연출 큐 — 대사의 그 어절이 나는 순간 일어나는 일회성 동작 (Spec §4.6)",
+      "required": [
+        "line",
+        "at",
+        "target",
+        "do"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "line": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "이 비트의 몇 번째 줄"
+        },
+        "at": {
+          "type": "string",
+          "minLength": 1,
+          "description": "그 줄의 어절. 소리가 나기 시작할 때 터진다"
+        },
+        "nth": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "같은 어절이 여러 번이면 몇 번째 (기본 1)"
+        },
+        "offsetMs": {
+          "type": "integer",
+          "minimum": -1000,
+          "maximum": 1000
+        },
+        "target": {
+          "type": "string",
+          "description": "배우 id, 또는 camera · stage"
+        },
+        "do": {
+          "enum": [
+            "appear",
+            "vanish",
+            "lift",
+            "drop",
+            "startle",
+            "shimmer",
+            "brighten",
+            "darken",
+            "pushIn",
+            "pullOut",
+            "panLeft",
+            "panRight",
+            "tiltUp",
+            "shake"
           ]
         }
       }

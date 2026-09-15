@@ -3,7 +3,10 @@
  * 넘기는 주체는 여기 하나다. 오디오 종료와 durationMs 중 늦은 쪽에서 넘어간다.
  */
 import { useEffect, useRef, useState } from 'react'
-import { lineOf, preloadPaths, shouldAdvance, wordIndexAt } from '../engine'
+import {
+  activeCues, beatOf, beatState, cuesForLine, lineOf, preloadPaths,
+  shouldAdvance, wordIndexAt, type ResolvedCue,
+} from '../engine'
 import type { AudioBus } from '../audio/AudioBus'
 import { useApp } from '../store'
 
@@ -13,6 +16,8 @@ export function usePlayback(bus: AudioBus) {
   const advance = useApp((s) => s.advance)
   const syncOffsetMs = useApp((s) => s.syncOffsetMs)
   const [word, setWord] = useState(-1)
+  const [fired, setFired] = useState<ResolvedCue[]>([])
+  const [shown, setShown] = useState<Map<string, 'shown' | 'hidden'>>(new Map())
 
   const audioEnded = useRef(false)
   const startedAt = useRef(0)
@@ -25,9 +30,13 @@ export function usePlayback(bus: AudioBus) {
     if (!line) return
 
     setWord(-1)
+    setFired([])
+    setShown(new Map())
     audioEnded.current = false
     startedAt.current = performance.now()
 
+    const beat = beatOf(story, play)
+    const cues = beat ? cuesForLine(beat, play.line) : []
     bus.preload(preloadPaths(story, play))
     bus.playLine(line.audio, () => { audioEnded.current = true })
 
@@ -38,6 +47,10 @@ export function usePlayback(bus: AudioBus) {
       // 자막은 실제로 나는 소리를 따라간다. 오디오가 없으면 경과 시간으로 대신한다.
       const heard = (bus.positionMs || elapsed) - syncOffsetMs
       setWord(wordIndexAt(line.wordTimings, heard))
+      if (cues.length) {
+        setFired(activeCues(cues, heard))
+        setShown(beatState(beat!, play.line, heard))
+      }
       if (shouldAdvance(elapsed, line, audioEnded.current)) {
         cancelAnimationFrame(raf)
         advance()
@@ -52,5 +65,5 @@ export function usePlayback(bus: AudioBus) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key])
 
-  return word
+  return { word, cues: fired, shown }
 }

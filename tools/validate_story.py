@@ -6,7 +6,8 @@
 
 사용: python3 tools/validate_story.py stories/goldaxe/story.json [--strict]
 """
-import json, re, sys, pathlib
+import json
+import re, sys, pathlib
 
 CAMERA = {"still","pushIn","pullOut","panLeft","panRight","tiltUp"}
 ANIM   = {"none","breathe","sway","bob","driftIn","pulse"}
@@ -242,6 +243,56 @@ def v12_subtitle_area(story, r):
                 r.err("V12", f"{b['id']}: {act['asset']} y={act['y']} > {SUBTITLE_TOP} — 자막 영역 침범")
 
 
+ACTOR_CUES  = {"appear", "vanish", "lift", "drop", "startle", "shimmer"}
+STAGE_CUES  = {"brighten", "darken"}
+CAMERA_CUES = {"pushIn", "pullOut", "panLeft", "panRight", "tiltUp", "shake"}
+_TRAIL = re.compile(r"[.,!?\u2026]+$")
+
+
+def v14_cues(story, r):
+    """연출 큐가 실제 어절에 물려 있는가 (Spec §4.6).
+
+    `at` 이 그 줄에 없는 어절이면 큐는 조용히 안 터진다. 화면에는 아무 일도
+    안 일어나고 오류도 안 난다 — 그래서 여기서 잡는다.
+    """
+    for _nid, b in iter_beats(story):
+        cues = b.get("cues") or []
+        ids = {a["id"] for a in b["scene"].get("actors", []) if a.get("id")}
+        for i, c in enumerate(cues):
+            where = f"{b['id']} 큐[{i}] {c.get('do')}"
+            li = c.get("line")
+            if not isinstance(li, int) or li >= len(b["lines"]):
+                r.err("V14", f"{where} — {li}번 줄이 없다")
+                continue
+            line = b["lines"][li]
+            words = [_TRAIL.sub("", line["text"][a:e].strip())
+                     for a, e, *_ in line["wordTimings"]]
+            hits = words.count(c.get("at"))
+            if hits == 0:
+                r.err("V14", f"{where} — '{c.get('at')}' 가 그 줄에 없다: {words}")
+            elif hits > 1 and not c.get("nth"):
+                r.err("V14", f"{where} — '{c.get('at')}' 가 {hits}번 나온다. nth 를 적어라")
+            elif c.get("nth", 1) > hits:
+                r.err("V14", f"{where} — nth={c['nth']} 인데 {hits}번뿐이다")
+
+            do, tgt = c.get("do"), c.get("target")
+            if do in ACTOR_CUES:
+                if tgt not in ids:
+                    r.err("V14", f"{where} — 배우 '{tgt}' 가 이 비트에 없다: {sorted(ids)}")
+            elif do in STAGE_CUES:
+                if tgt != "stage":
+                    r.err("V14", f"{where} — '{do}' 의 target 은 stage 여야 한다")
+            elif do in CAMERA_CUES:
+                if tgt != "camera":
+                    r.err("V14", f"{where} — '{do}' 의 target 은 camera 여야 한다")
+            else:
+                r.err("V14", f"{where} — 모르는 동작 '{do}'")
+
+            off = c.get("offsetMs", 0)
+            if not -1000 <= off <= 1000:
+                r.err("V14", f"{where} — offsetMs {off} 는 ±1000 을 벗어난다")
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     strict = "--strict" in sys.argv
@@ -264,6 +315,7 @@ def main():
     v11_wordtimings(story, r)
     v12_subtitle_area(story, r)
     v13_bg_treatment(story, r)
+    v14_cues(story, r)
 
     print(f"검증 대상: {path}")
     for w in r.warns:  print(f"  ⚠  {w}")
@@ -271,7 +323,7 @@ def main():
     if r.errors:
         print(f"\n실패 — 오류 {len(r.errors)}건, 경고 {len(r.warns)}건")
         return 1
-    print(f"\n통과 — V1~V13 이상 없음 (경고 {len(r.warns)}건)")
+    print(f"\n통과 — V1~V14 이상 없음 (경고 {len(r.warns)}건)")
     return 0
 
 

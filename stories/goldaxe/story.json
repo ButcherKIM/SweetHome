@@ -107,7 +107,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "idle",
-                "enter": "fadeIn"
+                "enter": "fadeIn",
+                "id": "woodcutter"
               }
             ]
           },
@@ -206,6 +207,20 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "나무꾼이",
+              "target": "woodcutter",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "올라갔어요",
+              "target": "camera",
+              "do": "tiltUp"
+            }
           ]
         },
         {
@@ -229,7 +244,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "sad",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "props/axe_iron",
@@ -238,7 +254,8 @@
                 "scale": 0.5,
                 "z": 25,
                 "anim": "bob",
-                "enter": "slideIn"
+                "enter": "slideIn",
+                "id": "iron"
               }
             ]
           },
@@ -363,6 +380,32 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "미끄러졌어요",
+              "target": "iron",
+              "do": "drop"
+            },
+            {
+              "line": 1,
+              "at": "풍덩",
+              "target": "iron",
+              "do": "vanish"
+            },
+            {
+              "line": 1,
+              "at": "풍덩",
+              "target": "camera",
+              "do": "shake"
+            },
+            {
+              "line": 2,
+              "at": "주저앉고",
+              "target": "woodcutter",
+              "do": "drop"
+            }
           ]
         }
       ],
@@ -478,7 +521,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "sad",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               }
             ]
           },
@@ -603,6 +647,20 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 2,
+              "at": "빛이",
+              "target": "stage",
+              "do": "brighten"
+            },
+            {
+              "line": 2,
+              "at": "올라왔어요",
+              "target": "woodcutter",
+              "do": "startle"
+            }
           ]
         },
         {
@@ -621,7 +679,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "surprise",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -631,7 +690,8 @@
                 "scale": 1.25,
                 "z": 20,
                 "anim": "bob",
-                "enter": "fadeIn"
+                "enter": "fadeIn",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_gold",
@@ -640,7 +700,8 @@
                 "scale": 0.55,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "gold"
               },
               {
                 "asset": "props/light_rays",
@@ -649,7 +710,8 @@
                 "scale": 1.0,
                 "z": 15,
                 "anim": "pulse",
-                "enter": "fadeIn"
+                "enter": "fadeIn",
+                "id": "light"
               }
             ]
           },
@@ -717,6 +779,38 @@
                   4338
                 ]
               ]
+            }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "스르르",
+              "target": "light",
+              "do": "appear"
+            },
+            {
+              "line": 0,
+              "at": "나타났어요",
+              "target": "spirit",
+              "do": "appear"
+            },
+            {
+              "line": 0,
+              "at": "나타났어요",
+              "target": "woodcutter",
+              "do": "startle"
+            },
+            {
+              "line": 1,
+              "at": "금도끼를",
+              "target": "gold",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "들어",
+              "target": "gold",
+              "do": "lift"
             }
           ]
         }
@@ -838,7 +932,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "sad",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               }
             ]
           },
@@ -963,6 +1058,26 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 1,
+              "at": "기울고",
+              "target": "stage",
+              "do": "darken"
+            },
+            {
+              "line": 2,
+              "at": "쏟아졌어요",
+              "target": "stage",
+              "do": "brighten"
+            },
+            {
+              "line": 2,
+              "at": "쏟아졌어요",
+              "target": "woodcutter",
+              "do": "startle"
+            }
           ]
         },
         {
@@ -986,7 +1101,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "surprise",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -996,7 +1112,8 @@
                 "scale": 1.25,
                 "z": 20,
                 "anim": "bob",
-                "enter": "fadeIn"
+                "enter": "fadeIn",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_gold",
@@ -1005,7 +1122,8 @@
                 "scale": 0.55,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "gold"
               },
               {
                 "asset": "props/light_rays",
@@ -1014,7 +1132,8 @@
                 "scale": 1.0,
                 "z": 15,
                 "anim": "pulse",
-                "enter": "fadeIn"
+                "enter": "fadeIn",
+                "id": "light"
               }
             ]
           },
@@ -1082,6 +1201,38 @@
                   4338
                 ]
               ]
+            }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "스르르",
+              "target": "light",
+              "do": "appear"
+            },
+            {
+              "line": 0,
+              "at": "나타났어요",
+              "target": "spirit",
+              "do": "appear"
+            },
+            {
+              "line": 0,
+              "at": "나타났어요",
+              "target": "woodcutter",
+              "do": "startle"
+            },
+            {
+              "line": 1,
+              "at": "금도끼를",
+              "target": "gold",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "들어",
+              "target": "gold",
+              "do": "lift"
             }
           ]
         }
@@ -1198,7 +1349,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "sad",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               }
             ]
           },
@@ -1317,6 +1469,20 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "터덜터덜",
+              "target": "woodcutter",
+              "do": "drop"
+            },
+            {
+              "line": 2,
+              "at": "빛이",
+              "target": "stage",
+              "do": "brighten"
+            }
           ]
         },
         {
@@ -1340,7 +1506,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "surprise",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -1350,7 +1517,8 @@
                 "scale": 1.25,
                 "z": 20,
                 "anim": "bob",
-                "enter": "fadeIn"
+                "enter": "fadeIn",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_gold",
@@ -1359,7 +1527,8 @@
                 "scale": 0.55,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "gold"
               },
               {
                 "asset": "props/light_rays",
@@ -1368,7 +1537,8 @@
                 "scale": 1.0,
                 "z": 15,
                 "anim": "pulse",
-                "enter": "fadeIn"
+                "enter": "fadeIn",
+                "id": "light"
               }
             ]
           },
@@ -1436,6 +1606,38 @@
                   4338
                 ]
               ]
+            }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "스르르",
+              "target": "light",
+              "do": "appear"
+            },
+            {
+              "line": 0,
+              "at": "나타났어요",
+              "target": "spirit",
+              "do": "appear"
+            },
+            {
+              "line": 0,
+              "at": "나타났어요",
+              "target": "woodcutter",
+              "do": "startle"
+            },
+            {
+              "line": 1,
+              "at": "금도끼를",
+              "target": "gold",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "들어",
+              "target": "gold",
+              "do": "lift"
             }
           ]
         }
@@ -1555,7 +1757,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "happy",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -1565,7 +1768,8 @@
                 "z": 20,
                 "anim": "bob",
                 "enter": "none",
-                "pose": "smile"
+                "pose": "smile",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_gold",
@@ -1574,7 +1778,8 @@
                 "scale": 0.42,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "gold"
               },
               {
                 "asset": "props/axe_silver",
@@ -1583,7 +1788,8 @@
                 "scale": 0.42,
                 "z": 34,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "silver"
               }
             ]
           },
@@ -1676,6 +1882,32 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "가리켰어요",
+              "target": "woodcutter",
+              "do": "lift"
+            },
+            {
+              "line": 1,
+              "at": "세",
+              "target": "gold",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "자루를",
+              "target": "silver",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "주었어요",
+              "target": "spirit",
+              "do": "lift"
+            }
           ]
         }
       ]
@@ -1701,7 +1933,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "happy",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -1711,7 +1944,8 @@
                 "z": 20,
                 "anim": "bob",
                 "enter": "none",
-                "pose": "smile"
+                "pose": "smile",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_gold",
@@ -1720,7 +1954,8 @@
                 "scale": 0.42,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "gold"
               },
               {
                 "asset": "props/axe_silver",
@@ -1729,7 +1964,8 @@
                 "scale": 0.42,
                 "z": 34,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "silver"
               }
             ]
           },
@@ -1822,6 +2058,26 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "가리켰어요",
+              "target": "woodcutter",
+              "do": "lift"
+            },
+            {
+              "line": 1,
+              "at": "세",
+              "target": "gold",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "자루를",
+              "target": "silver",
+              "do": "appear"
+            }
           ]
         }
       ]
@@ -1847,7 +2103,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "happy",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -1857,7 +2114,8 @@
                 "z": 20,
                 "anim": "bob",
                 "enter": "none",
-                "pose": "smile"
+                "pose": "smile",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_gold",
@@ -1866,7 +2124,8 @@
                 "scale": 0.42,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "gold"
               },
               {
                 "asset": "props/axe_silver",
@@ -1875,7 +2134,8 @@
                 "scale": 0.42,
                 "z": 34,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "silver"
               }
             ]
           },
@@ -1962,6 +2222,26 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "가리켰어요",
+              "target": "woodcutter",
+              "do": "lift"
+            },
+            {
+              "line": 1,
+              "at": "세",
+              "target": "gold",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "자루를",
+              "target": "silver",
+              "do": "appear"
+            }
           ]
         }
       ]
@@ -1987,7 +2267,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "happy",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "props/axe_iron",
@@ -1996,7 +2277,8 @@
                 "scale": 0.5,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "iron"
               }
             ]
           },
@@ -2095,6 +2377,32 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "뻗자",
+              "target": "woodcutter",
+              "do": "lift"
+            },
+            {
+              "line": 0,
+              "at": "사라졌어요",
+              "target": "stage",
+              "do": "darken"
+            },
+            {
+              "line": 1,
+              "at": "쇠도끼가",
+              "target": "iron",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "반짝",
+              "target": "iron",
+              "do": "shimmer"
+            }
           ]
         }
       ]
@@ -2120,7 +2428,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "happy",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "props/axe_iron",
@@ -2129,7 +2438,8 @@
                 "scale": 0.5,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "iron"
               }
             ]
           },
@@ -2234,6 +2544,26 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "뻗자",
+              "target": "woodcutter",
+              "do": "lift"
+            },
+            {
+              "line": 0,
+              "at": "사라졌어요",
+              "target": "stage",
+              "do": "darken"
+            },
+            {
+              "line": 1,
+              "at": "쇠도끼가",
+              "target": "iron",
+              "do": "appear"
+            }
           ]
         }
       ]
@@ -2259,7 +2589,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "happy",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "props/axe_iron",
@@ -2268,7 +2599,8 @@
                 "scale": 0.5,
                 "z": 35,
                 "anim": "sway",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "iron"
               }
             ]
           },
@@ -2361,6 +2693,26 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 0,
+              "at": "뻗자",
+              "target": "woodcutter",
+              "do": "lift"
+            },
+            {
+              "line": 0,
+              "at": "사라졌어요",
+              "target": "stage",
+              "do": "darken"
+            },
+            {
+              "line": 1,
+              "at": "쇠도끼는",
+              "target": "iron",
+              "do": "shimmer"
+            }
           ]
         }
       ]
@@ -2391,7 +2743,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "idle",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -2401,7 +2754,8 @@
                 "z": 20,
                 "anim": "bob",
                 "enter": "none",
-                "pose": "smile"
+                "pose": "smile",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_iron",
@@ -2410,7 +2764,8 @@
                 "scale": 0.42,
                 "z": 35,
                 "anim": "bob",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "iron"
               },
               {
                 "asset": "props/light_rays",
@@ -2419,7 +2774,8 @@
                 "scale": 0.9,
                 "z": 15,
                 "anim": "pulse",
-                "enter": "none"
+                "enter": "none",
+                "id": "light"
               }
             ]
           },
@@ -2512,6 +2868,20 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 1,
+              "at": "쇠도끼를",
+              "target": "iron",
+              "do": "appear"
+            },
+            {
+              "line": 1,
+              "at": "주었어요",
+              "target": "spirit",
+              "do": "lift"
+            }
           ]
         }
       ]
@@ -2542,7 +2912,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "idle",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -2552,7 +2923,8 @@
                 "z": 20,
                 "anim": "bob",
                 "enter": "none",
-                "pose": "smile"
+                "pose": "smile",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_iron",
@@ -2561,7 +2933,8 @@
                 "scale": 0.42,
                 "z": 35,
                 "anim": "bob",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "iron"
               },
               {
                 "asset": "props/light_rays",
@@ -2570,7 +2943,8 @@
                 "scale": 0.9,
                 "z": 15,
                 "anim": "pulse",
-                "enter": "none"
+                "enter": "none",
+                "id": "light"
               }
             ]
           },
@@ -2657,6 +3031,20 @@
                 ]
               ]
             }
+          ],
+          "cues": [
+            {
+              "line": 1,
+              "at": "걷어",
+              "target": "stage",
+              "do": "brighten"
+            },
+            {
+              "line": 1,
+              "at": "쇠도끼가",
+              "target": "iron",
+              "do": "appear"
+            }
           ]
         }
       ]
@@ -2687,7 +3075,8 @@
                 "z": 30,
                 "anim": "breathe",
                 "pose": "idle",
-                "enter": "none"
+                "enter": "none",
+                "id": "woodcutter"
               },
               {
                 "asset": "characters/spirit",
@@ -2697,7 +3086,8 @@
                 "z": 20,
                 "anim": "bob",
                 "enter": "none",
-                "pose": "smile"
+                "pose": "smile",
+                "id": "spirit"
               },
               {
                 "asset": "props/axe_iron",
@@ -2706,7 +3096,8 @@
                 "scale": 0.42,
                 "z": 35,
                 "anim": "bob",
-                "enter": "popIn"
+                "enter": "popIn",
+                "id": "iron"
               },
               {
                 "asset": "props/light_rays",
@@ -2715,7 +3106,8 @@
                 "scale": 0.9,
                 "z": 15,
                 "anim": "pulse",
-                "enter": "none"
+                "enter": "none",
+                "id": "light"
               }
             ]
           },
@@ -2807,6 +3199,20 @@
                   4564
                 ]
               ]
+            }
+          ],
+          "cues": [
+            {
+              "line": 1,
+              "at": "뜰",
+              "target": "stage",
+              "do": "brighten"
+            },
+            {
+              "line": 1,
+              "at": "주었어요",
+              "target": "spirit",
+              "do": "lift"
             }
           ]
         }

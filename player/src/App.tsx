@@ -59,7 +59,7 @@ function Play({ bus, latency, onStart }: { bus: AudioBus; latency: Latency; onSt
   const screen = useApp((s) => s.screen)
   const advance = useApp((s) => s.advance)
   const subtitlesOn = useApp((s) => s.subtitlesOn)
-  const word = usePlayback(bus)
+  const { word, cues, shown } = usePlayback(bus)
 
   if (screen === 'title' || !play) return <TitleScreen story={story} onStart={onStart} />
 
@@ -69,7 +69,7 @@ function Play({ bus, latency, onStart }: { bus: AudioBus; latency: Latency; onSt
 
   return (
     <>
-      {beat ? <SceneView story={story} scene={beat.scene} beatId={beat.id} /> : null}
+      {beat ? <SceneView story={story} beat={beat} line={play.line} cues={cues} shown={shown} /> : null}
       {beat ? <FxCanvas fx={beat.scene.fx ?? 'none'} /> : null}
 
       {/* 화면 어디든 탭 = 다음 비트 (선택 화면 제외) — Spec §8.3 */}

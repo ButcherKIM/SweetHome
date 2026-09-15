@@ -64,3 +64,20 @@ def test_every_beat_has_a_background():
     """배경 없는 비트는 검은 화면이 된다."""
     for node_id, b in beats():
         assert b["scene"].get("background"), b["id"]
+
+
+def test_every_beat_has_cues():
+    """Spec §4.6 — 모든 비트에 연출이 붙어 있는가. 하나도 없으면 앰비언트로 돌아간 것이다."""
+    for node_id, b in beats():
+        assert b.get("cues"), f"{b['id']} 에 연출 큐가 없다"
+
+
+def test_cues_anchor_to_real_words():
+    """`at` 이 그 줄에 없는 어절이면 큐는 조용히 안 터진다 — V14 와 같은 확인."""
+    import re
+    trail = re.compile(r"[.,!?…]+$")
+    for node_id, b in beats():
+        for c in b.get("cues", []):
+            line = b["lines"][c["line"]]
+            words = [trail.sub("", line["text"][a:e].strip()) for a, e, *_ in line["wordTimings"]]
+            assert c["at"] in words, f"{b['id']}: '{c['at']}' 가 없다 — {words}"
