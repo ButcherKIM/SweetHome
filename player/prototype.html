@@ -3401,7 +3401,7 @@ function showEnding(n){
   ov.innerHTML = `${n.isCanonical?'<span class="badge">원작 엔딩을 찾았어요!</span>':''}
     <p class="t">${n.endingTitle||''}</p><p class="l">${n.lesson||''}</p>
     <button class="btn">다시 하기</button>
-    <p class="l" style="font-size:3.2cqh;opacity:.75">${st.seen.size} / 3 엔딩</p>`;
+    <p class="l" style="font-size:3.2cqh;opacity:.75">${st.seen.size} / ${Object.values(story.nodes).filter(n=>n.type==='ending').length} 엔딩</p>`;
   ov.querySelector('button').onclick = () => goto(story.rootNode, 0, true);
   $('#stage').appendChild(ov);
 }
