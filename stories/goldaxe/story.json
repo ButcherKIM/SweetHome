@@ -52,36 +52,36 @@
         "displayName": "나무꾼",
         "tint": "#4A7FB5",
         "poses": {
-          "idle": "char/woodcutter_idle.png",
-          "sad": "char/woodcutter_sad.png",
-          "surprise": "char/woodcutter_surprise.png",
-          "happy": "char/woodcutter_happy.png"
+          "idle": "char/char_woodcutter_idle.png",
+          "sad": "char/char_woodcutter_sad.png",
+          "surprise": "char/char_woodcutter_surprise.png",
+          "happy": "char/char_woodcutter_happy.png"
         }
       },
       "spirit": {
         "displayName": "산신령",
         "tint": "#E8C86A",
         "poses": {
-          "calm": "char/spirit_calm.png",
-          "smile": "char/spirit_smile.png"
+          "calm": "char/char_spirit_calm.png",
+          "smile": "char/char_spirit_smile.png"
         }
       }
     },
     "props": {
       "axe_iron": {
-        "src": "prop/axe_iron.png",
+        "src": "prop/prop_axe_iron.png",
         "tint": "#8A8F98"
       },
       "axe_gold": {
-        "src": "prop/axe_gold.png",
+        "src": "prop/prop_axe_gold.png",
         "tint": "#E3B341"
       },
       "axe_silver": {
-        "src": "prop/axe_silver.png",
+        "src": "prop/prop_axe_silver.png",
         "tint": "#C6CBD1"
       },
       "light_rays": {
-        "src": "prop/light_rays.png",
+        "src": "prop/prop_light_rays.png",
         "tint": "#FFE9A8",
         "blend": "screen"
       }

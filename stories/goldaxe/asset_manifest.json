@@ -1,0 +1,192 @@
+{
+  "summary": {
+    "total": 20,
+    "done": 0,
+    "todo": 20,
+    "byKind": {
+      "background": 4,
+      "prop": 4,
+      "character": 6,
+      "icon": 6
+    },
+    "reuse": {
+      "bg_pond_glow": 9,
+      "axe_iron": 7,
+      "bg_pond_day": 6,
+      "spirit:smile": 6,
+      "woodcutter:happy": 6,
+      "axe_gold": 6,
+      "light_rays": 6,
+      "woodcutter:idle": 4,
+      "woodcutter:sad": 4,
+      "spirit:calm": 3,
+      "woodcutter:surprise": 3,
+      "a:쇠도끼를 가리킨다": 3,
+      "b:금도끼를 받는다": 3,
+      "c:모르겠다고 한다": 3,
+      "axe_silver": 3
+    }
+  },
+  "assets": [
+    {
+      "id": "bg_pond_glow",
+      "kind": "background",
+      "src": "bg/bg_pond_glow.png",
+      "uses": 9,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "axe_iron",
+      "kind": "prop",
+      "src": "prop/prop_axe_iron.png",
+      "uses": 7,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "bg_pond_day",
+      "kind": "background",
+      "src": "bg/bg_pond_day.png",
+      "uses": 6,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "spirit:smile",
+      "kind": "character",
+      "src": "char/char_spirit_smile.png",
+      "uses": 6,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "woodcutter:happy",
+      "kind": "character",
+      "src": "char/char_woodcutter_happy.png",
+      "uses": 6,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "axe_gold",
+      "kind": "prop",
+      "src": "prop/prop_axe_gold.png",
+      "uses": 6,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "light_rays",
+      "kind": "prop",
+      "src": "prop/prop_light_rays.png",
+      "uses": 6,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "woodcutter:idle",
+      "kind": "character",
+      "src": "char/char_woodcutter_idle.png",
+      "uses": 4,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "woodcutter:sad",
+      "kind": "character",
+      "src": "char/char_woodcutter_sad.png",
+      "uses": 4,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "spirit:calm",
+      "kind": "character",
+      "src": "char/char_spirit_calm.png",
+      "uses": 3,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "woodcutter:surprise",
+      "kind": "character",
+      "src": "char/char_woodcutter_surprise.png",
+      "uses": 3,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "a:쇠도끼를 가리킨다",
+      "kind": "icon",
+      "src": "icon/choice_point_iron.png",
+      "uses": 3,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "b:금도끼를 받는다",
+      "kind": "icon",
+      "src": "icon/choice_take_gold.png",
+      "uses": 3,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "c:모르겠다고 한다",
+      "kind": "icon",
+      "src": "icon/choice_shrug.png",
+      "uses": 3,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "axe_silver",
+      "kind": "prop",
+      "src": "prop/prop_axe_silver.png",
+      "uses": 3,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "bg_forest_day",
+      "kind": "background",
+      "src": "bg/bg_forest_day.png",
+      "uses": 1,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "bg_home_night",
+      "kind": "background",
+      "src": "bg/bg_home_night.png",
+      "uses": 1,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "a:연못에 들어간다",
+      "kind": "icon",
+      "src": "icon/choice_wade.png",
+      "uses": 1,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "b:앉아서 기다린다",
+      "kind": "icon",
+      "src": "icon/choice_wait.png",
+      "uses": 1,
+      "status": "todo",
+      "inPrompts": true
+    },
+    {
+      "id": "c:집으로 돌아간다",
+      "kind": "icon",
+      "src": "icon/choice_home.png",
+      "uses": 1,
+      "status": "todo",
+      "inPrompts": true
+    }
+  ]
+}
