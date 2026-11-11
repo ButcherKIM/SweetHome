@@ -423,7 +423,7 @@
         },
         "actors": {
           "type": "array",
-          "maxItems": 4,
+          "maxItems": 5,
           "items": {
             "$ref": "#/$defs/actor"
           }

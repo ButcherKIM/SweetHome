@@ -7,6 +7,9 @@
   · 배경색은 모서리에서 직접 읽는다. 분홍의 진하기는 상관없다
   · 분홍 정도를 K = (R+B)/2 - G 로 재면 배경과 피사체가 잘 갈린다
     (연분홍 58 · 자주 77 인 반면 볼 홍조 15 · 살구 피부 1 · 미색 의복 -3)
+  · 배경에 이어진 분홍빛(산신령의 후광 같은 번짐)은 배경 + 빛이 섞인 것으로 본다 —
+    반투명으로 남기고 섞인 분홍을 걷어낸다. 안 그러면 분홍 테두리가 통째로 남는다.
+    배경에 안 닿는 분홍(볼 홍조)은 건드리지 않는다
   · 한 파일은 한 에셋이다. 떨어져 있는 부분(두 손, 지팡이 등)은 모두 살려 합친다
   · 부스러기(반짝이 등)만 버린다 — 가장 큰 덩어리의 12% 미만
 
@@ -22,6 +25,7 @@ from PIL import Image
 
 KEY_MIN   = 22     # 배경의 K 가 이보다 낮으면 분홍 배경이 아니라고 본다
 HI, LO    = .82, .45
+HALO_LO   = .12    # 배경에 이어진 번짐은 여기서부터 반투명 (LO 보다 훨씬 낮다)
 MIN_BLOB  = .12    # 가장 큰 덩어리 대비
 MASTER_PX = 1400   # 컷아웃 긴 변
 BG_PX     = 1800   # 배경 긴 변
@@ -58,6 +62,19 @@ def blobs_of(alpha):
     return label.reshape(h, w), sizes
 
 
+def reach_of(seed, through):
+    """seed 에서 through 를 따라 4-이웃으로 닿는 곳 전부 (seed 포함)."""
+    reach = seed.copy()
+    while True:
+        grow = reach.copy()
+        grow[1:] |= reach[:-1]; grow[:-1] |= reach[1:]
+        grow[:, 1:] |= reach[:, :-1]; grow[:, :-1] |= reach[:, 1:]
+        grow &= through | seed
+        if (grow == reach).all():
+            return reach
+        reach = grow
+
+
 def cut(img):
     """배경을 걷어내고 RGBA 이미지 하나를 돌려준다.
 
@@ -80,10 +97,26 @@ def cut(img):
     alpha = a[..., 3].astype(np.float64)
     alpha = np.where(k >= hi, 0.0,
              np.where(k > lo, np.minimum(alpha, 255 * (1 - (k - lo) / (hi - lo))), alpha))
-    a[..., 3] = alpha.astype(np.int16)
 
-    # 가장자리 분홍 잔상 억제
-    edge = (a[..., 3] < 250) & (k > 0)
+    # 배경에 이어진 번짐 — 반투명으로 두고, 섞인 배경색을 빼서 본래 빛깔로 되돌린다
+    #   P = αF + (1-α)M  →  F = (P - (1-α)M) / α
+    halo_lo = min(max(KEY_MIN, k_bg * HALO_LO), lo)
+    halo = reach_of(k >= hi, k > halo_lo) & (k < hi)
+    bg_rgb = np.median(np.concatenate([a[:patch, :patch, :3].reshape(-1, 3),
+                                       a[:patch, -patch:, :3].reshape(-1, 3)]), axis=0)
+    t = np.clip((hi - k) / (hi - halo_lo), 0, 1)
+    alpha = np.where(halo, np.minimum(alpha, 255 * t), alpha)
+    a[..., 3] = alpha.astype(np.int16)
+    if halo.any():
+        th = np.maximum(t[halo], 1e-3)[:, None]
+        fg = (a[..., :3][halo] - (1 - th) * bg_rgb) / th
+        m = np.minimum(fg[:, 0], fg[:, 2])                     # 남은 분홍기 = min(R,B) 가 G 를 넘는 만큼
+        spill = np.clip(m - fg[:, 1], 0, None)
+        fg[:, 0] -= spill; fg[:, 2] -= spill
+        a[..., :3][halo] = fg.clip(0, 255)
+
+    # 가장자리 분홍 잔상 억제 (번짐으로 처리하지 않은 곳)
+    edge = (a[..., 3] < 250) & (k > 0) & ~halo
     f = np.clip(k / (k_bg * .6), 0, 1)[edge] * .7
     a[..., 0][edge] = r[edge] - (r[edge] - g[edge]) * f
     a[..., 2][edge] = b[edge] - (b[edge] - g[edge]) * f

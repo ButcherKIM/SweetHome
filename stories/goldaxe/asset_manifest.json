@@ -4,14 +4,14 @@
     "done": 0,
     "todo": 20,
     "byKind": {
-      "background": 4,
       "prop": 4,
+      "background": 4,
       "character": 6,
       "icon": 6
     },
     "reuse": {
+      "axe_iron": 10,
       "bg_pond_glow": 9,
-      "axe_iron": 7,
       "bg_pond_day": 6,
       "spirit:smile": 6,
       "woodcutter:happy": 6,
@@ -29,18 +29,18 @@
   },
   "assets": [
     {
-      "id": "bg_pond_glow",
-      "kind": "background",
-      "src": "bg/bg_pond_glow.png",
-      "uses": 9,
+      "id": "axe_iron",
+      "kind": "prop",
+      "src": "prop/prop_axe_iron.png",
+      "uses": 10,
       "status": "todo",
       "inPrompts": true
     },
     {
-      "id": "axe_iron",
-      "kind": "prop",
-      "src": "prop/prop_axe_iron.png",
-      "uses": 7,
+      "id": "bg_pond_glow",
+      "kind": "background",
+      "src": "bg/bg_pond_glow.png",
+      "uses": 9,
       "status": "todo",
       "inPrompts": true
     },

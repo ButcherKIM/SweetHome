@@ -1772,6 +1772,16 @@
                 "id": "spirit"
               },
               {
+                "asset": "props/axe_iron",
+                "x": 0.38,
+                "y": 0.6,
+                "scale": 0.42,
+                "z": 36,
+                "anim": "sway",
+                "enter": "popIn",
+                "id": "iron"
+              },
+              {
                 "asset": "props/axe_gold",
                 "x": 0.46,
                 "y": 0.58,
@@ -1886,6 +1896,12 @@
           "cues": [
             {
               "line": 0,
+              "at": "쇠도끼를",
+              "target": "iron",
+              "do": "appear"
+            },
+            {
+              "line": 0,
               "at": "가리켰어요",
               "target": "woodcutter",
               "do": "lift"
@@ -1946,6 +1962,16 @@
                 "enter": "none",
                 "pose": "smile",
                 "id": "spirit"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.38,
+                "y": 0.6,
+                "scale": 0.42,
+                "z": 36,
+                "anim": "sway",
+                "enter": "popIn",
+                "id": "iron"
               },
               {
                 "asset": "props/axe_gold",
@@ -2062,6 +2088,12 @@
           "cues": [
             {
               "line": 0,
+              "at": "쇠도끼를",
+              "target": "iron",
+              "do": "appear"
+            },
+            {
+              "line": 0,
               "at": "가리켰어요",
               "target": "woodcutter",
               "do": "lift"
@@ -2116,6 +2148,16 @@
                 "enter": "none",
                 "pose": "smile",
                 "id": "spirit"
+              },
+              {
+                "asset": "props/axe_iron",
+                "x": 0.38,
+                "y": 0.6,
+                "scale": 0.42,
+                "z": 36,
+                "anim": "sway",
+                "enter": "popIn",
+                "id": "iron"
               },
               {
                 "asset": "props/axe_gold",
@@ -2224,6 +2266,12 @@
             }
           ],
           "cues": [
+            {
+              "line": 0,
+              "at": "쇠도끼를",
+              "target": "iron",
+              "do": "appear"
+            },
             {
               "line": 0,
               "at": "가리켰어요",

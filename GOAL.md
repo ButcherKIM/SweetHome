@@ -45,7 +45,7 @@
 | `story.schema.json` 고정 | ✅ | schemaVersion 0.5 |
 | 비트(그림) / 줄(자막) 2단 구조 | ✅ | §4.4 |
 | 움직임 폐쇄형 집합 — camera 6 · anim 6 · enter 4 · transitionIn 4 · fx 7 | ✅ | 27개 값 전부 렌더러에 있음 |
-| **연출 큐** — 어절에 물린 일회성 동작 14종 (§4.6) | ✅ | 17개 비트에 큐 54개. 검증 V14 |
+| **연출 큐** — 어절에 물린 일회성 동작 14종 (§4.6) | ✅ | 17개 비트에 큐 57개. 검증 V14 |
 | 발광체 `blend: "screen"` | ✅ | |
 | 배경 후처리 `bgTreatment` (stage + 비트별) | ✅ | |
 | 빌드 검증 V1~V13 | ✅ | `tools/validate_story.py` |
