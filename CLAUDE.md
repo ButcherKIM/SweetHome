@@ -38,7 +38,7 @@
 ## 2. 저장소
 
 ```
-StoryTellingSpec.md  Pipeline.md  GOAL.md
+CLAUDE.md  StoryTellingSpec.md  Pipeline.md  GOAL.md  requirements.txt
 schema/story.schema.json     스키마 0.5 — 콘텐츠의 계약
 stories/goldaxe/
   story.json                 13노드 / 17비트 / 38줄 / 9결말 / 큐 54개
@@ -78,9 +78,16 @@ src/platform/  engine 을 브라우저에 붙이는 얇은 층
 
 ## 4. 돌리는 법
 
+**새 환경에서 처음이면 이것부터.** 안 하면 도구들이 바로 막힌다.
+
+```bash
+python3 -m pip install -r requirements.txt   # edge-tts · Pillow · numpy · jsonschema · pytest
+cd player && npm install
+```
+
 ```bash
 # 앱
-cd player && npm install && npm run dev      # http://localhost:5173
+cd player && npm run dev                     # http://localhost:5173
 npm run build                                # dist/ — stories/ 를 함께 복사한다
 
 # 검증 — 고치고 나면 이 둘은 꼭
